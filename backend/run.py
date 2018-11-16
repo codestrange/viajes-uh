@@ -10,6 +10,7 @@ COV.start()
 
 from app import create_app
 from app import db
+from app.models.user import User
 
 app = create_app(getenv('FLASK_CONFIG') or 'default')
 
@@ -33,7 +34,7 @@ def test():
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(app=app, db=db)
+    return dict(app=app, db=db, User=User)
 
 
 # Shell de flask_script con IPython
