@@ -1,1 +1,1 @@
-# Gestion de las Relaciones Internacionales de la UH
+# Gestión de las Relaciones Internacionales de la UH
