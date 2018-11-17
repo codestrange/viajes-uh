@@ -7,7 +7,5 @@
 <script>
 export default {
     name:'Travels',
-    components:{
-    }
 }
 </script>

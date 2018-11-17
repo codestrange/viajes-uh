@@ -10,12 +10,18 @@
             <b-nav-item @click="changeTab('admin')">Administración</b-nav-item>
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
-                <b-nav-item-dropdown right>
+                <b-nav-item-dropdown right v-if="user_token != ''">
                     <template slot="button-content">
                     <strong>Mi Usuario</strong>
                     </template>
                     <b-dropdown-item>Perfil</b-dropdown-item>
                     <b-dropdown-item>Cerrar Sesión</b-dropdown-item>
+                </b-nav-item-dropdown>
+                <b-nav-item-dropdown right v-else>
+                    <template slot="button-content">
+                    <strong>Iniciar Sesión</strong>
+                    </template>
+                    <auth/>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
         </b-collapse>
@@ -30,9 +36,11 @@
 </template>
 
 <script>
-import Home from '@/components/Home.vue';
-import Travels from '@/components/Travels.vue';
-import Admin from '@/components/Admin.vue'
+import Home from '@/views/Home.vue';
+import Travels from '@/views/Travels.vue';
+import Admin from '@/views/Admin.vue';
+import Auth from '@/components/Auth.vue';
+import { authBus } from '@/main.js';
 
 export default {
     name: 'app',
@@ -40,17 +48,25 @@ export default {
         Home,
         Travels,
         Admin,
+        Auth,
     },
     data() {
         return {
             activeTab: 'home',
+            user_token: '',
         }
     },
     methods: {
         changeTab(newTab) {
             this.activeTab = newTab;
         }
-    }
+    },
+    created() {
+        authBus.$on('user_authenticated', (data) => {
+            console.log(data.token);
+            this.user_token = data.token;
+        })
+    },
 }
 </script>
 
