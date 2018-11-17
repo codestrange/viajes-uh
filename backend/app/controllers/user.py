@@ -7,7 +7,7 @@ def get_users():
 
 
 @api.route('/users/<int:id>', methods=['GET'])
-def get_user():
+def get_user(id):
     pass
 
 
@@ -17,10 +17,10 @@ def post_user():
 
 
 @api.route('/users/<int:id>', methods=['PUT'])
-def put_user():
+def put_user(id):
     pass
 
 
 @api.route('/users/<int:id>', methods=['DELETE'])
-def delete_user():
+def delete_user(id):
     pass
