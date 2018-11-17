@@ -27,9 +27,7 @@
         </b-collapse>
     </b-navbar>
     <div id="content" class="container-fluid">
-        <home v-if="activeTab == 'home'"/>
-        <travels v-else-if="activeTab == 'travels'"/>
-        <admin v-else-if="activeTab == 'admin'"/>
+        <component :is="activeView"></component>
     </div>
    
 </div>
@@ -40,7 +38,6 @@ import Home from '@/views/Home.vue';
 import Travels from '@/views/Travels.vue';
 import Admin from '@/views/Admin.vue';
 import Auth from '@/components/Auth.vue';
-import { authBus } from '@/main.js';
 
 export default {
     name: 'app',
@@ -52,33 +49,24 @@ export default {
     },
     data() {
         return {
-            activeTab: 'home',
-            user: {
-                token:'',
-            },
-        }
+            activeView: 'home',
+        };
     },
     methods: {
         changeTab(newTab) {
-            this.activeTab = newTab;
+            this.activeView = newTab;
         },
         isUserLogged() {
             //This should check if the user is logged with the controller
             //by asking if the token is valid
-            return this.user.token != '';
+            return this.$store.state.user.token !== '';
         },
         logoutUser() {
             //This should logout the user and notificate to the server
-            this.user.token = '';
+            this.$store.state.user.token = '';
         }
     },
     created() {
-        authBus.$on('user_authenticated', (data) => {
-            console.log(data.token);
-            this.user = {
-                token:data.token,
-            };
-        })
     },
 }
 </script>

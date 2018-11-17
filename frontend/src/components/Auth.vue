@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import { authBus } from '@/main.js';
-
 export default {
     name:'Auth',
     data() {
@@ -24,10 +22,8 @@ export default {
             //Now we should connect to the server and try to get the validation
             //For now we would use a mock response
             let user_token = this.getToken(this.username, this.password);
-            //Comunicating the token to the app component throug the authBus
-            authBus.$emit('user_authenticated',{
-                token:user_token,
-            });
+            //Storing the token in the app state
+            this.$store.state.user.token = 'mock_token';
         },
         getToken(username, password) {
             return 'mock_token';
