@@ -36,6 +36,9 @@ class User(Entity):
             return None
         return User.query().get(data['id'])
 
+    def to_json(self):
+        return {'id': self.id, 'username': self.username, 'email': self.email}
+
     @staticmethod
     def commit():
         current_app.db.session.commit()
