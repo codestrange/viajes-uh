@@ -1,15 +1,16 @@
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash, generate_password_hash
-from .. import db
+from .entity import Entity
+from .query import Query
 
 
-class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, index=True, nullable=False)
-    email = db.Column(db.String(64), unique=True, index=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+class User(Entity):
+    def __init__(self, username, email, password, id=None):
+        self.id = id
+        self.username = username
+        self.email = email
+        self.password_hash = generate_password_hash(password)
 
     @property
     def password(self):
@@ -33,4 +34,23 @@ class User(db.Model):
             data = s.loads(token)
         except:
             return None
-        return User.query.get(data['id'])
+        return User.query().get(data['id'])
+
+    @staticmethod
+    def commit():
+        current_app.db.session.commit()
+
+    @staticmethod
+    def add(entity):
+        current_app.db.session.add(entity)
+
+    @staticmethod
+    def delete(entity):
+        current_app.db.session.delete(entity)
+
+    @staticmethod
+    def query():
+        return Query(current_app.db.session.query(User).all())
+
+    def __repr__(self):
+        return f'<{self.username}, {self.email}>'

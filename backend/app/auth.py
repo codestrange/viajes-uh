@@ -10,7 +10,7 @@ auth_token = HTTPBasicAuth()
 
 @auth.verify_password
 def verify_password(username, password):
-    g.current_user = User.query.filter_by(username=username).first()
+    g.current_user = User.query().filter(lambda user: user.username == username).first()
     if g.current_user is None:
         return False
     return g.current_user.verify_password(password)
