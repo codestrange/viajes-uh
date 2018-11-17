@@ -1,26 +1,26 @@
 from . import api
 
 
-@api.route('/user/', methods=['GET'])
+@api.route('/users/', methods=['GET'])
 def get_users():
     pass
 
 
-@api.route('/user/<int:id>', methods=['GET'])
+@api.route('/users/<int:id>', methods=['GET'])
 def get_user():
     pass
 
 
-@api.route('/user/', methods=['POST'])
+@api.route('/users/', methods=['POST'])
 def post_user():
     pass
 
 
-@api.route('/user/<int:id>', methods=['PUT'])
+@api.route('/users/<int:id>', methods=['PUT'])
 def put_user():
     pass
 
 
-@api.route('/user/<int:id>', methods=['DELETE'])
+@api.route('/users/<int:id>', methods=['DELETE'])
 def delete_user():
     pass
