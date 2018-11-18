@@ -29,7 +29,6 @@
     <div id="content" class="container-fluid">
         <component :is="activeView"></component>
     </div>
-   
 </div>
 </template>
 
@@ -64,9 +63,18 @@ export default {
         logoutUser() {
             //This should logout the user and notificate to the server
             this.$store.state.user.token = '';
+            localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
+            this.activeView = 'home';
         }
     },
-    created() {
+    mounted() {
+        console.log('localStorage->' + localStorage.getItem('uh-travel-user_token'));
+        if(localStorage.getItem('user_token')) {
+            this.$store.state.user.token = localStorage.getItem('uh-travel-user_token');
+        }
+    },
+    updated() {
+        localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
     },
 }
 </script>
