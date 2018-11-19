@@ -49,3 +49,24 @@ class Query:
                 yield item
             else:
                 cont += 1
+
+    @query_decorator
+    def order(self):
+        raise NotImplementedError()
+
+    @query_decorator
+    def group(self):
+        raise NotImplementedError()
+
+
+class Repository:
+
+    def add(self, entity):
+        raise NotImplementedError()
+
+    def delete(self, entity):
+        raise NotImplementedError()
+
+    @query_decorator
+    def query(self):
+        raise NotImplementedError()
