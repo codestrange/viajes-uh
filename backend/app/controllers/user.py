@@ -9,7 +9,7 @@ def get_users():
     return jsonify([user.to_json() for user in users])
 
 
-@api.route('/users/<int:id>', methods=['GET'])
+@api.route('/users/<int:id>/', methods=['GET'])
 def get_user(id):
     user = User.query().get(id)
     if user is None:
