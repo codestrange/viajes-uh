@@ -8,9 +8,9 @@ from flask_script import Manager, Shell
 COV = coverage(branch=True, include='app/*')
 COV.start()
 
-from app import create_app
-from app import db
-from app.models.user import User
+from .app import create_app
+from .app import db
+from .app.models.user import User
 
 app = create_app(getenv('FLASK_CONFIG') or 'default')
 
