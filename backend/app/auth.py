@@ -1,7 +1,7 @@
-from flask import g
+from flask import g, current_app
 from flask_httpauth import HTTPBasicAuth
 from .errors import unauthorized as response_unauthorized
-from .models.user import User
+from .entities.user_entity import UserEntity
 
 
 auth = HTTPBasicAuth()
@@ -10,7 +10,8 @@ auth_token = HTTPBasicAuth()
 
 @auth.verify_password
 def verify_password(username, password):
-    g.current_user = User.query().filter(lambda user: user.username == username).first()
+    repository = current_app.unitofwork.get_repository('UserRepository')
+    g.current_user = repository.query().filter(lambda user: user.username == username).first()
     if g.current_user is None:
         return False
     return g.current_user.verify_password(password)
@@ -26,7 +27,7 @@ def unauthorized():
 
 @auth_token.verify_password
 def verify_auth_token(token, unused):
-    g.current_user = User.verify_auth_token(token)
+    g.current_user = UserEntity.verify_auth_token(token)
     return g.current_user is not None and unused == ''
 
 

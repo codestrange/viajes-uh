@@ -1,26 +1,29 @@
 from sqlalchemy import MetaData, Table, Column, Integer, Unicode
 from sqlalchemy.orm import sessionmaker, mapper
-from ..models.user import User
+from ..entities.user_entity import UserEntity
 
 
 class Database:
-    def __init__(self, session=None):
+    def __init__(self, metadata=None, session=None):
         self.session = session
+        self.metadata = metadata
 
     def init_app(self, app):
-        metadata = MetaData(app.config['DATABASE_URL'])
+        if self.metadata is None:
+            self.metadata = MetaData(app.config['DATABASE_URL'])
 
-        user_table = Table('tf_user', metadata,
+        user_table = Table('tf_user', self.metadata,
                            Column('id', Integer, primary_key=True),
                            Column('username', Unicode(64), unique=True, nullable=False),
                            Column('email', Unicode(64), unique=True, nullable=False),
                            Column('password_hash', Unicode(128), nullable=False))
 
-        mapper(User, user_table)
+        mapper(UserEntity, user_table)
 
-        metadata.create_all()
+        self.metadata.create_all()
 
-        Session = sessionmaker()
-        self.session = Session()
+        if self.session is None:
+            Session = sessionmaker()
+            self.session = Session()
 
         app.db = self

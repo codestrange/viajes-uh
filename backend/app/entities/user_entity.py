@@ -1,11 +1,9 @@
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash, generate_password_hash
-from .entity import Entity
-from .query import Query
 
 
-class User(Entity):
+class UserEntity:
     def __init__(self, username, email, password, id=None):
         self.id = id
         self.username = username
@@ -34,26 +32,11 @@ class User(Entity):
             data = s.loads(token)
         except:
             return None
-        return User.query().get(data['id'])
+        repository = current_app.unitofwork.get_repository('UserRepository')
+        return repository.query().get(data['id'])
 
     def to_json(self):
         return {'id': self.id, 'username': self.username, 'email': self.email}
-
-    @staticmethod
-    def commit():
-        current_app.db.session.commit()
-
-    @staticmethod
-    def add(entity):
-        current_app.db.session.add(entity)
-
-    @staticmethod
-    def delete(entity):
-        current_app.db.session.delete(entity)
-
-    @staticmethod
-    def query():
-        return Query(current_app.db.session.query(User).all())
 
     def __repr__(self):
         return f'<{self.username}, {self.email}>'

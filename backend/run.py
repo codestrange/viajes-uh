@@ -1,16 +1,14 @@
 from os import getenv
 from os.path import abspath, dirname, join
 from coverage import coverage
-from flask_script import Manager, Shell
 
 # Coverage debe empezar antes de las importaciones
 # de los módulos de las aplicación
 COV = coverage(branch=True, include='app/*')
 COV.start()
 
-from app import create_app
-from app import db
-from app.models.user import User
+from .app import create_app, db, unitofwork
+from .app.entities.user_entity import UserEntity
 
 app = create_app(getenv('FLASK_CONFIG') or 'default')
 
@@ -34,13 +32,4 @@ def test():
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(app=app, db=db, User=User)
-
-
-# Shell de flask_script con IPython
-manager = Manager(app)
-manager.add_command(Shell(make_context=make_shell_context))
-
-
-if __name__ == '__main__':
-    manager.run()
+    return dict(app=app, db=db, unitofwork=unitofwork, UserEntity=UserEntity)
