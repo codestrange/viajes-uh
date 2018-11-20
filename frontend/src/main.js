@@ -13,6 +13,9 @@ const store = new Vuex.Store({
     state: {
         user: {
             token:''
+        },
+        server: {
+            baseUrl:'http://localhost:5000/api/',
         }
     }
 })
