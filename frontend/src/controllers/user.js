@@ -1,29 +1,24 @@
+import Resources from './resource';
+import Endpoints from '../endpoints/endpoints'
+import {encode, decode} from '../utils/base64';
+
 export default {
-    getToken(vue, url, params) {
-        let r;
-        vue.$http.get(url).then(response => {
-            return response.json();
-        }, response => {
-                console.log(response);
-        }).then(json => {
-            r = json;
-            console.log(json);
-        });
-        if(r.token) {
-            return r.token;
-        }
-        return '';
-    },
-    setHeaders(instance, headers) {
-        console.log('vue->');
-        console.log(instance);
-        console.log('done vue');
-        instance.interceptors.push((request, prox) => {
-            headers.forEach(header => {
-                console.log(header.key,header.value);
-                request.headers.set(header.key, header.value);
-            });
-            prox();
-        });
+    getToken(username, password) {
+        Resources.clearHeaders();
+        Resources.setHeaders(
+            [{
+                key: 'Authorization',
+                value: 'Basic ' + encode(username + ':' + password)
+            },
+            {
+                key: 'Content-Type',
+                value: 'application/json'
+            },
+            {
+                key: 'Accept',
+                value: 'application/json'
+            }
+        ]);
+        return Resources.get(Endpoints.token_endpoint).then(response => response.json(), response => console.log('Error retriving json'));
     }
 }
