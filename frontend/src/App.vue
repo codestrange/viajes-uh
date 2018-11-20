@@ -61,15 +61,14 @@ export default {
             return this.$store.state.user.token !== '';
         },
         logoutUser() {
-            //This should logout the user and notificate to the server
+            //This should logout the user and notify to the server
             this.$store.state.user.token = '';
             localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
             this.activeView = 'home';
         }
     },
     mounted() {
-        console.log('localStorage->' + localStorage.getItem('uh-travel-user_token'));
-        if(localStorage.getItem('user_token')) {
+        if(localStorage.getItem('uh-travel-user_token')) {
             this.$store.state.user.token = localStorage.getItem('uh-travel-user_token');
         }
     },
@@ -78,9 +77,3 @@ export default {
     },
 }
 </script>
-
-<style>
-/* #content {
-    margin: 10pt;
-} */
-</style>
