@@ -3,7 +3,30 @@ import Endpoints from '../endpoints/endpoints'
 import {encode, decode} from '../utils/base64';
 
 export default {
-    getToken(username, password) {
+    id:-1,
+    username:'',
+    fullname:'',
+    email:'',
+    year:'',
+    token:'',
+    isLogued() {
+        return this.token !== '';
+    },
+    logOut() {
+        this.id = -1;
+        this.username = '';
+        this.fullname = '';
+        this.email = '';
+        this.year = '';
+        this.token = '';
+    },
+    updateToken(token) {
+        this.token = token;
+    },
+    updateId(id) {
+        this.token = id;
+    },
+    getAuthJson(username, password) {
         Resources.clearHeaders();
         Resources.setHeaders(
             [{
@@ -20,5 +43,17 @@ export default {
             }
         ]);
         return Resources.get(Endpoints.token_endpoint).then(response => response.json(), response => console.log('Error retriving json'));
+    },
+    authenticateUser(username, password) {
+        return this.getAuthJson(username, password)
+            .then(json => {
+                if (json.token != null && json.id != null) {
+                    this.updateToken(json.token);
+                    this.updateId(json.id);
+                    return true;
+                }
+                console.log(json.error + ':' + json.message);
+                return false;
+            });
     }
 }

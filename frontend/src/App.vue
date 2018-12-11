@@ -58,18 +58,18 @@ export default {
         isUserLogged() {
             //This should check if the user is logged with the controller
             //by asking if the token is valid
-            return this.$store.state.user.token !== '';
+            return this.$store.state.user.isLogued();
         },
         logoutUser() {
             //This should logout the user and notify to the server
-            this.$store.state.user.token = '';
             localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
+            this.$store.state.user.logOut();
             this.activeView = 'home';
         }
     },
     mounted() {
         if(localStorage.getItem('uh-travel-user_token')) {
-            this.$store.state.user.token = localStorage.getItem('uh-travel-user_token');
+            this.$store.state.user.updateToken(localStorage.getItem('uh-travel-user_token'));
         }
     },
     updated() {

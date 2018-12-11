@@ -15,8 +15,6 @@
 </template>
 
 <script>
-    import UserController from '@/controllers/user';
-
     export default {
         name: 'Auth',
         data() {
@@ -31,13 +29,9 @@
                 this.getToken(this.username, this.password);
             },
             getToken(username, password) {
-                UserController.getToken(username, password)
-                    .then(json => {
-                        if (json.token != null) {
-                            this.$store.state.user.token = json.token;
-                        }
-                        else {
-                            console.log(json.error + ':' + json.message);
+                this.$store.state.user.authenticateUser(username, password)
+                    .then(result => {
+                        if(result === false) {
                             this.state_input = false;
                             setTimeout(() => this.state_input = null, 1000);
                         }
