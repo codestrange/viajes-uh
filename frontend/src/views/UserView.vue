@@ -23,7 +23,7 @@
         },
         methods: {
             loadUserData() {
-                this.user = this.$store.state.user.getUserData();
+                this.$store.state.user.getUserData().then(user => this.user = user);
             },
         },
         mounted() {

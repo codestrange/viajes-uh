@@ -1,6 +1,6 @@
 export default {
     headers: {},
-    get(url, headers) {
+    get(url) {
         return fetch(url,{
             method:'get',
             headers: this.headers

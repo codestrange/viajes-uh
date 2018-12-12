@@ -65,21 +65,21 @@ export default {
         },
         logoutUser() {
             //This should logout the user and notify to the server
-            localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
             this.$store.state.user.logOut();
+            localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
             this.changeTab('home');
         }
     },
     mounted() {
-        if(localStorage.getItem('uh-travel-user_token')) {
-            this.$store.state.user.updateToken(localStorage.getItem('uh-travel-user_token'));
+        if(localStorage.getItem('uh-travel-user_data') !== null) {
+            this.$store.state.user.reloadMinData(JSON.parse(localStorage.getItem('uh-travel-user_data')));
         }
         if(localStorage.getItem('uh-travel-active_view')) {
             this.activeView = localStorage.getItem('uh-travel-active_view');
         }
     },
     updated() {
-        localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
+        localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
         localStorage.setItem('uh-travel-active_view', this.activeView);
     },
 }

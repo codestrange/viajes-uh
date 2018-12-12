@@ -3,28 +3,40 @@ import Endpoints from '../endpoints/endpoints'
 import {encode, decode} from '../utils/base64';
 
 export default {
-    id:-1,
-    username:'',
-    fullname:'',
-    email:'',
-    year:'',
-    token:'',
+    user_data: {
+        id:-1,
+        username:'',
+        fullname:'',
+        email:'',
+        year:'',
+        token:'',
+    },
+    getMinData() {
+        return JSON.stringify({
+            id: Number(this.user_data.id),
+            token: String(this.user_data.token)
+        });
+    },
+    reloadMinData(data) {
+        this.updateId(data.id);
+        this.updateToken(data.token);
+    },
     isLogued() {
-        return this.token !== '';
+        return this.user_data.token !== '';
     },
     logOut() {
-        this.id = -1;
-        this.username = '';
-        this.fullname = '';
-        this.email = '';
-        this.year = '';
-        this.token = '';
+        this.user_data.id = -1;
+        this.user_data.username = '';
+        this.user_data.fullname = '';
+        this.user_data.email = '';
+        this.user_data.year = '';
+        this.user_data.token = '';
     },
     updateToken(token) {
-        this.token = token;
+        this.user_data.token = String(token);
     },
     updateId(id) {
-        this.token = id;
+        this.user_data.id = Number(id);
     },
     getAuthJson(username, password) {
         Resources.clearHeaders();
@@ -57,10 +69,33 @@ export default {
             });
     },
     getUserData() {
-        return {
-            username: 'carlos',
-            fullname: 'Carlos Bermudez Porto',
-            email: 'c.bermudez@estudiantes.matcom.uh.cu',
-        };
+        Resources.clearHeaders();
+        Resources.setHeaders(
+            [{
+                key: 'Authorization',
+                value: 'Basic ' + encode(this.user_data.token)
+                },
+                {
+                    key: 'Content-Type',
+                    value: 'application/json'
+                },
+                {
+                    key: 'Accept',
+                    value: 'application/json'
+                }
+            ]);
+        return Resources.get(Endpoints.single_user_data + this.user_data.id.toString() + '/').then(
+            response => response.json(), response => console.log('Error getting the response.'))
+            .then(json => {
+                if(json.email !== null && json.username !== null) {
+                    this.user_data.email = json.email;
+                    this.user_data.username = json.username;
+                    return {
+                      username: json.username,
+                      email: json.email,
+                      fullname: 'No in DB',
+                    };
+                }
+            })
     },
 }
