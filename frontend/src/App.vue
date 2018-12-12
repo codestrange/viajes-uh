@@ -14,7 +14,7 @@
                     <template slot="button-content">
                     <strong>Mi Usuario</strong>
                     </template>
-                    <b-dropdown-item>Perfil</b-dropdown-item>
+                    <b-dropdown-item @click="changeTab('userView')">Perfil</b-dropdown-item>
                     <b-dropdown-item @click="logoutUser()">Cerrar Sesión</b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item-dropdown right v-else>
@@ -36,6 +36,7 @@
 import Home from '@/views/Home.vue';
 import Travels from '@/views/Travels.vue';
 import Admin from '@/views/Admin.vue';
+import UserView from '@/views/UserView.vue';
 import Auth from '@/components/Auth.vue';
 
 export default {
@@ -45,6 +46,7 @@ export default {
         Travels,
         Admin,
         Auth,
+        UserView,
     },
     data() {
         return {
@@ -54,6 +56,7 @@ export default {
     methods: {
         changeTab(newTab) {
             this.activeView = newTab;
+            localStorage.setItem('uh-travel-active_view', this.activeView);
         },
         isUserLogged() {
             //This should check if the user is logged with the controller
@@ -64,16 +67,20 @@ export default {
             //This should logout the user and notify to the server
             localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
             this.$store.state.user.logOut();
-            this.activeView = 'home';
+            this.changeTab('home');
         }
     },
     mounted() {
         if(localStorage.getItem('uh-travel-user_token')) {
             this.$store.state.user.updateToken(localStorage.getItem('uh-travel-user_token'));
         }
+        if(localStorage.getItem('uh-travel-active_view')) {
+            this.activeView = localStorage.getItem('uh-travel-active_view');
+        }
     },
     updated() {
         localStorage.setItem('uh-travel-user_token', this.$store.state.user.token);
+        localStorage.setItem('uh-travel-active_view', this.activeView);
     },
 }
 </script>
