@@ -14,7 +14,7 @@
                     <template slot="button-content">
                     <strong>Mi Usuario</strong>
                     </template>
-                    <b-dropdown-item @click="changeTab('userView')">Perfil</b-dropdown-item>
+                    <b-dropdown-item @click="changeTab('user-view')">Perfil</b-dropdown-item>
                     <b-dropdown-item @click="logoutUser()">Cerrar Sesión</b-dropdown-item>
                 </b-nav-item-dropdown>
                 <b-nav-item-dropdown right v-else>

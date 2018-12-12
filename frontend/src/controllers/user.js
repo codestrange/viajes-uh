@@ -55,5 +55,12 @@ export default {
                 console.log(json.error + ':' + json.message);
                 return false;
             });
-    }
+    },
+    getUserData() {
+        return {
+            username: 'carlos',
+            fullname: 'Carlos Bermudez Porto',
+            email: 'c.bermudez@estudiantes.matcom.uh.cu',
+        };
+    },
 }
