@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import App from './App.vue';
 import BootstrapVue from 'bootstrap-vue';
 import UserController from './controllers/user';
+import Loader from './store/loading';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
@@ -13,6 +14,7 @@ Vue.config.productionTip = false;
 const store = new Vuex.Store({
     state: {
         user: UserController,
+        loader: Loader,
         server: {
             baseUrl:'http://localhost:5000/api/',
         }

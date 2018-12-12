@@ -26,6 +26,9 @@
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
+    <div id="loader">
+        <loading v-if="this.$store.state.loader.showing"></loading>
+    </div>
     <div id="content" class="container-fluid">
         <component :is="activeView"></component>
     </div>
@@ -38,6 +41,7 @@ import Travels from '@/views/Travels.vue';
 import Admin from '@/views/Admin.vue';
 import UserView from '@/views/UserView.vue';
 import Auth from '@/components/Auth.vue';
+import Loading from '@/components/Loading.vue';
 
 export default {
     name: 'app',
@@ -47,6 +51,7 @@ export default {
         Admin,
         Auth,
         UserView,
+        Loading,
     },
     data() {
         return {
@@ -68,7 +73,7 @@ export default {
             this.$store.state.user.logOut();
             localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
             this.changeTab('home');
-        }
+        },
     },
     mounted() {
         if(localStorage.getItem('uh-travel-user_data') !== null) {

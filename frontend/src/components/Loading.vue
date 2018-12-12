@@ -1,13 +1,11 @@
 <template>
-    $END$
+    <div id="loading" style="text-align: center;">
+        Cargando...
+    </div>
 </template>
 
 <script>
     export default {
-        name: "Loading.vue"
+        name: 'Loading'
     }
 </script>
-
-<style scoped>
-
-</style>
