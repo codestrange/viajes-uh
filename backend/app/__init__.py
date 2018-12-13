@@ -3,8 +3,8 @@ from flask_cors import CORS
 from .config import config
 from .container import Container
 from .database import Database
-from .unitofwork.sqlalchemy_unitofwork import UnitOfWorkSQLAlchemy
-from .repositories.user_repository import UserRepository
+from .database.unitofwork.sqlalchemy_unitofwork import UnitOfWorkSQLAlchemy
+from .database.repositories.user_repository import UserRepository
 
 db = Database()
 unitofwork = UnitOfWorkSQLAlchemy()

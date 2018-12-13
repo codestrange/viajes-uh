@@ -1,5 +1,5 @@
 from . import Repository, query_decorator
-from ..container import Container
+from ...container import Container
 
 
 class SQLAlchemyRepository(Repository):

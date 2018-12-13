@@ -6,7 +6,7 @@ from coverage import coverage
 COV = coverage(branch=True, include='app/*')
 COV.start()
 
-from .app import create_app, db, unitofwork
+from .app import create_app
 from .app.entities.user_entity import UserEntity
 
 app = create_app(getenv('FLASK_CONFIG') or 'default')
@@ -31,4 +31,4 @@ def test():
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(app=app, db=db, unitofwork=unitofwork, UserEntity=UserEntity)
+    return dict(app=app, UserEntity=UserEntity)

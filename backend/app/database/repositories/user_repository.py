@@ -1,5 +1,5 @@
 from .sqlalchemy_repository import SQLAlchemyRepository
-from ..entities.user_entity import UserEntity
+from ...entities.user_entity import UserEntity
 
 
 class UserRepository(SQLAlchemyRepository):

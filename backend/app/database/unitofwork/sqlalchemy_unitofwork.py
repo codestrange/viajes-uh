@@ -1,5 +1,5 @@
 from . import UnitOfWork
-from ..container import Container
+from ...container import Container
 
 
 class UnitOfWorkSQLAlchemy(UnitOfWork):
