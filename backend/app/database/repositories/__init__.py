@@ -14,7 +14,7 @@ class Query:
 
     def first(self):
         try:
-            return next(self.iterable)
+            return next(iter(self.iterable))
         except StopIteration:
             return None
 
