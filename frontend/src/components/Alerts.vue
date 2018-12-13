@@ -1,6 +1,6 @@
 <template>
     <div id="alerts-shower">
-        <b-alert show v-bind:variant="this.type">{{this.text}}</b-alert>
+        <b-alert show v-bind:variant="this.type" style="text-align: center;">{{this.text}}</b-alert>
     </div>
 </template>
 
