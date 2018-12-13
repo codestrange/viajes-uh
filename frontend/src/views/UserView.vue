@@ -23,15 +23,14 @@
         },
         methods: {
             loadUserData() {
-                this.$store.state.user.getUserData().then(user => {
-                    this.$store.state.loader.showLoading();
+                return this.$store.state.user.getUserData().then(user => {
                     this.user = user;
-                    this.$store.state.loader.stopShowing();
                 });
             },
         },
         mounted() {
-            this.loadUserData();
+            this.$store.state.loader.showLoading();
+            this.loadUserData().then( () => this.$store.state.loader.stopShowing() );
         },
     }
 </script>
