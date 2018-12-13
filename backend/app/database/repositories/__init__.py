@@ -14,7 +14,7 @@ class Query:
 
     def first(self):
         try:
-            return next(self.iterable)
+            return next(iter(self.iterable))
         except StopIteration:
             return None
 
@@ -52,21 +52,21 @@ class Query:
 
     @query_decorator
     def order(self):
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @query_decorator
     def group(self):
-        raise NotImplementedError()
+        raise NotImplementedError
 
 
 class Repository:
 
     def add(self, entity):
-        raise NotImplementedError()
+        raise NotImplementedError
 
     def delete(self, entity):
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @query_decorator
     def query(self):
-        raise NotImplementedError()
+        raise NotImplementedError
