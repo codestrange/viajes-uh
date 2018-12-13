@@ -54,7 +54,7 @@ export default {
                 value: 'application/json'
             }
         ]);
-        return Resources.get(Endpoints.token_endpoint).then(response => response.json(), response => console.log('Error retriving json'));
+        return Resources.get(Endpoints.token_endpoint).then(response => response.json(), response => console.log('Error getting the response.'));
     },
     authenticateUser(username, password) {
         return this.getAuthJson(username, password)
@@ -84,7 +84,7 @@ export default {
                     value: 'application/json'
                 }
             ]);
-        return Resources.get(Endpoints.single_user_data + this.user_data.id.toString() + '/').then(
+        return Resources.get(Endpoints.users_data + this.user_data.id.toString() + '/').then(
             response => response.json(), response => console.log('Error getting the response.'))
             .then(json => {
                 if(json.email !== null && json.username !== null) {
@@ -98,4 +98,28 @@ export default {
                 }
             })
     },
+    getUsersData() {
+        Resources.clearHeaders();
+        Resources.setHeaders(
+            [{
+                key: 'Authorization',
+                value: 'Basic ' + encode(this.user_data.token)
+            },
+                {
+                    key: 'Content-Type',
+                    value: 'application/json'
+                },
+                {
+                    key: 'Accept',
+                    value: 'application/json'
+                }
+            ]);
+        return Resources.get(Endpoints.users_data).then(response => response.json(), response => console.log('Error getting the response.'))
+            .then( json => {
+                if (json !== null) {
+                    return json;
+                }
+                console.log('Error getting JSON.');
+            })
+    }
 }
