@@ -3,7 +3,7 @@
     <b-navbar toggleable="md" type="dark" variant="primary">
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
         <b-navbar-brand href="#">UH Travels</b-navbar-brand>
-        <b-collapse is-nav id="nav_collapse">   
+        <b-collapse is-nav id="nav_collapse">
             <b-navbar-nav>
             <b-nav-item @click="changeTab('home')"><strong>Home</strong></b-nav-item>
             <b-nav-item @click="changeTab('travels')" v-if="isUserLogged()"><strong>Viajes</strong></b-nav-item>
@@ -31,6 +31,9 @@
             </b-navbar-nav>
         </b-collapse>
     </b-navbar>
+    <div id="alerts">
+        <alerts v-bind:text="this.$store.state.notify.note" v-bind:type="this.$store.state.notify.type" v-if="this.$store.state.notify.showing"/>
+    </div>
     <div id="loader">
         <loading v-if="this.$store.state.loader.showing"></loading>
     </div>
@@ -47,6 +50,7 @@ import AdminUser from '@/views/AdminUser.vue';
 import UserView from '@/views/UserView.vue';
 import Auth from '@/components/Auth.vue';
 import Loading from '@/components/Loading.vue';
+import Alerts from '@/components/Alerts.vue';
 
 export default {
     name: 'app',
@@ -57,6 +61,7 @@ export default {
         Auth,
         UserView,
         Loading,
+        Alerts,
     },
     data() {
         return {
@@ -69,12 +74,9 @@ export default {
             localStorage.setItem('uh-travel-active_view', this.activeView);
         },
         isUserLogged() {
-            //This should check if the user is logged with the controller
-            //by asking if the token is valid
             return this.$store.state.user.isLogued();
         },
         logoutUser() {
-            //This should logout the user and notify to the server
             this.$store.state.user.logOut();
             localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
             this.changeTab('home');

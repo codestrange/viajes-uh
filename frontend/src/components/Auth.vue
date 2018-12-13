@@ -33,7 +33,11 @@
                     .then(result => {
                         if(result === false) {
                             this.state_input = false;
-                            setTimeout(() => this.state_input = null, 1000);
+                            this.$store.state.notify.showError('Usuario o Contraseña Invalida!');
+                            setTimeout(() => {
+                                this.state_input = null;
+                                this.$store.state.notify.hideAlerts();
+                            }, 1000);
                         }
                     });
             }
