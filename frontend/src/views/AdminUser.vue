@@ -1,7 +1,7 @@
 <template>
     <div id="useradmin" v-if="!this.$store.state.loader.showing">
         <b-container fluid>
-            <b-row>
+            <b-row md="6" class="my-2">
                 <b-col md="6" class="my-1">
                     <b-form-group horizontal label="Filter" class="mb-0">
                         <b-input-group>
@@ -11,8 +11,6 @@
                             </b-input-group-append>
                         </b-input-group>
                     </b-form-group>
-                </b-col>
-                <b-col md="6" class="my-1">
                     <b-form-group horizontal label="Sort" class="mb-0">
                         <b-input-group>
                             <b-form-select v-model="sortBy" :options="sortOptions">
@@ -24,26 +22,12 @@
                             </b-form-select>
                         </b-input-group>
                     </b-form-group>
-                </b-col>
-                <b-col md="6" class="my-1">
-                    <b-form-group horizontal label="Sort direction" class="mb-0">
-                        <b-input-group>
-                            <b-form-select v-model="sortDirection" slot="append">
-                                <option value="asc">Asc</option>
-                                <option value="desc">Desc</option>
-                                <option value="last">Last</option>
-                            </b-form-select>
-                        </b-input-group>
-                    </b-form-group>
-                </b-col>
-                <b-col md="6" class="my-1">
                     <b-form-group horizontal label="Per page" class="mb-0">
                         <b-form-select :options="pageOptions" v-model="perPage" />
                     </b-form-group>
                 </b-col>
             </b-row>
 
-            <!-- Main table element -->
             <b-table show-empty
                      stacked="md"
                      :items="items"
