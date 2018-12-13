@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 import App from './App.vue';
 import BootstrapVue from 'bootstrap-vue';
 import UserController from './controllers/user';
+import PermissionController from './controllers/permissions';
+import RolesController from './controllers/roles';
 import Loader from './store/loading';
 import Notify from './store/notification';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -15,6 +17,8 @@ Vue.config.productionTip = false;
 const store = new Vuex.Store({
     state: {
         user: UserController,
+        roles: RolesController,
+        permissions: PermissionController,
         loader: Loader,
         notify: Notify,
     }

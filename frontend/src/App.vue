@@ -12,6 +12,8 @@
                     <strong>Administración</strong>
                 </template>
                 <b-dropdown-item @click="changeTab('admin-user')">Usuarios</b-dropdown-item>
+                <b-dropdown-item @click="changeTab('admin-role')">Roles</b-dropdown-item>
+                <b-dropdown-item @click="changeTab('admin-permission')">Permisos</b-dropdown-item>
             </b-nav-item-dropdown>
             </b-navbar-nav>
             <b-navbar-nav class="ml-auto">
@@ -46,7 +48,9 @@
 <script>
 import Home from '@/views/Home.vue';
 import Travels from '@/views/Travels.vue';
-import AdminUser from '@/views/AdminUser.vue';
+import AdminUser from '@/views/admin/AdminUser.vue';
+import AdminRole from '@/views/admin/AdminRole.vue';
+import AdminPermission from '@/views/admin/AdminPermission.vue';
 import UserView from '@/views/UserView.vue';
 import Auth from '@/components/Auth.vue';
 import Loading from '@/components/Loading.vue';
@@ -58,6 +62,8 @@ export default {
         Home,
         Travels,
         AdminUser,
+        AdminRole,
+        AdminPermission,
         Auth,
         UserView,
         Loading,

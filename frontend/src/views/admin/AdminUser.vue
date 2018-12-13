@@ -3,18 +3,18 @@
         <b-container fluid>
             <b-row md="6" class="my-2">
                 <b-col md="6" class="my-1">
-                    <b-form-group horizontal label="Filter" class="mb-0">
+                    <b-form-group horizontal label="Filtrar" class="mb-0">
                         <b-input-group>
-                            <b-form-input v-model="filter" placeholder="Type to Search" />
+                            <b-form-input v-model="filter" placeholder="Buscar" />
                             <b-input-group-append>
-                                <b-btn :disabled="!filter" @click="filter = ''">Clear</b-btn>
+                                <b-btn :disabled="!filter" @click="filter = ''">Limpiar</b-btn>
                             </b-input-group-append>
                         </b-input-group>
                     </b-form-group>
-                    <b-form-group horizontal label="Sort" class="mb-0">
+                    <b-form-group horizontal label="Ordenar por" class="mb-0">
                         <b-input-group>
                             <b-form-select v-model="sortBy" :options="sortOptions">
-                                <option slot="first" :value="null">-- none --</option>
+                                <option slot="first" :value="null">-- ninguno --</option>
                             </b-form-select>
                             <b-form-select :disabled="!sortBy" v-model="sortDesc" slot="append">
                                 <option :value="false">Asc</option>
@@ -22,7 +22,7 @@
                             </b-form-select>
                         </b-input-group>
                     </b-form-group>
-                    <b-form-group horizontal label="Per page" class="mb-0">
+                    <b-form-group horizontal label="Mostrar por Página" class="mb-0">
                         <b-form-select :options="pageOptions" v-model="perPage" />
                     </b-form-group>
                 </b-col>
