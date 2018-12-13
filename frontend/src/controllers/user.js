@@ -73,7 +73,7 @@ export default {
         Resources.setHeaders(
             [{
                 key: 'Authorization',
-                value: 'Basic ' + encode(this.user_data.token)
+                value: 'Basic ' + encode(this.user_data.token + ':')
                 },
                 {
                     key: 'Content-Type',
@@ -103,7 +103,7 @@ export default {
         Resources.setHeaders(
             [{
                 key: 'Authorization',
-                value: 'Basic ' + encode(this.user_data.token)
+                value: 'Basic ' + encode(this.user_data.token + ':')
             },
                 {
                     key: 'Content-Type',
