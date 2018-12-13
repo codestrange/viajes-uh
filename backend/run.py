@@ -2,8 +2,7 @@ from os import getenv
 from os.path import abspath, dirname, join
 from coverage import coverage
 
-# Coverage debe empezar antes de las importaciones
-# de los módulos de las aplicación
+# Coverage debe empezar antes de las importaciones de los módulos de las aplicación
 COV = coverage(branch=True, include='app/*')
 COV.start()
 

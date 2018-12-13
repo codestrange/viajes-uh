@@ -1,16 +1,8 @@
-from flask import current_app
-from . import Repository, query_decorator
+from .sqlalchemy_repository import SQLAlchemyRepository
 from ..entities.user_entity import UserEntity
 
 
-class UserRepository(Repository):
+class UserRepository(SQLAlchemyRepository):
 
-    def add(self, entity):
-        current_app.db.session.add(entity)
-
-    def delete(self, entity):
-        current_app.db.session.delete(entity)
-
-    @query_decorator
-    def query(self):
-        return current_app.db.session.query(UserEntity).all()
+    def entity(self):
+        return UserEntity

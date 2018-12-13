@@ -1,8 +1,8 @@
-from flask import current_app
 from . import UnitOfWork
+from ..container import Container
 
 
 class UnitOfWorkSQLAlchemy(UnitOfWork):
 
     def commit(self):
-        current_app.db.session.commit()
+        Container.instance().current_app.db.session.commit()
