@@ -96,7 +96,7 @@ export default {
                       fullname: 'No in DB',
                     };
                 }
-            })
+            });
     },
     getUsersData() {
         Resources.clearHeaders();
@@ -120,6 +120,6 @@ export default {
                     return json;
                 }
                 console.log('Error getting JSON.');
-            })
+            });
     }
 }

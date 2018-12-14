@@ -5,15 +5,15 @@ export default {
         return [
             {
                 id: 1,
-                label: 'perm1',
+                name: 'perm1',
             },
             {
                 id: 2,
-                label: 'perm2',
+                name: 'perm2',
             },
             {
                 id: 3,
-                label: 'perm3',
+                name: 'perm3',
             }
         ];
     }

@@ -22,7 +22,7 @@
                             </b-form-select>
                         </b-input-group>
                     </b-form-group>
-                    <b-form-group horizontal label="Mostrar por Página" class="mb-0">
+                    <b-form-group horizontal label="Cantidad por Página" class="mb-0">
                         <b-form-select :options="pageOptions" v-model="perPage" />
                     </b-form-group>
                 </b-col>

@@ -5,15 +5,15 @@ export default {
         return [
             {
                 id: 1,
-                label: 'role1',
+                name: 'role1',
             },
             {
                 id: 2,
-                label: 'role2',
+                name: 'role2',
             },
             {
                 id: 3,
-                label: 'role3',
+                name: 'role3',
             }
         ];
     }
