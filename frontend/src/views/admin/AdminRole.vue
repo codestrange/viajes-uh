@@ -1,5 +1,5 @@
 <template>
-    <div id="useradmin" v-if="!this.$store.state.loader.showing">
+    <div id="useradmin" v-if="!this.$store.state.loader.showing" >
         <b-container fluid>
             <b-row md="6" class="my-2">
                 <b-col md="6" class="my-1">
@@ -104,7 +104,16 @@
                 this.currentPage = 1
             },
             loadRoles() {
-                this.items = this.$store.state.roles.getRoles();
+                this.$store.state.loader.showLoading();
+                this.$store.state.roles.getRoles(this.$store.state.user.user_data.token).then( data => {
+                    if ( data === null) {
+                        this.items = [];
+                    }
+                    else {
+                        this.items = data;
+                    }
+                    this.$store.state.loader.stopShowing();
+                });
             }
         },
         mounted() {

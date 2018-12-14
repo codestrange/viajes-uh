@@ -104,7 +104,16 @@
                 this.currentPage = 1
             },
             loadPermissions() {
-                this.items = this.$store.state.permissions.getPermissions();
+                this.$store.state.loader.showLoading();
+                this.$store.state.permissions.getPermissions(this.$store.state.user.user_data.token).then( data => {
+                    if ( data === null) {
+                        this.items = [];
+                    }
+                    else {
+                        this.items = data;
+                    }
+                    this.$store.state.loader.stopShowing();
+                });
             }
         },
         mounted() {

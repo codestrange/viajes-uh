@@ -1,20 +1,24 @@
 import Resources from './resource';
+import {encode} from "../utils/base64";
+import Endpoints from "../endpoints/endpoints";
 
 export default {
-    getPermissions() {
-        return [
-            {
-                id: 1,
-                name: 'perm1',
+    getPermissions(authToken) {
+        Resources.clearHeaders();
+        Resources.setHeaders(
+            [{
+                key: 'Authorization',
+                value: 'Basic ' + encode(authToken + ':')
             },
-            {
-                id: 2,
-                name: 'perm2',
-            },
-            {
-                id: 3,
-                name: 'perm3',
-            }
-        ];
+                {
+                    key: 'Content-Type',
+                    value: 'application/json'
+                },
+                {
+                    key: 'Accept',
+                    value: 'application/json'
+                }
+            ]);
+        return Resources.get(Endpoints.permissions_data).then(response => response.json());
     }
 }
