@@ -4,11 +4,12 @@ from ..container import Container
 
 
 class UserEntity:
-    def __init__(self, username, email, password, id=None):
+    def __init__(self, username, email, password, id=None, roles=None):
         self.id = id
         self.username = username
         self.email = email
         self.password_hash = generate_password_hash(password)
+        self.roles = [] if roles is None else roles
 
     @property
     def password(self):

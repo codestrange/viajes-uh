@@ -8,6 +8,8 @@ COV.start()
 
 from .app import create_app
 from .app.entities.user_entity import UserEntity
+from .app.entities.role_entity import RoleEntity
+from .app.entities.permission_entity import PermissionEntity
 
 app = create_app(getenv('FLASK_CONFIG') or 'default')
 
@@ -31,4 +33,4 @@ def test():
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(app=app, UserEntity=UserEntity)
+    return dict(app=app, UserEntity=UserEntity, RoleEntity=RoleEntity, PermissionEntity=PermissionEntity)
