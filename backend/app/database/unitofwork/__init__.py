@@ -19,4 +19,4 @@ class UnitOfWork:
         return self.repositories.get(name)()
 
     def commit(self):
-        raise NotImplementedError()
+        raise NotImplementedError
