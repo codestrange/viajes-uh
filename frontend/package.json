@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "uh-travels",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bootstrap-vue": "^2.0.0-rc.11",
+    "router": "^1.3.3",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
@@ -15,6 +16,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.3",
     "@vue/cli-service": "^3.0.3",
+    "jquery": "^3.3.1",
     "style-loader": "^0.23.1",
     "vue-template-compiler": "^2.5.17"
   },

@@ -1,94 +1,104 @@
 <template>
-  <div id="app" class="page-container">
-    <md-app md-waterfall md-mode="flexible">
-      <md-app-toolbar class="md-large md-primary">
-        <div class="md-toolbar-row">
-          <div class="md-toolbar-section-start">
-            <md-button class="md-icon-button" @click="menuVisible = !menuVisible">
-              <md-icon>menu</md-icon>
-            </md-button>
-          </div>
-
-          <div class="md-toolbar-section-end">
-            <md-button class="md-icon-button">
-              <md-icon>more_vert</md-icon>
-            </md-button>
-          </div>
-        </div>
-
-        <div class="md-toolbar-row md-toolbar-offset">
-          <span class="md-display-1">My Title</span>
-        </div>
-      </md-app-toolbar>
-
-      <md-app-drawer :md-active.sync="menuVisible">
-        <md-toolbar class="md-transparent" md-elevation="0">Navigation</md-toolbar>
-
-        <md-list>
-          <md-list-item>
-            <md-icon>move_to_inbox</md-icon>
-            <span class="md-list-item-text">Inbox</span>
-          </md-list-item>
-
-          <md-list-item>
-            <md-icon>send</md-icon>
-            <span class="md-list-item-text">Sent Mail</span>
-          </md-list-item>
-
-          <md-list-item>
-            <md-icon>delete</md-icon>
-            <span class="md-list-item-text">Trash</span>
-          </md-list-item>
-
-          <md-list-item>
-            <md-icon>error</md-icon>
-            <span class="md-list-item-text">Spam</span>
-          </md-list-item>
-        </md-list>
-      </md-app-drawer>
-
-      <md-app-content>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-      </md-app-content>
-    </md-app>
-  </div>
+<div id="app">
+    <b-navbar toggleable="md" type="dark" variant="primary">
+        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+        <b-navbar-brand href="#">UH Travels</b-navbar-brand>
+        <b-collapse is-nav id="nav_collapse">
+            <b-navbar-nav>
+            <b-nav-item @click="changeTab('home')"><strong>Home</strong></b-nav-item>
+            <b-nav-item @click="changeTab('travels')" v-if="isUserLogged()"><strong>Viajes</strong></b-nav-item>
+            <b-nav-item-dropdown v-if="isUserLogged()">
+                <template slot="button-content">
+                    <strong>Administración</strong>
+                </template>
+                <b-dropdown-item @click="changeTab('admin-user')">Usuarios</b-dropdown-item>
+                <b-dropdown-item @click="changeTab('admin-role')">Roles</b-dropdown-item>
+                <b-dropdown-item @click="changeTab('admin-permission')">Permisos</b-dropdown-item>
+            </b-nav-item-dropdown>
+            </b-navbar-nav>
+            <b-navbar-nav class="ml-auto">
+                <b-nav-item-dropdown right v-if="isUserLogged()">
+                    <template slot="button-content">
+                    <strong>Mi Usuario</strong>
+                    </template>
+                    <b-dropdown-item @click="changeTab('user-view')">Perfil</b-dropdown-item>
+                    <b-dropdown-item @click="logoutUser()">Cerrar Sesión</b-dropdown-item>
+                </b-nav-item-dropdown>
+                <b-nav-item-dropdown right v-else>
+                    <template slot="button-content">
+                    <strong>Iniciar Sesión</strong>
+                    </template>
+                    <auth/>
+                </b-nav-item-dropdown>
+            </b-navbar-nav>
+        </b-collapse>
+    </b-navbar>
+    <div id="alerts">
+        <alerts v-bind:text="this.$store.state.notify.note" v-bind:type="this.$store.state.notify.type" v-if="this.$store.state.notify.showing"/>
+    </div>
+    <div id="loader">
+        <loading v-if="this.$store.state.loader.showing"></loading>
+    </div>
+    <div id="content" class="container-fluid">
+        <component :is="activeView"></component>
+    </div>
+</div>
 </template>
 
-
 <script>
+import Home from '@/views/Home.vue';
+import Travels from '@/views/Travels.vue';
+import AdminUser from '@/views/admin/AdminUser.vue';
+import AdminRole from '@/views/admin/AdminRole.vue';
+import AdminPermission from '@/views/admin/AdminPermission.vue';
+import UserView from '@/views/UserView.vue';
+import Auth from '@/components/Auth.vue';
+import Loading from '@/components/Loading.vue';
+import Alerts from '@/components/Alerts.vue';
+
 export default {
-  name: 'Flexible',
-  data: () => ({
-    menuVisible: false
-  })
+    name: 'app',
+    components: {
+        Home,
+        Travels,
+        AdminUser,
+        AdminRole,
+        AdminPermission,
+        Auth,
+        UserView,
+        Loading,
+        Alerts,
+    },
+    data() {
+        return {
+            activeView: 'home',
+        };
+    },
+    methods: {
+        changeTab(newTab) {
+            this.activeView = newTab;
+            localStorage.setItem('uh-travel-active_view', this.activeView);
+        },
+        isUserLogged() {
+            return this.$store.state.user.isLogued();
+        },
+        logoutUser() {
+            this.$store.state.user.logOut();
+            localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
+            this.changeTab('home');
+        },
+    },
+    mounted() {
+        if(localStorage.getItem('uh-travel-user_data') !== null) {
+            this.$store.state.user.reloadMinData(JSON.parse(localStorage.getItem('uh-travel-user_data')));
+        }
+        if(localStorage.getItem('uh-travel-active_view')) {
+            this.activeView = localStorage.getItem('uh-travel-active_view');
+        }
+    },
+    updated() {
+        localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
+        localStorage.setItem('uh-travel-active_view', this.activeView);
+    },
 }
 </script>
-
-<style lang="scss" scoped>
-  .md-app {
-    max-height: 400px;
-    border: 1px solid rgba(#000, .12);
-  }
-
-  .md-app-toolbar {
-    height: 196px;
-  }
-  .md-drawer {
-    width: 230px;
-    max-width: calc(100vw - 125px);
-  }
-</style>

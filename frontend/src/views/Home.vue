@@ -1,14 +1,11 @@
 <template>
-  <div class="home">
-    <h1>Bienvenidos a Viajes UH</h1>
-  </div>
+    <div id="home">
+        <h1>Bienvenidos a UH Travels</h1>
+    </div>
 </template>
 
 <script>
-// @ is an alias to /src
 export default {
-  name: 'home',
-  components: {
-  }
+    name:'Home',
 }
 </script>

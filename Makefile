@@ -35,43 +35,8 @@ backend_shell:
 	flask shell &&\
 	cd ..
 
-backend_ishell:
-	cd backend &&\
-	python run.py shell &&\
-	cd ..
-
 backend_test:
 	export FLASK_APP=run.py &&\
 	cd backend &&\
 	flask test &&\
-	cd ..
-
-backend_db_init:
-	export FLASK_APP=run.py &&\
-	cd backend &&\
-	flask db init &&\
-	cd ..
-
-backend_db_migrate:
-	export FLASK_APP=run.py &&\
-	cd backend &&\
-	flask db migrate &&\
-	cd ..
-
-backend_db_upgrade:
-	export FLASK_APP=run.py &&\
-	cd backend &&\
-	flask db upgrade &&\
-	cd ..
-
-backend_db_downgrade:
-	export FLASK_APP=run.py &&\
-	cd backend &&\
-	flask db downgrade &&\
-	cd ..
-
-backend_db_stamp:
-	export FLASK_APP=run.py &&\
-	cd backend &&\
-	flask db stamp &&\
 	cd ..
