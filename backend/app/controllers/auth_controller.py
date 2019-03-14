@@ -1,6 +1,6 @@
 from flask import jsonify, g
 from . import api
-from ..auth import auth
+from ..auth import auth, generate_auth_token
 
 
 @api.route('/token/')
@@ -8,5 +8,5 @@ from ..auth import auth
 def get_token():
     return jsonify({
         'id': g.current_user.id,
-        'token': g.current_user.generate_auth_token()
+        'token': generate_auth_token(g.current_user)
     })
