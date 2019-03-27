@@ -1,7 +1,8 @@
+const baseUrl = 'http://localhost:5000/api/';
+
 export default {
-    baseUrl: 'http://localhost:5000/api/',
-    token_endpoint: 'http://localhost:5000/api/token/',
-    users_data: 'http://localhost:5000/api/users/',
-    roles_data: 'http://localhost:5000/api/roles/',
-    permissions_data: 'http://localhost:5000/api/permissions/',
-}
+    baseUrl: baseUrl,
+    profile: baseUrl + 'profile',
+    register: baseUrl + 'register',
+    token: baseUrl + 'token'
+};

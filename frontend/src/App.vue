@@ -1,104 +1,37 @@
 <template>
-<div id="app">
-    <b-navbar toggleable="md" type="dark" variant="primary">
-        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-        <b-navbar-brand href="#">UH Travels</b-navbar-brand>
-        <b-collapse is-nav id="nav_collapse">
-            <b-navbar-nav>
-            <b-nav-item @click="changeTab('home')"><strong>Home</strong></b-nav-item>
-            <b-nav-item @click="changeTab('travels')" v-if="isUserLogged()"><strong>Viajes</strong></b-nav-item>
-            <b-nav-item-dropdown v-if="isUserLogged()">
-                <template slot="button-content">
-                    <strong>Administración</strong>
-                </template>
-                <b-dropdown-item @click="changeTab('admin-user')">Usuarios</b-dropdown-item>
-                <b-dropdown-item @click="changeTab('admin-role')">Roles</b-dropdown-item>
-                <b-dropdown-item @click="changeTab('admin-permission')">Permisos</b-dropdown-item>
-            </b-nav-item-dropdown>
-            </b-navbar-nav>
-            <b-navbar-nav class="ml-auto">
-                <b-nav-item-dropdown right v-if="isUserLogged()">
-                    <template slot="button-content">
-                    <strong>Mi Usuario</strong>
-                    </template>
-                    <b-dropdown-item @click="changeTab('user-view')">Perfil</b-dropdown-item>
-                    <b-dropdown-item @click="logoutUser()">Cerrar Sesión</b-dropdown-item>
-                </b-nav-item-dropdown>
-                <b-nav-item-dropdown right v-else>
-                    <template slot="button-content">
-                    <strong>Iniciar Sesión</strong>
-                    </template>
-                    <auth/>
-                </b-nav-item-dropdown>
-            </b-navbar-nav>
-        </b-collapse>
-    </b-navbar>
-    <div id="alerts">
-        <alerts v-bind:text="this.$store.state.notify.note" v-bind:type="this.$store.state.notify.type" v-if="this.$store.state.notify.showing"/>
+    <div id="app">
+        <router-view></router-view>
     </div>
-    <div id="loader">
-        <loading v-if="this.$store.state.loader.showing"></loading>
-    </div>
-    <div id="content" class="container-fluid">
-        <component :is="activeView"></component>
-    </div>
-</div>
 </template>
 
 <script>
-import Home from '@/views/Home.vue';
-import Travels from '@/views/Travels.vue';
-import AdminUser from '@/views/admin/AdminUser.vue';
-import AdminRole from '@/views/admin/AdminRole.vue';
-import AdminPermission from '@/views/admin/AdminPermission.vue';
-import UserView from '@/views/UserView.vue';
-import Auth from '@/components/Auth.vue';
-import Loading from '@/components/Loading.vue';
-import Alerts from '@/components/Alerts.vue';
-
-export default {
-    name: 'app',
-    components: {
-        Home,
-        Travels,
-        AdminUser,
-        AdminRole,
-        AdminPermission,
-        Auth,
-        UserView,
-        Loading,
-        Alerts,
-    },
-    data() {
-        return {
-            activeView: 'home',
-        };
-    },
-    methods: {
-        changeTab(newTab) {
-            this.activeView = newTab;
-            localStorage.setItem('uh-travel-active_view', this.activeView);
+    export default {
+        name: 'app',
+        data() {
+            return {
+            };
         },
-        isUserLogged() {
-            return this.$store.state.user.isLogued();
+        methods: {
+            
         },
-        logoutUser() {
-            this.$store.state.user.logOut();
-            localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
-            this.changeTab('home');
-        },
-    },
-    mounted() {
-        if(localStorage.getItem('uh-travel-user_data') !== null) {
-            this.$store.state.user.reloadMinData(JSON.parse(localStorage.getItem('uh-travel-user_data')));
+        mounted() {
+            // let jqueryjs = document.createElement('script');
+            // jqueryjs.setAttribute('src', './assets/vendor/jquery/jquery.min');
+            // document.body.appendChild(jqueryjs);
+            // let bootstrapjs = document.createElement('script');
+            // bootstrapjs.setAttribute('src', './assets/vendor/bootstrap/js/bootstrap.bundle.min');
+            // document.body.appendChild(bootstrapjs);
+            // let jqueryeasing = document.createElement('script');
+            // jqueryeasing.setAttribute('src', './assets/vendor/jquery-easing/jquery.easing.min');
+            // document.body.appendChild(jqueryeasing);
+            // let sbadminjs = document.createElement('script');
+            // sbadminjs.setAttribute('src', './assets/js/sb-admin-2.min');
+            // document.body.appendChild(sbadminjs);
         }
-        if(localStorage.getItem('uh-travel-active_view')) {
-            this.activeView = localStorage.getItem('uh-travel-active_view');
-        }
-    },
-    updated() {
-        localStorage.setItem('uh-travel-user_data', this.$store.state.user.getMinData());
-        localStorage.setItem('uh-travel-active_view', this.activeView);
-    },
-}
+    }
 </script>
+
+<style>
+    @import "assets/css/sb-admin-2.min.css";
+    @import "assets/vendor/fontawesome-free/css/all.min.css";
+</style>

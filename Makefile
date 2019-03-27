@@ -1,7 +1,45 @@
 backend_host = 0.0.0.0
 backend_port = 5000
-backend_env = development
-backend_debug = 1
+
+backend_run:
+	export FLASK_APP=run.py &&\
+	export FLASK_ENV=development &&\
+	export FLASK_DEBUG=1 &&\
+	cd backend &&\
+	flask run --host=${backend_host} --port=${backend_port}
+
+backend_run_pro:
+	export FLASK_APP=run.py &&\
+	export FLASK_ENV=production &&\
+	export FLASK_DEBUG=0
+	cd backend &&\
+	flask run --host=${backend_host} --port=${backend_port}
+
+backend_shell:
+	export FLASK_APP=run.py &&\
+	cd backend &&\
+	flask shell
+
+backend_install:
+	pipenv install
+
+backend_env_run:
+	pipenv shell
+
+backend_db_init:
+	export FLASK_APP=run.py &&\
+	cd backend &&\
+	flask db init
+
+backend_db_migrate:
+	export FLASK_APP=run.py &&\
+	cd backend &&\
+	flask db migrate
+
+backend_db_upgrade:
+	export FLASK_APP=run.py &&\
+	cd backend &&\
+	flask db upgrade
 
 frontend_run:
 	cd frontend &&\
@@ -10,21 +48,3 @@ frontend_run:
 frontend_install:
 	cd frontend &&\
 	sudo npm install
-
-backend_run:
-	export FLASK_APP=run.py &&\
-	export FLASK_ENV=${backend_env} &&\
-	export FLASK_DEBUG=1${backend_debug} &&\
-	cd backend &&\
-	flask run --host=${backend_host} --port=${backend_port}
-
-backend_install:
-	pipenv install
-
-backend_activate_env:
-	pipenv shell
-
-backend_shell:
-	export FLASK_APP=run.py &&\
-	cd backend &&\
-	flask shell
