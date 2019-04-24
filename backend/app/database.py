@@ -24,8 +24,8 @@ workflowstate_type_document = db.Table('workflowstate_type_document',
 class Area(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
-    users = db.relationship('User', backref='area')
-    workflow_states = db.relationship('WorkflowState', backref='area')
+    users = db.relationship('User', backref='area', lazy='dynamic')
+    workflow_states = db.relationship('WorkflowState', backref='area', lazy='dynamic')
     ancestor_id = db.Column(db.Integer, db.ForeignKey('area.id'))
 
     @property
@@ -49,7 +49,7 @@ class Country(db.Model):
     name = db.Column(db.String(64), unique=True, nullable=False)
     region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
-    travels = db.relationship('Travel', backref='country')
+    travels = db.relationship('Travel', backref='country', lazy='dynamic')
 
     def __repr__(self):
         return f'{self.name}'
@@ -70,7 +70,7 @@ class Document(db.Model):
 class Region(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
-    countries = db.relationship('Country', backref='region')
+    countries = db.relationship('Country', backref='region', lazy='dynamic')
 
     def __repr__(self):
         return f'{self.name}'
@@ -80,7 +80,8 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
     default = db.Column(db.Boolean, default=False, index=True)
-    users = db.relationship('User', secondary=user_role, backref='roles')
+    users = db.relationship('User', secondary=user_role, 
+                            backref=db.backref('roles', lazy='dynamic'), lazy='dynamic')
     workflow_states = db.relationship('WorkflowState', backref='role')
 
     def __repr__(self):
@@ -93,7 +94,7 @@ class Travel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
-    documents = db.relationship('Document', backref='travel')
+    documents = db.relationship('Document', backref='travel', lazy='dynamic')
 
     def __repr__(self):
         return f'{self.name}'
@@ -102,7 +103,7 @@ class Travel(db.Model):
 class TypeDocument(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
-    documents = db.relationship('Document', backref='type')
+    documents = db.relationship('Document', backref='type', lazy='dynamic')
 
     def __repr__(self):
         return f'{self.name}'
@@ -116,7 +117,7 @@ class User(db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     activated = db.Column(db.Boolean, default=True)
     area_id = db.Column(db.Integer, db.ForeignKey('area.id'))
-    travels = db.relationship('Travel', backref='user')
+    travels = db.relationship('Travel', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -147,11 +148,12 @@ class WorkflowState(db.Model):
     area_id = db.Column(db.Integer, db.ForeignKey('area.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     next_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
-    travels = db.relationship('Travel', backref='workflowstate')
-    countries = db.relationship('Country', backref='workflowstate')
+    travels = db.relationship('Travel', backref='workflowstate', lazy='dynamic')
+    countries = db.relationship('Country', backref='workflowstate', lazy='dynamic')
     requirements = db.relationship('TypeDocument',
                                    secondary=workflowstate_type_document,
-                                   backref='workflowstates')
+                                   backref=db.backref('workflowstates', lazy='dynamic'),
+                                   lazy='dynamic')
 
     @property
     def next(self):
