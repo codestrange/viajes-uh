@@ -2,7 +2,7 @@ from flask import jsonify, request, g
 from . import api
 from ..auth import auth, auth_simple, auth_token, generate_auth_token, \
     generate_confirmation_token, verify_confirmation_token
-from ..database import db, User
+from ..database import db, User,Travel
 from ..errors import bad_request
 from ..utils import check_json, json_load
 
@@ -48,6 +48,7 @@ def edit_profile():
 @api.route('/register', methods=['POST'])
 def post_register():
     json = json_load(request.json)
+    print(json)
     check_json(json, ['username', 'email', 'password'])
     user = User(username=json.username, email=json.email, password=json.password)
     if User.query.filter_by(username=user.username).first():
