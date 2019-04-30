@@ -1,0 +1,8 @@
+from flask import render_template, redirect, url_for, flash, request
+from flask_login import login_user, current_user
+from . import approvement
+from ...models import Travel
+
+@approvement.route('/travels', methods=['GET'])
+def approve_travels():
+    return render_template('approvement/approve_travels.html')
