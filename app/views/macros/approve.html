@@ -1,5 +1,7 @@
-{% macro travel_info %}
+{% macro travel_info(travel) %}
 <div class="card bg-dark text-white">
-    <div class="card-body">Dark card</div>
+    <div class="card-head">{{travel.name}}</div>
+    <div class="card-body">Viaje hacia {{travel.country}}</div>
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline-light m-3">Ver detalles</a>
 </div>
 {% endmacro %}
