@@ -1,0 +1,34 @@
+{% extends "navbar.html" %}
+{% block page_content %}
+<div class="text-center mb-4">
+    <h1>Registrar</h1>
+</div>
+<form method="POST" class="col-4 offset-4 mb-5">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.firstname.label }}:
+        {{ form.firstname(class="form-control", placeholder="Introduzca su nombre") }}
+    </div>
+    <div class="form-group">
+        {{ form.lastname.label }}:
+        {{ form.lastname(class="form-control", placeholder="Introduzca sus apellidos") }}
+    </div>
+    <div class="form-group">
+        {{ form.username.label }}:
+        {{ form.username(class="form-control", placeholder="Introduzca su usuario") }}
+    </div>
+    <div class="form-group">
+        {{ form.email.label }}:
+        {{ form.email(class="form-control", placeholder="Introduzca su correo electrónico") }}
+    </div>
+    <div class="form-group">
+        {{ form.password.label }}:
+        {{ form.password(class="form-control", placeholder="Introduzca su contraseña") }}
+    </div>
+    <div class="form-group">
+        {{ form.password2.label }}:
+        {{ form.password2(class="form-control", placeholder="Repita su contraseña") }}
+    </div>
+    {{ form.submit(class="btn btn-outline-dark btn-block") }}
+</form>
+{% endblock page_content %}

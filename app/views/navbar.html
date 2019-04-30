@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block body_content %}
+    {% block header %} {% endblock header %}
+    {% block navbar %}
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">Viajes UH</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>  
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.index') }}">Inicio</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav align-content-end">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdownUserInfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ current_user.username }} </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownUserInfo">
+                        <a class="dropdown-item" href="{{ url_for('main.create_travel') }}">Crear Viaje</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
+                    </div>
+                </li>
+                {% else %}
+                <a class="btn btn-outline-light" href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    {% endblock navbar %}
+    {% block content %}
+    <main role="main" class="container-fluid">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button> {{ message }}
+        </div>
+        {% endfor %}
+        {% block page_content %} {% endblock page_content %}
+    </main>
+    {% endblock content %}
+    {% block footer %} {% endblock footer %}
+{% endblock body_content %}
