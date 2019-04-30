@@ -4,16 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylint = "*"
 
 [packages]
 flask = "*"
 flask-admin = "*"
 flask-cors = "*"
-flask-httpauth = "*"
 flask-shell-ipython = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
+flask-login = "*"
+flask-wtf = "*"
 
 [requires]
 python_version = "3.6"

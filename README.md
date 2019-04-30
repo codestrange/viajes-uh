@@ -1,4 +1,4 @@
-# **UH Travels** - **Proyecto de Ingeniería de Software**
+# **Viajes UH** - **Proyecto de Ingeniería de Software**
 
 ## **Facultad de Matemática y Computación** - **Universidad de La Habana**
 
