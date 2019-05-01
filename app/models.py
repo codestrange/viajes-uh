@@ -90,8 +90,8 @@ class Country(db.Model):
 
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    path = db.Column(db.String(256), unique=True, nullable=False)
+    name = db.Column(db.String(64), nullable=False)
+    path = db.Column(db.String(256), unique=True, nullable=True)
     confirmed = db.Column(db.Boolean, default=False, index=True)
     type_id = db.Column(db.Integer, db.ForeignKey('type_document.id'))
     travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
@@ -136,7 +136,7 @@ class Travel(db.Model):
 class TypeDocument(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
-    documents = db.relationship('Document', backref='type', lazy='dynamic')
+    documents = db.relationship('Document', backref='type_document', lazy='dynamic')
 
     def __repr__(self):
         return f'{self.name}'
