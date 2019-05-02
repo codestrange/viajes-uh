@@ -2,16 +2,16 @@
 {% extends "navbar.html" %}
 {% block subtitle %} - Aprovación{% endblock subtitle %}
 {% block page_content %}
-<div class="page-header">
-    <div class="text-center">
-        <div class="col-6 offset-3">
-            <h1><strong>Administre Viajes</strong></h1>
+<div class="col-6 offset-3">
+    <div class="card bg-dark text-light mb-2">
+        <div class="card-header text-center">
+            <h2 class="m-0">Administrar Viajes</h2>
         </div>
-        {% for travel in travels %}
-            <div class="col-6 offset-3 mb-2">
-                {{ travel_info(travel) }}
-            </div>    
-        {% endfor %}
     </div>
+    {% for travel in travels %}
+        <div class="mb-2">
+            {{ travel_info(travel) }}
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}
