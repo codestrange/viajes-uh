@@ -47,6 +47,17 @@ class Area(db.Model):
     @property
     def descendants(self):
         return Area.query.filter(Area.ancestor_id == self.id).all()
+    
+    @staticmethod
+    def insert():
+        areas = []
+        areas.append(Area(name='General'))
+        areas.append(Area(name='MatCom', ancestor=areas[-1]))
+        areas.append(Area(name='Cibernetica', ancestor=areas[-1]))
+        areas.append(Area(name='Matematica', ancestor=areas[-2]))
+        for item in areas:
+            db.session.add(item)
+        db.session.commit()
 
     def __repr__(self):
         return f'{self.name}'
@@ -90,11 +101,25 @@ class Country(db.Model):
 
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    path = db.Column(db.String(256), unique=True, nullable=False)
+    name = db.Column(db.String(64), nullable=False)
+    path = db.Column(db.String(256), unique=True, nullable=True)
     confirmed = db.Column(db.Boolean, default=False, index=True)
     type_id = db.Column(db.Integer, db.ForeignKey('type_document.id'))
     travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
+
+    @staticmethod
+    def insert():
+        type1 = TypeDocument.query.get(1)
+        type2 = TypeDocument.query.get(2)
+        document1 = Document(name='Documento 1', type_document=type1, travel=Travel.query.get(1))
+        document2 = Document(name='Documento 2', type_document=type2, travel=Travel.query.get(1))
+        document3 = Document(name='Documento 3', type_document=type1, travel=Travel.query.get(2))
+        document4 = Document(name='Documento 4', type_document=type2, travel=Travel.query.get(2))
+        db.session.add(document1)
+        db.session.add(document2)
+        db.session.add(document3)
+        db.session.add(document4)
+        db.session.commit()
 
     def __repr__(self):
         return f'{self.name}'
@@ -117,6 +142,34 @@ class Role(db.Model):
                             backref=db.backref('roles', lazy='dynamic'), lazy='dynamic')
     workflow_states = db.relationship('WorkflowState', backref='role')
 
+    @staticmethod
+    def insert():
+        roles = []
+        viajero = Role(name='Viajero', default=True)
+        estudiante = Role(name='Estudiante')
+        profesor = Role(name='Profesor')
+        decano = Role(name='Decano')
+        especialista = Role(name='Especialista')
+        db.session.add(viajero)
+        db.session.add(estudiante)
+        db.session.add(profesor)
+        db.session.add(decano)
+        db.session.add(especialista)
+        db.session.commit()
+        leynier = User.query.get(1)
+        carlos = User.query.get(2)
+        martinez = User.query.get(3)
+        roberto = User.query.get(4)
+        leynier.roles.append(estudiante)
+        carlos.roles.append(profesor)
+        martinez.roles.append(especialista)
+        roberto.roles.append(decano)
+        db.session.add(leynier)
+        db.session.add(carlos)
+        db.session.add(martinez)
+        db.session.add(roberto)
+        db.session.commit()
+
     def __repr__(self):
         return f'{self.name}'
 
@@ -129,6 +182,20 @@ class Travel(db.Model):
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
 
+    @staticmethod
+    def insert():
+        travel1 = Travel(name='Viaje uno')
+        travel1.user = User.query.get(1)
+        travel1.country = Country.query.get(41)
+        travel1.workflow_state = WorkflowState.query.get(2)
+        travel2 = Travel(name='Viaje dos')
+        travel2.user = User.query.get(2)
+        travel2.country = Country.query.get(25)
+        travel2.workflow_state = WorkflowState.query.get(2)
+        db.session.add(travel1)
+        db.session.add(travel2)
+        db.session.commit()
+
     def __repr__(self):
         return f'{self.name}'
 
@@ -136,7 +203,18 @@ class Travel(db.Model):
 class TypeDocument(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
-    documents = db.relationship('Document', backref='type', lazy='dynamic')
+    documents = db.relationship('Document', backref='type_document', lazy='dynamic')
+
+    @staticmethod
+    def insert():
+        types = []
+        types.append(TypeDocument(name='Visa'))
+        types.append(TypeDocument(name='Pasaporte'))
+        types.append(TypeDocument(name='Carta de Invitación'))
+        types.append(TypeDocument(name='Otros'))
+        for item in types:
+            db.session.add(item)
+        db.session.commit()
 
     def __repr__(self):
         return f'{self.name}'
@@ -183,6 +261,27 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return False
 
+    @staticmethod
+    def insert():
+        leynier = User(username='l.gutierrez', email='l.gutierrez@gmail.com', password='1234')
+        carlos = User(username='c.bermudez', email='c.bermudez@gmail.com', password='1234')
+        martinez = User(username='c.martinez', email='c.martinez@gmail.com', password='1234')
+        roberto = User(username='r.marti', email='r.marti@gmail.com', password='1234')
+        leynier.confirmed = carlos.confirmed = martinez.confirmed = roberto.confirmed = True
+        general = Area.query.get(1)
+        matcom = Area.query.get(2)
+        computacion = Area.query.get(3)
+        matematica = Area.query.get(4)
+        leynier.area = computacion
+        carlos.area = matematica
+        martinez.area = general
+        roberto.area = matcom
+        db.session.add(leynier)
+        db.session.add(carlos)
+        db.session.add(martinez)
+        db.session.add(roberto)
+        db.session.commit()
+
     def have_decissions(self):
         return True
 
@@ -214,6 +313,21 @@ class WorkflowState(db.Model):
     @property
     def previous(self):
         return WorkflowState.query.filter(WorkflowState.next_id == self.id).all()
+
+    @staticmethod
+    def insert():
+        item0 = WorkflowState(name='Paso Dos')
+        item0.role = Role.query.filter_by(name='Especialista').first()
+        item0.requirements.append(TypeDocument.query.get(1))
+        item1 = WorkflowState(name='Paso Uno')
+        item1.role = Role.query.filter_by(name='Decano').first()
+        item1.requirements.append(TypeDocument.query.get(2))
+        item1.next = item0
+        item1.countries.append(Country.query.get(41))
+        item1.countries.append(Country.query.get(25))
+        db.session.add(item0)
+        db.session.add(item1)
+        db.session.commit()
 
     def __repr__(self):
         return f'{self.name}'

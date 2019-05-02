@@ -1,8 +1,9 @@
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, current_user
 from . import main
-from .forms import CreateTravelForm
-from ...models import db, Country, Travel
+from .forms import CreateTravelForm, UploadDocumentForm
+from ...models import db, Country, Travel, TypeDocument
+from ...utils import save_document
 
 
 @main.route('/')
@@ -27,3 +28,22 @@ def create_travel():
         flash('Su viaje ha sido creado correctamente.')
         return redirect(request.args.get('next') or url_for('main.index'))
     return render_template('create_travel.html', form=form)
+
+
+@main.route('/upload_document', methods=['GET', 'POST'])
+@login_required
+def upload_document():
+    form = UploadDocumentForm()
+    form.travel.choices = [
+        (str(travel.id), travel.name)
+        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
+    ]
+    form.type_document.choices = [
+        (str(type_document.id), type_document.name)
+        for type_document in TypeDocument.query.all()
+    ]
+    if form.validate_on_submit():
+        save_document(form.name.data, form.file_document.data, form.travel.data,
+                      form.type_document.data)
+        return redirect(request.args.get('next') or url_for('main.index'))
+    return render_template('upload_document.html', form=form)

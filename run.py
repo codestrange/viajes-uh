@@ -15,10 +15,17 @@ def make_shell_context():
 
 @app.cli.command()
 def init():
-    insert(Country, 'countries')
+    insert(Area)
+    insert(Country)
+    insert(TypeDocument)
+    insert(User)
+    insert(Role)
+    insert(WorkflowState)
+    insert(Travel)
+    insert(Document)
 
 
-def insert(model, name):
-    print(f'Inserting {name} ...')
+def insert(model):
+    print(f'Inserting table {model.__tablename__} ...')
     model.insert()
-    print(f'Inserted {name} - OK')
+    print(f'Table {model.__tablename__} inserted - OK')

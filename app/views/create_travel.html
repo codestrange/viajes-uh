@@ -1,20 +1,25 @@
 {% extends "navbar.html" %}
-{{ form.name.label }}
-{% block subtitle %} - Home{% endblock subtitle %}
+{% block subtitle %} - Crear Viaje{% endblock subtitle %}
 {% block page_content %}
-<div class="text-center mb-4">
-    <h1>Crear Viaje</h1>
+<div class="col-4 offset-4">
+    <div class="card mb-5 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Crear Viaje</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.name.label }}:
+                    {{ form.name(class="form-control", placeholder="Introduzca el nombre del viaje") }}
+                </div>
+                <div class="form-group">
+                    {{ form.country.label }}:
+                    {{ form.country(class="form-control", placeholder="Seleccione el país") }}
+                </div>
+                {{ form.submit(class="btn btn-outline-light btn-block") }}
+            </form>
+        </div>
+    </div>
 </div>
-<form method="POST" class="col-4 offset-4">
-    {{ form.csrf_token }}
-    <div class="form-group">
-        {{ form.name.label }}:
-        {{ form.name(class="form-control", placeholder="Introduzca el nombre del viaje") }}
-    </div>
-    <div class="form-group">
-        {{ form.country.label }}:
-        {{ form.country(class="form-control", placeholder="Seleccione el país") }}
-    </div>
-    {{ form.submit(class="btn btn-outline-dark btn-block") }}
-</form>
-{% endblock %}
+{% endblock page_content %}
