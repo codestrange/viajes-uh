@@ -1,0 +1,21 @@
+{% extends "navbar.html" %}
+{% block page_content %}
+<div class="text-center mb-4">
+    <h1>Perfil</h1>
+</div>
+<form method="POST" class="col-4 offset-4">
+    {{ form.csrf_token }}
+    <div class="alert alert-secondary" role="alert">Nombre</div>
+    <div class="alert alert-success" role="alert">{{ form.firstname }}</div>
+
+    <div class="alert alert-secondary" role="alert">Apellidos</div>
+    <div class="alert alert-success" role="alert">{{ form.lastname }}</div>
+
+    <div class="alert alert-secondary" role="alert">Nombre de Usuario</div>
+    <div class="alert alert-success" role="alert">{{ form.username }}</div>
+
+    <div class="alert alert-secondary" role="alert">Email</div>
+    <div class="alert alert-success" role="alert">{{ form.email }}</div>
+</form>
+
+{% endblock page_content %}

@@ -46,9 +46,7 @@ def logout():
 @login_required
 def editprofile():
     form = EditProfileForm()
-    print('edit:')
     if form.validate_on_submit():
-        print('yes')
         user = current_user
         user.firstname = form.firstname.data
         user.lastname = form.lastname.data
@@ -58,3 +56,9 @@ def editprofile():
         flash('Perfil actualizado.')
         return redirect(url_for('main.index'))
     return render_template('auth/editprofile.html',form=form)
+
+@auth.route('/seeprofile', methods=['GET'])
+@login_required
+def seeprofile():
+    user = current_user
+    return render_template('auth/seeprofile.html',form=user)
