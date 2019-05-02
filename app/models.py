@@ -281,10 +281,10 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def insert():
-        leynier = User(username='l.gutierrez', email='l.gutierrez@gmail.com', password='1234')
-        carlos = User(username='c.bermudez', email='c.bermudez@gmail.com', password='1234')
-        martinez = User(username='c.martinez', email='c.martinez@gmail.com', password='1234')
-        roberto = User(username='r.marti', email='r.marti@gmail.com', password='1234')
+        leynier = User(username='l.gutierrez', email='l.gutierrez@estudiantes.matcom.uh.cu', password='1234')
+        carlos = User(username='c.bermudez', email='c.bermudez@estudiantes.matcom.uh.cu', password='1234')
+        martinez = User(username='c.martinez', email='c.martinez@estudiantes.matcom.uh.cu', password='1234')
+        roberto = User(username='r.marti', email='r.marti@estudiantes.matcom.uh.cu', password='1234')
         leynier.confirmed = carlos.confirmed = martinez.confirmed = roberto.confirmed = True
         general = Area.query.get(1)
         matcom = Area.query.get(2)

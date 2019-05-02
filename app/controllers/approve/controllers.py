@@ -4,7 +4,7 @@ from . import approve
 from ...models import Travel
 
 
-@approve.route('/travels', methods=['GET'])
+@approve.route('/travels')
 @login_required
 def approve_travels():
     return render_template('approve/approve_travels.html', travels=current_user.decisions())
