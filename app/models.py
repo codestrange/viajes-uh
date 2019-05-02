@@ -36,13 +36,17 @@ class Area(db.Model):
     workflow_states = db.relationship('WorkflowState', backref='area', lazy='dynamic')
     ancestor_id = db.Column(db.Integer, db.ForeignKey('area.id'))
 
+    def __init__(self, name, ancestor=None):
+        self.name = name
+        self.ancestor = ancestor
+
     @property
     def ancestor(self):
-        return Area.query.get(self.ancestor_id)
+        return Area.query.get(self.ancestor_id) if self.ancestor_id is not None else None
 
     @ancestor.setter
     def ancestor(self, ancestor):
-        self.ancestor_id = ancestor.id
+        self.ancestor_id = ancestor.id if ancestor is not None else None
 
     @property
     def descendants(self):
@@ -52,12 +56,28 @@ class Area(db.Model):
     def insert():
         areas = []
         areas.append(Area(name='General'))
-        areas.append(Area(name='MatCom', ancestor=areas[-1]))
-        areas.append(Area(name='Cibernetica', ancestor=areas[-1]))
-        areas.append(Area(name='Matematica', ancestor=areas[-2]))
-        for item in areas:
-            db.session.add(item)
+        db.session.add(areas[-1])
         db.session.commit()
+        areas.append(Area(name='MatCom', ancestor=areas[-1]))
+        db.session.add(areas[-1])
+        db.session.commit()
+        areas.append(Area(name='Cibernetica', ancestor=areas[-1]))
+        db.session.add(areas[-1])
+        db.session.commit()
+        areas.append(Area(name='Matematica', ancestor=areas[-2]))
+        db.session.add(areas[-1])
+        db.session.commit()
+
+
+    def contains(self, area):
+        print(self.id, area.id)
+        if self.id == area.id:
+            return True
+        sons = Area.query.filter_by(ancestor_id = self.id).all()
+        for son in sons:
+            if son.id == area.id or son.contains(area):
+                return True
+        return False
 
     def __repr__(self):
         return f'{self.name}'
@@ -284,10 +304,12 @@ class User(UserMixin, db.Model):
 
     def deccissions(self):
         travels_to_decide = []
-        for role in current_user.roles:
+        for role in self.roles:
             for ws in WorkflowState.query.filter_by(role_id=role.id).all():
                 for travel in Travel.query.filter_by(workflow_state_id=ws.id).all():
-                    travels_to_decide.append(travel)
+                    user = User.query.get(travel.user_id)
+                    if Area.query.get(self.area_id).contains(Area.query.get(user.area_id)):
+                        travels_to_decide.append(travel)
         return travels_to_decide
 
     def have_decissions(self):
