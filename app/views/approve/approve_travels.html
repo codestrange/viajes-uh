@@ -1,0 +1,17 @@
+{% from "macros/approve.html" import travel_info with context %}
+{% extends "navbar.html" %}
+{% block subtitle %} - Aprovación{% endblock subtitle %}
+{% block page_content %}
+<div class="page-header">
+    <div class="text-center">
+        <div class="col-6 offset-3">
+            <h1><strong>Administre Viajes</strong></h1>
+        </div>
+        {% for travel in travels %}
+            <div class="col-6 offset-3 mb-2">
+                {{ travel_info(travel) }}
+            </div>    
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

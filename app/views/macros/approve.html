@@ -1,0 +1,11 @@
+{% macro travel_info(travel) %}
+<div class="card bg-dark text-white">
+    <div class="card-header text-center">
+        <h3 class="m-0">{{ travel.name }}</h3>
+    </div>
+    <div class="card-body">Viaje hacia {{ travel.country }}</div>
+    <div class="card-footer">
+        <a href="{{ url_for('approve.edit_travel_state', id=travel.id) }}" class="btn btn-outline-light btn-block">Ver detalles</a>
+    </div>
+</div>
+{% endmacro %}
