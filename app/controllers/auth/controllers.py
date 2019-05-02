@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, EditProfileForm
 from ...models import db, User
 
 
@@ -40,3 +40,21 @@ def logout():
     logout_user()
     flash('Usted ha sido desconectado.')
     return redirect(request.args.get('next') or url_for('main.index'))
+
+
+@auth.route('/editprofile', methods=['GET', 'POST'])
+@login_required
+def editprofile():
+    form = EditProfileForm()
+    print('edit:')
+    if form.validate_on_submit():
+        print('yes')
+        user = current_user
+        user.firstname = form.firstname.data
+        user.lastname = form.lastname.data
+        user.confirmed = True
+        db.session.add(user)
+        db.session.commit()
+        flash('Perfil actualizado.')
+        return redirect(url_for('main.index'))
+    return render_template('auth/editprofile.html',form=form)

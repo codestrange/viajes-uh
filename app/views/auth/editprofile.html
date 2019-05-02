@@ -1,0 +1,22 @@
+{% extends "navbar.html" %}
+{% block page_content %}
+<div class="text-center mb-4">
+    <h1>Editar</h1>
+</div>
+<form method="POST" class="col-4 offset-4">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.firstname.label }}:
+        {{ form.firstname(class="form-control", placeholder="Introduzca su nombre") }}
+    </div>
+    <div class="form-group">
+        {{ form.lastname.label }}:
+        {{ form.lastname(class="form-control", placeholder="Introduzca sus apellidos") }}
+    </div>
+    <div class="form-group">
+        {{ form.sexo.label }}:
+        {{ form.sexo(class="form-control", placeholder="Sexo") }}
+    </div>
+    {{ form.submit(class="btn btn-outline-dark btn-block") }}
+</form>
+{% endblock page_content %}

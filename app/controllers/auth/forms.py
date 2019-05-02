@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, SelectField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 from ...models import User
 
@@ -33,3 +33,10 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('El nombre de usuario ya está en uso.')
+
+
+class EditProfileForm(FlaskForm):
+    sexo = SelectField('Sexo',choices=[('m','masculino'),('f','femenino')])
+    firstname = StringField('Nombre')
+    lastname = StringField('Apellidos')
+    submit = SubmitField('Guardar')
