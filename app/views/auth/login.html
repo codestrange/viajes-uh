@@ -1,26 +1,32 @@
 {% extends "navbar.html" %}
+{% block subtitle %} - Iniciar Sesión{% endblock subtitle %}
 {% block page_content %}
-<div class="text-center mb-4">
-    <h1>Iniciar Sesión</h1>
-</div>
-<form method="POST" class="col-4 offset-4">
-    {{ form.csrf_token }}
-    <div class="form-group">
-        {{ form.email.label }}:
-        {{ form.email(class="form-control", placeholder="Introduzca su correo electrónico") }}
+<div class="col-4 offset-4">
+    <div class="card mb-5 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Iniciar Sesión</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.email.label }}:
+                    {{ form.email(class="form-control", placeholder="Introduzca su correo electrónico") }}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label }}:
+                    {{ form.password(class="form-control", placeholder="Introduzca su contraseña") }}
+                </div>
+                <div class="form-group form-check">
+                    {{ form.remember_me(class="form-check-input") }}
+                    {{ form.remember_me.label(class="form-check-label ml-2") }}
+                </div>
+                {{ form.submit(class="btn btn-outline-light btn-block") }}
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <a class="text-light" href="{{ url_for('auth.register') }}">Registrarse</a>
+        </div>
     </div>
-    <div class="form-group">
-        {{ form.password.label }}:
-        {{ form.password(class="form-control", placeholder="Introduzca su contraseña") }}
-    </div>
-    <div class="form-group form-check">
-        {{ form.remember_me(class="form-check-input") }}
-        <!-- <label class="form-check-label ml-2" for="inputRemember">Recuerdame</label> -->
-        {{ form.remember_me.label(class="form-check-label ml-2") }}
-    </div>
-    {{ form.submit(class="btn btn-outline-dark btn-block") }}
-</form>
-<div class="text-center m-3 mb-5">
-    <a class="text-dark" href="{{ url_for('auth.register') }}">Registrarse</a>
 </div>
 {% endblock page_content %}
