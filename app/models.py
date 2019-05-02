@@ -70,7 +70,6 @@ class Area(db.Model):
 
 
     def contains(self, area):
-        print(self.id, area.id)
         if self.id == area.id:
             return True
         sons = Area.query.filter_by(ancestor_id = self.id).all()
@@ -302,7 +301,7 @@ class User(UserMixin, db.Model):
         db.session.add(roberto)
         db.session.commit()
 
-    def deccissions(self):
+    def decisions(self):
         travels_to_decide = []
         for role in self.roles:
             for ws in WorkflowState.query.filter_by(role_id=role.id).all():
@@ -312,8 +311,8 @@ class User(UserMixin, db.Model):
                         travels_to_decide.append(travel)
         return travels_to_decide
 
-    def have_decissions(self):
-        return len(self.deccissions()) > 0
+    def have_decisions(self):
+        return len(self.decisions()) > 0
 
     def __repr__(self):
         return f'{self.username}'
