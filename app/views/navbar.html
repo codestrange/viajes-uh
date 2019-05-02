@@ -14,7 +14,7 @@
                 </li>
                 {% if current_user.is_authenticated and current_user.have_decissions() %}
                 <li class="nav-item">
-                    <a href="{{ url_for('approvement.approve_travels') }}" class="nav-link">Administrar Viajes</a>
+                    <a href="{{ url_for('approve.approve_travels') }}" class="nav-link">Administrar Viajes</a>
                 </li>
                 {% endif %}
             </ul>
