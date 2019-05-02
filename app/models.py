@@ -183,6 +183,9 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return False
 
+    def have_decissions(self):
+        return True
+
     def __repr__(self):
         return f'{self.username}'
 

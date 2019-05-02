@@ -12,6 +12,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('main.index') }}">Inicio</a>
                 </li>
+                {% if current_user.is_authenticated and current_user.have_decissions() %}
+                <li class="nav-item">
+                    <a href="{{ url_for('approvement.approve_travels') }}" class="nav-link">Administrar Viajes</a>
+                </li>
+                {% endif %}
             </ul>
             <ul class="navbar-nav align-content-end">
                 {% if current_user.is_authenticated %}
