@@ -1,6 +1,6 @@
 from json import load
 from os.path import abspath, dirname, join
-from flask_login import LoginManager, AnonymousUserMixin, UserMixin
+from flask_login import LoginManager, AnonymousUserMixin, UserMixin, current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -282,8 +282,16 @@ class User(UserMixin, db.Model):
         db.session.add(roberto)
         db.session.commit()
 
+    def deccissions(self):
+        travels_to_decide = []
+        for role in current_user.roles:
+            for ws in WorkflowState.query.filter_by(role_id=role.id).all():
+                for travel in Travel.query.filter_by(workflow_state_id=ws.id).all():
+                    travels_to_decide.append(travel)
+        return travels_to_decide
+
     def have_decissions(self):
-        return True
+        return len(self.deccissions()) > 0
 
     def __repr__(self):
         return f'{self.username}'

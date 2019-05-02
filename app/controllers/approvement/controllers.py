@@ -6,18 +6,4 @@ from ...models import Travel
 @approvement.route('/travels', methods=['GET'])
 @login_required
 def approve_travels():
-    travels = [
-        {
-            'name': 'Mi viaje 1',
-            'country': 'Cuba'
-        },
-        {
-            'name': 'Mi viaje 2',
-            'country': 'Canada'
-        },
-        {
-            'name': 'Mi viaje 2',
-            'country': 'Mexico'
-        }
-    ]
-    return render_template('approvement/approve_travels.html', travels=travels)
+    return render_template('approvement/approve_travels.html', travels=current_user.deccissions())

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 335e45742e27
+Revision ID: 1beffd3173f1
 Revises: 
-Create Date: 2019-04-30 12:10:51.872258
+Create Date: 2019-05-02 08:37:18.729762
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '335e45742e27'
+revision = '1beffd3173f1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -114,14 +114,13 @@ def upgrade():
     op.create_table('document',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=False),
-    sa.Column('path', sa.String(length=256), nullable=False),
+    sa.Column('path', sa.String(length=256), nullable=True),
     sa.Column('confirmed', sa.Boolean(), nullable=True),
     sa.Column('type_id', sa.Integer(), nullable=True),
     sa.Column('travel_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['travel_id'], ['travel.id'], ),
     sa.ForeignKeyConstraint(['type_id'], ['type_document.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name'),
     sa.UniqueConstraint('path')
     )
     op.create_index(op.f('ix_document_confirmed'), 'document', ['confirmed'], unique=False)
