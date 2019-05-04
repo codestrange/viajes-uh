@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from .admin import admin, ModelView, UserModelView
 from .config import config
-from .models import Area, Country, Document, Region, Role, Travel, TypeDocument, User, \
+from .models import Area, Concept, Country, Document, Region, Role, Travel, TypeDocument, User, \
     WorkflowState, db, login_manager
 
 migrate = Migrate()
@@ -21,6 +21,7 @@ def create_app(config_name):
     migrate.init_app(app, db)
 
     admin.add_view(ModelView(Area, db.session))
+    admin.add_view(ModelView(Concept, db.session))
     admin.add_view(ModelView(Country, db.session))
     admin.add_view(ModelView(Document, db.session))
     admin.add_view(ModelView(Region, db.session))

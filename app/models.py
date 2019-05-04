@@ -1,3 +1,4 @@
+from datetime import datetime
 from json import load
 from os.path import abspath, dirname, join
 from flask_login import LoginManager, AnonymousUserMixin, UserMixin, current_user
@@ -76,6 +77,24 @@ class Area(db.Model):
             if son.id == area.id or son.contains(area):
                 return True
         return False
+
+    def __repr__(self):
+        return f'{self.name}'
+
+
+class Concept(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    travels = db.relationship('Travel', backref='concept', lazy='dynamic')
+
+    @staticmethod
+    def insert():
+        basedir = abspath(dirname(__file__))
+        json = load(open(join(basedir, 'static/concepts.json')))
+        for item in json:
+            concept = Concept(name=item)
+            db.session.add(concept)
+        db.session.commit()
 
     def __repr__(self):
         return f'{self.name}'
@@ -195,7 +214,10 @@ class Role(db.Model):
 class Travel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
+    departure_date = db.Column(db.Date, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    concept_id = db.Column(db.Integer, db.ForeignKey('concept.id'))
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
@@ -206,10 +228,16 @@ class Travel(db.Model):
         travel1.user = User.query.get(1)
         travel1.country = Country.query.get(41)
         travel1.workflow_state = WorkflowState.query.get(2)
+        travel1.concept = Concept.query.get(3)
+        travel1.departure_date = datetime.now()
+        travel1.duration = 3
         travel2 = Travel(name='Viaje dos')
         travel2.user = User.query.get(2)
         travel2.country = Country.query.get(25)
         travel2.workflow_state = WorkflowState.query.get(2)
+        travel2.concept = Concept.query.get(5)
+        travel2.departure_date = datetime.now()
+        travel2.duration = 6
         db.session.add(travel1)
         db.session.add(travel2)
         db.session.commit()

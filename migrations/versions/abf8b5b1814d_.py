@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 0460c8ffb905
+Revision ID: abf8b5b1814d
 Revises: 
-Create Date: 2019-05-02 19:27:58.014127
+Create Date: 2019-05-04 17:43:48.157782
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0460c8ffb905'
+revision = 'abf8b5b1814d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,6 +23,12 @@ def upgrade():
     sa.Column('name', sa.String(length=64), nullable=False),
     sa.Column('ancestor_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['ancestor_id'], ['area.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
+    op.create_table('concept',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
@@ -102,9 +108,13 @@ def upgrade():
     op.create_table('travel',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=False),
+    sa.Column('departure_date', sa.Date(), nullable=False),
+    sa.Column('duration', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('concept_id', sa.Integer(), nullable=True),
     sa.Column('country_id', sa.Integer(), nullable=True),
     sa.Column('workflow_state_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['concept_id'], ['concept.id'], ),
     sa.ForeignKeyConstraint(['country_id'], ['country.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.ForeignKeyConstraint(['workflow_state_id'], ['workflow_state.id'], ),
@@ -143,5 +153,6 @@ def downgrade():
     op.drop_index(op.f('ix_role_default'), table_name='role')
     op.drop_table('role')
     op.drop_table('region')
+    op.drop_table('concept')
     op.drop_table('area')
     # ### end Alembic commands ###
