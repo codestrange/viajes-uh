@@ -1,7 +1,7 @@
 {% extends "navbar.html" %}
 {% block subtitle %} - Registrar{% endblock subtitle %}
 {% block page_content %}
-<div class="col-4 offset-4">
+<div class="col-8 offset-2">
     <div class="card mb-5 text-white bg-dark">
         <div class="card-header text-center">
             <h2 class="m-0">Registrar</h2>
@@ -9,29 +9,47 @@
         <div class="card-body">
             <form method="POST">
                 {{ form.csrf_token }}
-                <div class="form-group">
-                    {{ form.firstname.label }}:
-                    {{ form.firstname(class="form-control", placeholder="Introduzca su nombre") }}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{ form.firstname.label }}:
+                            {{ form.firstname(class="form-control", placeholder="Introduzca su nombre") }}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{ form.lastname.label }}:
+                            {{ form.lastname(class="form-control", placeholder="Introduzca sus apellidos") }}
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    {{ form.lastname.label }}:
-                    {{ form.lastname(class="form-control", placeholder="Introduzca sus apellidos") }}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{ form.username.label }}:
+                            {{ form.username(class="form-control", placeholder="Introduzca su usuario") }}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{ form.email.label }}:
+                            {{ form.email(class="form-control", placeholder="Introduzca su correo electrónico") }}
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    {{ form.username.label }}:
-                    {{ form.username(class="form-control", placeholder="Introduzca su usuario") }}
-                </div>
-                <div class="form-group">
-                    {{ form.email.label }}:
-                    {{ form.email(class="form-control", placeholder="Introduzca su correo electrónico") }}
-                </div>
-                <div class="form-group">
-                    {{ form.password.label }}:
-                    {{ form.password(class="form-control", placeholder="Introduzca su contraseña") }}
-                </div>
-                <div class="form-group">
-                    {{ form.password2.label }}:
-                    {{ form.password2(class="form-control", placeholder="Repita su contraseña") }}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{ form.password.label }}:
+                            {{ form.password(class="form-control", placeholder="Introduzca su contraseña") }}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            {{ form.password2.label }}:
+                            {{ form.password2(class="form-control", placeholder="Repita su contraseña") }}
+                        </div>
+                    </div>
                 </div>
                 {{ form.submit(class="btn btn-outline-light btn-block") }}
             </form>
