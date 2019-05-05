@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">Viaje hacia {{travel.country}}</div>
     <div class="card-footer">
-        <a href="{{ url_for('main.index') }}" class="btn btn-outline-light btn-block">Ver detalles</a>
+        <a href="{{ url_for('approve.edit_travel_state', id=travel.id) }}" class="btn btn-outline-light btn-block">Ver detalles</a>
     </div>
 </div>
 {% endmacro %}
