@@ -200,6 +200,8 @@ class Travel(db.Model):
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
+    rejected = db.Column(db.Boolean, default=False, index=True)
+    confirmed_in_state = db.Column(db.Boolean, default=False, index=True)
 
     @staticmethod
     def insert():
