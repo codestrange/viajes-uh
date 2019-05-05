@@ -20,12 +20,12 @@
                 <h2><strong>Documentos a confirmar:</strong></h2>
                 <div class="form-group">
                     {% for document in documents %}
-                        <input type="checkbox" value="{{ document.id }}" name="confirmed_docs" id="confirmed_docs"
+                        <input type="checkbox" value="{{ document.id }}" name="confirmed_docs" id="{{ 'cb' + document.id.__str__() }}"
                         {% if document.confirmed %}
                         checked
                         {% endif %}
                         >
-                        <label for="confirmed_docs">{{document.name}}</label>
+                        <label for="{{ 'cb' + document.id.__str__() }}">{{ document.name }}</label>
                     {% endfor %}
                 </div>
                 <button type="submit" class="btn btn-dark ">Aceptar cambios</button>
