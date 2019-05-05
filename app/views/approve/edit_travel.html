@@ -5,7 +5,31 @@
 <div class="page-header">
     <div class="text-center">
         <div class="col-6 offset-3">
-            <h1><strong>Editando el Viaje {{travel.name}}.</strong></h1>
+            <h1><strong>Estado del Viaje "{{travel.name}}" .</strong></h1>
+            <h2><strong>Creado por el usuario {{creator.username}} .</strong></h2>
+            <h2><strong>Hacia el país {{to_country.name}} .</strong></h2>
+            <h2><strong>Se requiere autorizar los siguientes tipos documentos:</strong></h2>
+            <ul>
+                {% for req in requirements %}
+                <li><h3>{{ req.name }}</h3></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-6 offset-3">
+            <form method="POST">
+                <h2><strong>Documentos a confirmar:</strong></h2>
+                <div class="form-group">
+                    {% for document in documents %}
+                        <input type="checkbox" value="{{ document.id }}" name="confirmed_docs" id="confirmed_docs"
+                        {% if document.confirmed %}
+                        checked
+                        {% endif %}
+                        >
+                        <label for="confirmed_docs">{{document.name}}</label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-dark ">Aceptar cambios</button>
+            </form>
         </div>
     </div>
 </div>
