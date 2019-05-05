@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, current_user, login_required
 from . import approve
-from ...models import db, Travel, User, Country, Document, WorkflowState
+from ...models import db, Travel, User, Country, Document, WorkflowState, Role
 
 @approve.route('/travels', methods=['GET'])
 @login_required
@@ -15,6 +15,7 @@ def edit_travel_state(id):
     creator = User.query.get(travel.user_id)
     to_country = Country.query.get(travel.country_id)
     state = WorkflowState.query.get(travel.workflow_state_id)
+    role = Role.query.get(state.role_id)
     documents = travel.documents
     requirements_ids = [ requirement.id for requirement in state.requirements ]
     requirements = [ requirement for requirement in state.requirements ]
@@ -22,6 +23,9 @@ def edit_travel_state(id):
     if request.method == 'POST':
         confirmed_docs = [ Document.query.get(int(id)) for id in request.form.getlist('confirmed_docs') ]
         confirmed_ids = { doc.id for doc in confirmed_docs }
+        if request.form.get('accept_travel'):
+            travel.confirmed_in_state = True
+            db.session.add(travel)
         for doc in confirmed_docs:
             doc.confirmed = True
             db.session.add(doc)
@@ -34,5 +38,6 @@ def edit_travel_state(id):
     creator=creator, \
     to_country=to_country, \
     documents=to_confirm_documents, \
-    requirements=requirements)
+    requirements=requirements, \
+    role=role )
  

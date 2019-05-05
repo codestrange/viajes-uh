@@ -19,15 +19,23 @@
             <form method="POST">
                 <h2><strong>Documentos a confirmar:</strong></h2>
                 <div class="form-group">
-                    {% for document in documents %}
+                    <input type="checkbox" name="accept_travel" id="accept_travel"
+                    {% if travel.confirmed_in_state %}
+                    checked
+                    {% endif %}
+                    >
+                    <label for="accept_travel">Autorización por {{ role.name }}</label>
+                </div>
+                {% for document in documents %}
+                    <div class="form-group">
                         <input type="checkbox" value="{{ document.id }}" name="confirmed_docs" id="{{ 'cb' + document.id.__str__() }}"
                         {% if document.confirmed %}
                         checked
                         {% endif %}
                         >
                         <label for="{{ 'cb' + document.id.__str__() }}">{{ document.name }}</label>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
                 <button type="submit" class="btn btn-dark ">Aceptar cambios</button>
             </form>
         </div>
