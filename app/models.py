@@ -350,13 +350,14 @@ class WorkflowState(db.Model):
         item0 = WorkflowState(name='Paso Dos')
         item0.role = Role.query.filter_by(name='Especialista').first()
         item0.requirements.append(TypeDocument.query.get(1))
+        db.session.add(item0)
+        db.session.commit()
         item1 = WorkflowState(name='Paso Uno')
         item1.role = Role.query.filter_by(name='Decano').first()
         item1.requirements.append(TypeDocument.query.get(2))
         item1.next = item0
         item1.countries.append(Country.query.get(41))
         item1.countries.append(Country.query.get(25))
-        db.session.add(item0)
         db.session.add(item1)
         db.session.commit()
 
