@@ -200,6 +200,7 @@ class Travel(db.Model):
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
+    accepted = db.Column(db.Boolean, default=False, index=True)
     rejected = db.Column(db.Boolean, default=False, index=True)
     confirmed_in_state = db.Column(db.Boolean, default=False, index=True)
 
@@ -309,7 +310,7 @@ class User(UserMixin, db.Model):
             for ws in WorkflowState.query.filter_by(role_id=role.id).all():
                 for travel in Travel.query.filter_by(workflow_state_id=ws.id).all():
                     user = User.query.get(travel.user_id)
-                    if Area.query.get(self.area_id).contains(Area.query.get(user.area_id)):
+                    if Area.query.get(self.area_id).contains(Area.query.get(user.area_id)) and not travel.accepted and not travel.rejected:
                         travels_to_decide.append(travel)
         return travels_to_decide
 

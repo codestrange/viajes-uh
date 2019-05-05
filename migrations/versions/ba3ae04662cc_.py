@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 4cd9b16fc619
+Revision ID: ba3ae04662cc
 Revises: 
-Create Date: 2019-05-05 11:49:16.782335
+Create Date: 2019-05-05 12:36:15.346544
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4cd9b16fc619'
+revision = 'ba3ae04662cc'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -105,6 +105,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('country_id', sa.Integer(), nullable=True),
     sa.Column('workflow_state_id', sa.Integer(), nullable=True),
+    sa.Column('accepted', sa.Boolean(), nullable=True),
     sa.Column('rejected', sa.Boolean(), nullable=True),
     sa.Column('confirmed_in_state', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['country_id'], ['country.id'], ),
@@ -113,6 +114,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    op.create_index(op.f('ix_travel_accepted'), 'travel', ['accepted'], unique=False)
     op.create_index(op.f('ix_travel_confirmed_in_state'), 'travel', ['confirmed_in_state'], unique=False)
     op.create_index(op.f('ix_travel_rejected'), 'travel', ['rejected'], unique=False)
     op.create_table('document',
@@ -137,6 +139,7 @@ def downgrade():
     op.drop_table('document')
     op.drop_index(op.f('ix_travel_rejected'), table_name='travel')
     op.drop_index(op.f('ix_travel_confirmed_in_state'), table_name='travel')
+    op.drop_index(op.f('ix_travel_accepted'), table_name='travel')
     op.drop_table('travel')
     op.drop_table('workflow_state_type_document')
     op.drop_table('user_role')
