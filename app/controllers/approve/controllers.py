@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, current_user, login_required
 from . import approve
 from ...models import db, Travel, User, Country, Document, WorkflowState, Role
+from ...utils import check_conditions
 
 @approve.route('/travels', methods=['GET'])
 @login_required
@@ -33,6 +34,8 @@ def edit_travel_state(id):
             doc.confirmed = False
             db.session.add(doc)
         db.session.commit()
+        if check_conditions(travel):
+            return redirect(url_for('approve.approve_travels'))
     return render_template('approve/edit_travel.html', \
     travel=travel, \
     creator=creator, \

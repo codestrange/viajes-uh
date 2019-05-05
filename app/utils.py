@@ -1,6 +1,6 @@
 from os import remove
 from os.path import abspath, exists, join
-from .models import db, Document, Travel, TypeDocument 
+from .models import db, Document, Travel, TypeDocument, WorkflowState 
 
 
 def save_document(name, file_document, travel_id, type_document_id):
@@ -18,3 +18,25 @@ def save_document(name, file_document, travel_id, type_document_id):
     if exists(path):
         remove(path)
     file_document.save(path)
+
+def check_conditions(travel):
+    actual_state = WorkflowState.query.get(travel.workflow_state_id)
+    documents = travel.documents
+    requirements_ids = [ requirement.id for requirement in actual_state.requirements ]
+    to_confirm_documents = [ document for document in documents if document.type_id in requirements_ids ]
+    if travel.confirmed_in_state:
+        for requirement in requirements_ids:
+            for doc in to_confirm_documents:
+                if doc.type_id == requirement and doc.confirmed:
+                    break
+            else:
+                return False
+        travel.confirmed_in_state = False
+        if actual_state.next_id:
+            travel.workflow_state_id = actual_state.next_id
+        else:
+            travel.accepted = True
+        db.session.add(travel)
+        db.session.commit()
+        return True
+    return False
