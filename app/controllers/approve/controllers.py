@@ -7,7 +7,10 @@ from ...utils import check_conditions
 @approve.route('/travels', methods=['GET'])
 @login_required
 def approve_travels():
-    return render_template('approve/approve_travels.html', travels=current_user.decisions())
+    travels = current_user.decisions()
+    if not travels:
+        return redirect(url_for('main.index'))
+    return render_template('approve/approve_travels.html', travels=travels)
 
 @approve.route('/travels/<int:id>', methods=['GET', 'POST'])
 @login_required
