@@ -37,6 +37,7 @@
                     </div>
                 {% endfor %}
                 <button type="submit" class="btn btn-dark ">Aceptar cambios</button>
+                <a href="{{ url_for('approve.reject_travel', id=travel.id) }}" class="btn btn-danger">Rechazar Viaje</a>
             </form>
         </div>
     </div>

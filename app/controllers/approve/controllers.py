@@ -12,6 +12,15 @@ def approve_travels():
         return redirect(url_for('main.index'))
     return render_template('approve/approve_travels.html', travels=travels)
 
+@approve.route('/reject/travel/<int:id>', methods=['GET'])
+@login_required
+def reject_travel(id):
+    travel = Travel.query.get(id)
+    travel.rejected = True
+    db.session.add(travel)
+    db.session.commit()
+    return redirect(url_for('approve.approve_travels'))
+
 @approve.route('/travels/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_travel_state(id):
