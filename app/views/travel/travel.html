@@ -1,0 +1,69 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Estado{% endblock subtitle %}
+{% block page_content %}
+<div class="card text-light bg-dark">
+    <div class="card-header">
+        <col></col>
+        <h2 class="m-0">Vista de estado de viaje</h2>
+        <h3 class="m-0">Estado {{_travel.accepted}}</h3>
+    </div>
+    
+    <div class="card-body">
+        <h5 class="card-title">Name</h5>
+        <p class="card-text">{{_travel.name}}</p>
+    </div>
+
+    <div class="card-body ">
+        <h5 class="card-title">Fecha de Salida</h5>
+        <p class="card-text">{{_travel.departure_date}}</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">Duración</h5>
+        <p class="card-text">{{_travel.duration}} días</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">User_ID</h5>
+        <p class="card-text">{{_travel.user_id}}</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">Concept ID</h5>
+        <p class="card-text">{{_travel.concept_id}}</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">País ID</h5>
+        <p class="card-text">{{_travel.country_id}}</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">Estado WorkFlow</h5>
+        <p class="card-text">{{_travel.workflow_state_id}}</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">Documentos</h5>
+        {% for document in _travel.documents %}
+            <p class="card-text">{{document.name}}</p>    
+        {% endfor %}
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">Estado Actual</h5>
+        <p class="card-text">{{_travel.accepted}}</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">Estado Viaje</h5>
+        <p class="card-text">{{_travel.rejected}}</p>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">Proceso actual</h5>
+        <p class="card-text">{{_travel.confirmed_in_state}}</p>
+    </div>
+    
+</div>
+{% endblock page_content %}
