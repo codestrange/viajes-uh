@@ -1,7 +1,7 @@
 {% extends "navbar.html" %}
 {% block subtitle %} - Crear Viaje{% endblock subtitle %}
 {% block page_content %}
-<div class="col-4 offset-4">
+<div class="col-8 offset-2">
     <div class="card mb-5 text-white bg-dark">
         <div class="card-header text-center">
             <h2 class="m-0">Crear Viaje</h2>
@@ -9,13 +9,65 @@
         <div class="card-body">
             <form method="POST">
                 {{ form.csrf_token }}
-                <div class="form-group">
-                    {{ form.name.label }}:
-                    {{ form.name(class="form-control", placeholder="Introduzca el nombre del viaje") }}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            {{ form.name.label }}:
+                            {{ form.name(class="form-control", placeholder="Introduzca el nombre del viaje") }}
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    {{ form.country.label }}:
-                    {{ form.country(class="form-control", placeholder="Seleccione el país") }}
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            {{ form.concept.label }}:
+                            {{ form.concept(class="form-control", placeholder="Seleccione el concepto") }}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {{ form.country.label }}:
+                            {{ form.country(class="form-control", placeholder="Seleccione el país") }}
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            {{ form.duration.label }}:
+                            {{ form.duration(class="form-control", placeholder="Introduzca la duración") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Fecha de Salida:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <div class="form-group">
+                            {{ form.departure_date_hour(class="form-control", placeholder="Hora") }}
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            {{ form.departure_date_minute(class="form-control", placeholder="Minuto") }}
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            {{ form.departure_date_day(class="form-control", placeholder="Día") }}
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{ form.departure_date_month(class="form-control", placeholder="Mes") }}
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            {{ form.departure_date_year(class="form-control", placeholder="Año") }}
+                        </div>
+                    </div>
                 </div>
                 {{ form.submit(class="btn btn-outline-light btn-block") }}
             </form>

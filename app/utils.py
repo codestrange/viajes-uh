@@ -1,3 +1,4 @@
+from flask import flash
 from os import remove
 from os.path import abspath, exists, join
 from .models import db, Document, Travel, TypeDocument 
@@ -18,3 +19,9 @@ def save_document(name, file_document, travel_id, type_document_id):
     if exists(path):
         remove(path)
     file_document.save(path)
+
+
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'{error}')

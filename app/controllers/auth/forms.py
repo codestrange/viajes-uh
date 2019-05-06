@@ -15,11 +15,13 @@ class RegistrationForm(FlaskForm):
     firstname = StringField('Nombre')
     lastname = StringField('Apellidos')
     username = StringField('Nombre de usuario',
-                           validators=[DataRequired(), Length(1, 64),
+                           validators=[DataRequired(), Length(1, 64, message='El nombre \
+        debe tener un máximo de 64 letras.'),
                                        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
                                               'Los nombres de usuario solo deben tener letras, \
                                               números, puntos o guiones bajos.')])
-    email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64, message='El email \
+        debe tener un máximo de 64 letras.'), Email()])
     password = PasswordField('Contraseña',
                              validators=[DataRequired(),
                                          EqualTo('password2', message='Las contraseñas deben coincidir.')])

@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from .forms import LoginForm, RegistrationForm, EditProfileForm
 from ...models import db, User
+from ...utils import flash_errors
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -14,6 +15,8 @@ def login():
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('Correo electrónico o contraseña invalida.')
+    else:
+        flash_errors(form)
     return render_template('auth/login.html', form=form)
 
 
@@ -32,6 +35,8 @@ def register():
         db.session.commit()
         flash('Ahora puede iniciar sesión.')
         return redirect(request.args.get('next') or url_for('auth.login'))
+    else:
+        flash_errors(form)
     return render_template('auth/register.html', form=form)
 
 
@@ -53,6 +58,8 @@ def edit_profile():
         db.session.commit()
         flash('Perfil actualizado.')
         return redirect(request.args.get('next') or url_for('auth.see_profile'))
+    else:
+        flash_errors(form)
     return render_template('auth/edit_profile.html', form=form)
 
 
