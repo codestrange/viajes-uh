@@ -221,6 +221,9 @@ class Travel(db.Model):
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
+    accepted = db.Column(db.Boolean, default=False, index=True)
+    rejected = db.Column(db.Boolean, default=False, index=True)
+    confirmed_in_state = db.Column(db.Boolean, default=False, index=True)
 
     @staticmethod
     def insert():
@@ -333,7 +336,7 @@ class User(UserMixin, db.Model):
         for role in self.roles:
             for ws in WorkflowState.query.filter_by(role_id=role.id).all():
                 for travel in Travel.query.filter_by(workflow_state_id=ws.id).all():
-                    if self.area.contains(travel.user.area):
+                    if self.area.contains(travel.user.area) and not travel.accepted and not travel.rejected:
                         travels_to_decide.append(travel)
         return travels_to_decide
 
@@ -374,13 +377,14 @@ class WorkflowState(db.Model):
         item0 = WorkflowState(name='Paso Dos')
         item0.role = Role.query.filter_by(name='Especialista').first()
         item0.requirements.append(TypeDocument.query.get(1))
+        db.session.add(item0)
+        db.session.commit()
         item1 = WorkflowState(name='Paso Uno')
         item1.role = Role.query.filter_by(name='Decano').first()
         item1.requirements.append(TypeDocument.query.get(2))
         item1.next = item0
         item1.countries.append(Country.query.get(41))
         item1.countries.append(Country.query.get(25))
-        db.session.add(item0)
         db.session.add(item1)
         db.session.commit()
 
