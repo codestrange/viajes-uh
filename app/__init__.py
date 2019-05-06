@@ -40,9 +40,7 @@ def create_app(config_name):
     from .controllers.approve import approve as approve_blueprint
     app.register_blueprint(approve_blueprint, url_prefix='/approve')
 
+    from .controllers.workflow import workflow as workflow_blueprint
+    app.register_blueprint(workflow_blueprint, url_prefix='/workflow')
+
     return app
-
-
-#git push origin martinez
-#carlosmartinezmolina
-#Zz@...
