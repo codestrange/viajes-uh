@@ -71,11 +71,20 @@ def upload_document():
 @main.route('/travels')
 @login_required
 def get_travels():
-    return render_template("travels.html", travels=current_user.travels)
+    return render_template('travels.html', travels=current_user.travels)
 
 
 @main.route('/travels/<int:id>')
 @login_required
 def get_travel(id):
     travel = Travel.query.get(id)
-    return render_template("travel.html", travel=travel)
+    requirements = []
+    for requirement in travel.workflow_state.requirements.all():
+        mask = False
+        for document in travel.documents.all():
+            if document.type_document.id == document.id:
+                mark = True
+                break
+        if not mask:
+            requirements.append(requirement)
+    return render_template("travel.html", travel=travel, requirements=requirements)

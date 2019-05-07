@@ -1,36 +1,71 @@
 {% extends "navbar.html" %}
 {% block subtitle %} - Viaje{% endblock subtitle %}
 {% block page_content %}
-<div class="col-8 offset-2">
-    <div class="card mb-2 text-white bg-dark">
-        <div class="card-header text-center">
-            <h3 class="m-0">{{ travel.name }}</h3>
-        </div>
-        <div class="card-body">
-            <div><strong>Fecha de Salida:</strong> {{ travel.departure_date }}</div>
-            <div><strong>Duración:</strong> {{ travel.duration }} día(s)</div>
-            <div><strong>Concepto:</strong> {{ travel.concept }}</div>
-            <div><strong>País:</strong> {{ travel.country }}</div>
-            <div>
-                {% if travel.documents.first() %}
-                <strong>Documentos:</strong> 
-                {% for document in travel.documents.all() %}
-                    {{ document.name }}{% if loop.index != loop.length %}, {% endif %}
-                {% endfor %}
+<div class="row">
+    <div class="col-8">
+        <span class="mb-0 h1">{{ travel.name }}</span>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="col-12">
+                {% if travel.accepted %}
+                    <span class="badge badge-pill badge-success w-100 mr-2"><strong>Estado:</strong> Aceptado</span>
+                {% elif travel.rejected %}
+                    <span class="badge badge-pill badge-danger w-100 mr-2"><strong>Estado:</strong> Rechazado</span>
+                {% else %}
+                <span class="badge badge-pill badge-info w-100 mr-2"><strong>Estado:</strong> En Proceso</span>
                 {% endif %}
             </div>
         </div>
-        <div class="card-footer">
-            <h5 class="m-0"><strong>Estado:</strong> 
-                {% if travel.accepted %}
-                    <span class="text-success">Aceptado</span>
-                {% elif travel.rejected %}
-                    <span class="text-danger">Rechazado</span>
-                {% else %}
-                <span class="text-info">En Proceso</span>
-                {% endif %}
-            </h5>
+        <div class="row">
+            <div class="col-6">
+                <span class="badge badge-pill badge-dark mt-1 w-100"><strong>Salida:</strong> {{ travel.departure_date }}
+                    <i class="fas fa-calendar-alt"></i>
+                </span>
+                <span class="badge badge-pill badge-dark mt-1 w-100"><strong>Duración:</strong> {{ travel.duration }} días</span>
+            </div>
+            <div class="col-6">
+                <span class="badge badge-pill badge-dark mt-1 w-100"><strong>Concepto:</strong> {{ travel.concept }}</span>
+                <span class="badge badge-pill badge-dark mt-1 w-100"><strong>Destino:</strong> {{ travel.country }}</span>
+            </div>
         </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-2">
+            <div class="card-header"><strong>Documentos</strong></div>
+            <div class="card-body">
+                {% for document in travel.documents %}
+                    <div class="row mb-1">
+                        <div class="col-10">
+                            {% if document.confirmed %}
+                            <a href="{{ url_for('static', filename=document.path) }}" class="btn btn-block btn-outline-success">{{ document.name }}
+                                <span class="badge badge-pill badge-success">Confirmado</span>
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('static', filename=document.path) }}" class="btn btn-block btn-outline-danger">{{ document.name }}
+                                <span class="badge badge-pill badge-danger">No Confirmado</span>
+                            </a>
+                            {% endif %}
+                        </div>
+                        <div class="col-2">
+                            <a href="" class="btn btn-block btn-outline-dark">Editar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% if requirements %}
+        <div class="card mb-2">
+            <div class="card-header"><strong>Requisitos que necesita el viaje:</strong> 
+                {% for requirement in requirements %}
+                {{ requirement.name }}{% if loop.index != loop.length %}, {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock page_content %}
