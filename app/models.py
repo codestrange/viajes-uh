@@ -99,6 +99,13 @@ class Concept(db.Model):
         return f'{self.name}'
 
 
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
 class Country(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
@@ -224,6 +231,7 @@ class Travel(db.Model):
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
+    comments = db.relationship('Comment', backref='travel', lazy='dynamic')
     accepted = db.Column(db.Boolean, default=False, index=True)
     rejected = db.Column(db.Boolean, default=False, index=True)
     confirmed_in_state = db.Column(db.Boolean, default=False, index=True)
@@ -283,6 +291,7 @@ class User(UserMixin, db.Model):
     activated = db.Column(db.Boolean, default=True, index=True)
     area_id = db.Column(db.Integer, db.ForeignKey('area.id'))
     travels = db.relationship('Travel', backref='user', lazy='dynamic')
+    comments = db.relationship('Comment', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

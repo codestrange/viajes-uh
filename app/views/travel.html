@@ -66,6 +66,29 @@
             </div>
         </div>
         {% endif %}
+        <div class="card mb-2">
+            <div class="card-header h4"><strong>Escribir comentario</strong></div>
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="card-body">
+                    {{ form.text(class="form-control") }}
+                </div>
+                <div class="card-footer">
+                    {{ form.submit(class="btn btn-outline-dark btn-block") }}
+                </div>
+            </form>
+        </div>
+        {% if travel.comments.first() %}
+        <div class="card mb-2">
+            <div class="card-header h4"><strong>Comentario</strong></div>
+        </div>
+        {% for comment in travel.comments %}
+        <div class="card mb-2">
+            <div class="card-body"><strong>{% if comment.user.id == current_user.id %}Yo{% else %}{{ comment.user }}{% endif %}:</strong> {{ comment.text }}</div>
+        </div>
+        {% endfor %}
+        {% endif %}
     </div>
+    <div class="mb-3">&nbsp;</div>
 </div>
 {% endblock page_content %}

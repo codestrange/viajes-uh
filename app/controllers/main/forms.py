@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, FileField, IntegerField, DateTimeField
+from wtforms import StringField, SubmitField, SelectField, FileField, IntegerField, \
+    DateTimeField, TextAreaField
 from wtforms.validators import DataRequired, Length, NumberRange
 
 
@@ -27,3 +28,8 @@ class UploadDocumentForm(FlaskForm):
     travel = SelectField('Viaje', validators=[DataRequired()])
     type_document = SelectField('Tipo de Documento', validators=[DataRequired()])
     submit = SubmitField('Subir')
+
+
+class CommentForm(FlaskForm):
+    text = TextAreaField()
+    submit = SubmitField('Comentar')

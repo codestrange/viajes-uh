@@ -2,8 +2,8 @@ from datetime import datetime
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, current_user
 from . import main
-from .forms import CreateTravelForm, UploadDocumentForm
-from ...models import db, Concept, Country, Document, Travel, TypeDocument
+from .forms import CreateTravelForm, UploadDocumentForm, CommentForm
+from ...models import db, Concept, Country, Comment, Document, Travel, TypeDocument
 from ...utils import flash_errors, modify_document, save_document
 
 
@@ -99,7 +99,7 @@ def get_travels():
     return render_template('travels.html', travels=current_user.travels)
 
 
-@main.route('/travels/<int:id>')
+@main.route('/travels/<int:id>', methods=['GET', 'POST'])
 @login_required
 def get_travel(id):
     travel = Travel.query.get(id)
@@ -112,4 +112,15 @@ def get_travel(id):
                 break
         if not mask:
             requirements.append(requirement)
-    return render_template("travel.html", travel=travel, requirements=requirements)
+    form = CommentForm()
+    form.text.data = ''
+    if form.validate_on_submit():
+        comment = Comment()
+        comment.text = form.text.data
+        comment.user = current_user
+        comment.travel = travel
+        db.session.add(comment)
+        db.session.commit()
+    else:
+        flash_errors(form)
+    return render_template("travel.html", travel=travel, requirements=requirements, form=form)
