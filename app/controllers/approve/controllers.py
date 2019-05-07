@@ -1,8 +1,8 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, abort
 from flask_login import login_user, current_user, login_required
 from . import approve
 from ...models import db, Travel, User, Country, Document, WorkflowState, Role
-from ...utils import check_conditions
+from ...utils import check_conditions, user_can_decide
 
 
 @approve.route('/travels')
@@ -17,6 +17,8 @@ def approve_travels():
 @approve.route('/reject/travel/<int:id>', methods=['GET'])
 @login_required
 def reject_travel(id):
+    if not user_can_decide(current_user, Travel.query.get(id)):
+        return abort(403)
     travel = Travel.query.get(id)
     travel.rejected = True
     db.session.add(travel)
@@ -24,9 +26,11 @@ def reject_travel(id):
     return redirect(url_for('approve.approve_travels'))
 
 
-@approve.route('/travels/<int:id>', methods=['GET', 'POST'])
+@approve.route('/travel/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_travel_state(id):
+    if not user_can_decide(current_user, Travel.query.get(id)):
+        return abort(403)
     travel = Travel.query.get(id)
     creator = User.query.get(travel.user_id)
     to_country = Country.query.get(travel.country_id)
