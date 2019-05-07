@@ -1,6 +1,7 @@
 from flask import flash
 from os import remove
 from os.path import abspath, exists, join
+from os.path import exists, join
 from .models import db, Document, Travel, TypeDocument, WorkflowState 
 
 
@@ -13,7 +14,24 @@ def save_document(name, file_document, travel_id, type_document_id):
     file_name = str(document.id)
     file_name += f'.{file_document.filename.split(".")[-1]}' if file_document.filename.split(".") else ''
     path = join(f'{abspath("")}/app/static/uploads', file_name)
-    document.path = path
+    document.path = join('uploads', file_name)
+    db.session.add(document)
+    db.session.commit()
+    if exists(path):
+        remove(path)
+    file_document.save(path)
+
+
+def modify_document(document, name, file_document, travel_id, type_document_id):
+    travel = Travel.query.get(travel_id)
+    type_document = TypeDocument.query.get(type_document_id)
+    document.name = name
+    document.travel = travel
+    document.type_document = type_document
+    file_name = str(document.id)
+    file_name += f'.{file_document.filename.split(".")[-1]}' if file_document.filename.split(".") else ''
+    path = join(f'{abspath("")}/app/static/uploads', file_name)
+    document.path = join('uploads', file_name)
     db.session.add(document)
     db.session.commit()
     if exists(path):

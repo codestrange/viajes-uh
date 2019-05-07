@@ -3,8 +3,8 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, current_user
 from . import main
 from .forms import CreateTravelForm, UploadDocumentForm
-from ...models import db, Concept, Country, Travel, TypeDocument
-from ...utils import flash_errors, save_document
+from ...models import db, Concept, Country, Document, Travel, TypeDocument
+from ...utils import flash_errors, modify_document, save_document
 
 
 @main.route('/')
@@ -66,6 +66,31 @@ def upload_document():
     else:
         flash_errors(form)
     return render_template('upload_document.html', form=form)
+
+
+@main.route('/edit_document/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_document(id):
+    document = Document.query.get_or_404(id)
+    form = UploadDocumentForm()
+    form.travel.choices = [
+        (str(travel.id), travel.name)
+        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
+    ]
+    form.type_document.choices = [
+        (str(type_document.id), type_document.name)
+        for type_document in TypeDocument.query.all()
+    ]
+    form.name.data = document.name
+    form.travel.data = str(document.travel.id)
+    form.type_document.data = str(document.type_document.id)
+    if form.validate_on_submit():
+        modify_document(document, form.name.data, form.file_document.data, form.travel.data,
+                      form.type_document.data)
+        return redirect(request.args.get('next') or url_for('main.index'))
+    else:
+        flash_errors(form)
+    return render_template('edit_document.html', form=form)
 
 
 @main.route('/travels')

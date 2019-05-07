@@ -1,0 +1,33 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Editar Documento{% endblock subtitle %}
+{% block page_content %}
+<div class="col-4 offset-4">
+    <div class="card mb-5 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Editar Documento</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" >
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.name.label }}:
+                    {{ form.name(class="form-control", placeholder="Introduzca el nombre del documento") }}
+                </div>
+                <div class="form-group">
+                    {{ form.file_document.label }}:
+                    {{ form.file_document(class="form-control-file") }}
+                </div>
+                <div class="form-group">
+                    {{ form.travel.label }}:
+                    {{ form.travel(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.type_document.label }}:
+                    {{ form.type_document(class="form-control") }}
+                </div>
+                {{ form.submit(class="btn btn-outline-light btn-block") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
