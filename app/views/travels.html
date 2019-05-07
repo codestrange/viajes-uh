@@ -1,17 +1,26 @@
 {% extends "navbar.html" %}
-{% block subtitle %} - Inicio{% endblock subtitle %}
+{% block subtitle %} - Mis Viajes{% endblock subtitle %}
 {% block page_content %}
-<div class="card text-light bg-dark">
-    <div class="card-header">
-        <h2 class="m-0">Listado de Viajes Actuales</h2>
-        <div class="card" style="width: 18rem;">
-            <ul class="list-group list-group-flush">
-                {% for travel in travels %}
-                <li class="list-group-item bg-dark">{{ travel.name }}</li>
-                <a href="{{ url_for('main.get_travel', id=travel.id) }}" class="btn btn-success">Consultar</a>
-                {% endfor %}
-            </ul>
+<div class="col-8 offset-2">
+    <div class="card mb-2 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Mis Viajes</h2>
         </div>
     </div>
+    {% for travel in travels %}
+    <div class="card mb-2 text-white bg-dark">
+        <div class="card-header text-center">
+            <h4 class="m-0">{{ travel.name }}</h4>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-12">
+                    <a href="{{ url_for('main.get_travel', id=travel.id) }}" class="btn btn-block btn-outline-light">Ver Viaje</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="mb-3">&nbsp;</div>
 </div>
 {% endblock page_content %}

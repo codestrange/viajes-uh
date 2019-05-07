@@ -1,68 +1,36 @@
 {% extends "navbar.html" %}
-{% block subtitle %} - Estado{% endblock subtitle %}
+{% block subtitle %} - Viaje{% endblock subtitle %}
 {% block page_content %}
-<div class="card text-light bg-dark">
-    <div class="card-header">
-        <h2 class="m-0">Vista de estado de viaje</h2>
-        <h3 class="m-0">Estado {{ travel.accepted }}</h3>
+<div class="col-8 offset-2">
+    <div class="card mb-2 text-white bg-dark">
+        <div class="card-header text-center">
+            <h3 class="m-0">{{ travel.name }}</h3>
+        </div>
+        <div class="card-body">
+            <div><strong>Fecha de Salida:</strong> {{ travel.departure_date }}</div>
+            <div><strong>Duración:</strong> {{ travel.duration }} día(s)</div>
+            <div><strong>Concepto:</strong> {{ travel.concept }}</div>
+            <div><strong>País:</strong> {{ travel.country }}</div>
+            <div>
+                {% if travel.documents.first() %}
+                <strong>Documentos:</strong> 
+                {% for document in travel.documents.all() %}
+                    {{ document.name }}{% if loop.index != loop.length %}, {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-footer">
+            <h5 class="m-0"><strong>Estado:</strong> 
+                {% if travel.accepted %}
+                    <span class="text-success">Aceptado</span>
+                {% elif travel.rejected %}
+                    <span class="text-danger">Rechazado</span>
+                {% else %}
+                <span class="text-info">En Proceso</span>
+                {% endif %}
+            </h5>
+        </div>
     </div>
-    
-    <div class="card-body">
-        <h5 class="card-title">Name</h5>
-        <p class="card-text">{{ travel.name }}</p>
-    </div>
-
-    <div class="card-body ">
-        <h5 class="card-title">Fecha de Salida</h5>
-        <p class="card-text">{{ travel.departure_date }}</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">Duración</h5>
-        <p class="card-text">{{ travel.duration }} días</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">User_ID</h5>
-        <p class="card-text">{{ travel.user_id }}</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">Concept ID</h5>
-        <p class="card-text">{{ travel.concept_id }}</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">País ID</h5>
-        <p class="card-text">{{ travel.country_id }}</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">Estado WorkFlow</h5>
-        <p class="card-text">{{ travel.workflow_state_id }}</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">Documentos</h5>
-        {% for document in travel.documents %}
-            <p class="card-text">{{ document.name }}</p>    
-        {% endfor %}
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">Estado Actual</h5>
-        <p class="card-text">{{ travel.accepted }}</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">Estado Viaje</h5>
-        <p class="card-text">{{ travel.rejected }}</p>
-    </div>
-
-    <div class="card-body">
-        <h5 class="card-title">Proceso actual</h5>
-        <p class="card-text">{{ travel.confirmed_in_state }}</p>
-    </div>
-    
 </div>
 {% endblock page_content %}
