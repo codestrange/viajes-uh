@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_required, current_user
 from . import main
 from .forms import CreateTravelForm, UploadDocumentForm
@@ -77,5 +77,7 @@ def get_travels():
 @main.route('/travels/<int:id>')
 @login_required
 def get_travel(id):
+    if id not in (travel.id for travel in current_user.travels):
+        abort(403)
     travel = Travel.query.get(id)
     return render_template("travel.html", travel=travel)

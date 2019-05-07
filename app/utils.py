@@ -1,7 +1,12 @@
 from flask import flash
 from os import remove
 from os.path import abspath, exists, join
-from .models import db, Document, Travel, TypeDocument, WorkflowState 
+from .models import db, Document, Travel, TypeDocument, WorkflowState, Role 
+
+
+
+def is_specialist(user):
+    return Role.query.filter_by(name='Especialista').first().id in (role.id for role in user.roles)
 
 
 def user_can_decide(user, travel):

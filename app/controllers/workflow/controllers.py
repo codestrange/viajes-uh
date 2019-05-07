@@ -1,18 +1,25 @@
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, abort
+from flask_login import current_user, login_required
 from . import workflow
 from .forms import AppendWorkflowStateForm, CreateWorkflowStateForm, EditWorkflowStateForm
 from ...models import db, Role, TypeDocument, WorkflowState
-from ...utils import flash_errors
+from ...utils import flash_errors, is_specialist
 
 
 @workflow.route('/view/<int:id>', methods=['GET'])
+@login_required
 def view_workflow(id):
+    if not is_specialist(current_user):
+        abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
     return render_template('workflow/view.html', workflow=workflow_actual)
 
 
 @workflow.route('/create', methods=['GET', 'POST'])
+@login_required
 def create_workflow():
+    if not is_specialist(current_user):
+        abort(403)
     form = CreateWorkflowStateForm()
     requirements = TypeDocument.query.all()
     roles = Role.query.all()
@@ -39,7 +46,10 @@ def create_workflow():
 
 
 @workflow.route('/append/<int:id>', methods=['GET', 'POST'])
+@login_required
 def append_workflow(id=0):
+    if not is_specialist(current_user):
+        abort(403)
     prev_workflow = WorkflowState.query.get_or_404(id)
     form = AppendWorkflowStateForm()
     requirements = TypeDocument.query.all()
@@ -66,7 +76,10 @@ def append_workflow(id=0):
 
 
 @workflow.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_workflow(id):
+    if not is_specialist(current_user):
+        abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
     form = EditWorkflowStateForm()
     requirements = TypeDocument.query.all()
@@ -101,13 +114,19 @@ def edit_workflow(id):
 
 
 @workflow.route('/', methods=['GET'])
+@login_required
 def get_workflows():
+    if not is_specialist(current_user):
+        abort(403)
     workflows = WorkflowState.query.all()
     return render_template('workflow/workflows.html', workflows=workflows)
 
 
 @workflow.route('/<int:id>', methods=['GET'])
+@login_required
 def graph_workflow(id):
+    if not is_specialist(current_user):
+        abort(403)
     workflows = [WorkflowState.query.get_or_404(id)]
     for workflow in workflows:
         if workflow.next:
