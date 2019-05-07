@@ -34,7 +34,6 @@ class Area(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
     users = db.relationship('User', backref='area', lazy='dynamic')
-    workflow_states = db.relationship('WorkflowState', backref='area', lazy='dynamic')
     ancestor_id = db.Column(db.Integer, db.ForeignKey('area.id'))
 
     def __init__(self, name, ancestor=None):
@@ -350,7 +349,6 @@ class User(UserMixin, db.Model):
 class WorkflowState(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
-    area_id = db.Column(db.Integer, db.ForeignKey('area.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     next_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     travels = db.relationship('Travel', backref='workflow_state', lazy='dynamic')
@@ -362,7 +360,7 @@ class WorkflowState(db.Model):
 
     @property
     def next(self):
-        return WorkflowState.query.get(self.next_id)
+        return WorkflowState.query.get(self.next_id) if self.next_id else None
 
     @next.setter
     def next(self, next):
