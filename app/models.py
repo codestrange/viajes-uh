@@ -151,6 +151,10 @@ class Document(db.Model):
         document2 = Document(name='Documento 2', type_document=type2, travel=Travel.query.get(1))
         document3 = Document(name='Documento 3', type_document=type1, travel=Travel.query.get(2))
         document4 = Document(name='Documento 4', type_document=type2, travel=Travel.query.get(2))
+        document1.path = 'empty1'
+        document2.path = 'empty2'
+        document3.path = 'empty3'
+        document4.path = 'empty4'
         db.session.add(document1)
         db.session.add(document2)
         db.session.add(document3)
