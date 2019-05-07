@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_required, current_user
 from . import main
 from .forms import CreateTravelForm, UploadDocumentForm, CommentForm
@@ -102,6 +102,8 @@ def get_travels():
 @main.route('/travels/<int:id>', methods=['GET', 'POST'])
 @login_required
 def get_travel(id):
+    if id not in (travel.id for travel in current_user.travels):
+        abort(403)
     travel = Travel.query.get(id)
     requirements = []
     for requirement in travel.workflow_state.requirements.all():
