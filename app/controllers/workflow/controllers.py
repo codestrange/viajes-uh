@@ -98,3 +98,21 @@ def edit_workflow(id):
     else:
         flash_errors(form)
     return render_template('workflow/edit.html', form=form)
+
+
+@workflow.route('/', methods=['GET'])
+def get_workflows():
+    workflows = WorkflowState.query.all()
+    return render_template('workflow/workflows.html', workflows=workflows)
+
+
+@workflow.route('/<int:id>', methods=['GET'])
+def graph_workflow(id):
+    workflows = [WorkflowState.query.get_or_404(id)]
+    for workflow in workflows:
+        if workflow.next:
+            workflows.append(workflow.next)
+    return render_template('workflow/graph.html',
+                           start_workflow=workflows[0],
+                           end_workflow=workflows[-1],
+                           workflows=workflows)

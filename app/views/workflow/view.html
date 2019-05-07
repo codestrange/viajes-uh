@@ -31,6 +31,16 @@
             </div>
         </div>
     </div>
-    <a href="{{ url_for('workflow.edit_workflow', id=workflow.id) }}" class="btn btn-block btn-dark">Editar Nodo</a>
+    <div class="row">
+        <div class="col-3">
+            <a href="{{ url_for('workflow.edit_workflow', id=workflow.id) }}" class="btn btn-block btn-dark">Editar Nodo</a>
+        </div>
+        <div class="col-5">
+            <a href="{{ url_for('workflow.append_workflow', id=workflow.id) }}" class="btn btn-block btn-dark">Insertar Nodo a Continuación</a>
+        </div>
+        <div class="col-4">
+            <a href="{{ url_for('workflow.graph_workflow', id=workflow.id) }}" class="btn btn-block btn-dark">Ver Workflow</a>
+        </div>
+    </div>
 </div>
 {% endblock page_content %}
