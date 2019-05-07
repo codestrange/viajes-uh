@@ -342,6 +342,9 @@ class User(UserMixin, db.Model):
     def have_decisions(self):
         return len(self.decisions()) > 0
 
+    def is_admin(self):
+        return Role.query.filter_by(name='Especialista').first().id in (role.id for role in self.roles)
+
     def __repr__(self):
         return f'{self.username}'
 
