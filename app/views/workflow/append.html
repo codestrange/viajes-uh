@@ -1,0 +1,30 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Crear Nodo{% endblock subtitle %}
+{% block page_content %}
+<div class="col-8 offset-2">
+    <div class="card mb-5 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Crear Nodo del Workflow</h2>
+            <h6 class="m-0">a continuación del nodo <a href="{{ url_for('workflow.view_workflow', id=prev_workflow.id) }}" class="text-light"><u>{{ prev_workflow.name }}</u></a></h6>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    {{ form.name.label }}:
+                    {{ form.name(class="form-control", placeholder="Introduzca el nombre") }}
+                </div>
+                <div class="form-group">
+                    {{ form.role.label }}:
+                    {{ form.role(class="form-control", placeholder="Seleccione el rol") }}
+                </div>
+                <div class="form-group">
+                    {{ form.requirements.label }}:
+                    {{ form.requirements(class="form-control", placeholder="Seleccione los requisitos") }}
+                </div>
+                {{ form.submit(class="btn btn-outline-light btn-block") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
