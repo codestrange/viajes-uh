@@ -40,9 +40,6 @@ def create_app(config_name):
     from .controllers.approve import approve as approve_blueprint
     app.register_blueprint(approve_blueprint, url_prefix='/approve')
 
-    from .controllers.travel import travel_mod as travel_blueprint
-    app.register_blueprint(travel_blueprint, url_prefix='/travel')
-
     from .controllers.workflow import workflow as workflow_blueprint
     app.register_blueprint(workflow_blueprint, url_prefix='/workflow')
 

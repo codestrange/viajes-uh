@@ -66,3 +66,16 @@ def upload_document():
     else:
         flash_errors(form)
     return render_template('upload_document.html', form=form)
+
+
+@main.route('/travels')
+@login_required
+def get_travels():
+    return render_template("travels.html", travels=current_user.travels)
+
+
+@main.route('/travels/<int:id>')
+@login_required
+def get_travel(id):
+    travel = Travel.query.get(id)
+    return render_template("travel.html", travel=travel)
