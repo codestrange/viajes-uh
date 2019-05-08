@@ -6,11 +6,11 @@
     <div class="text-center">
         <div class="col-6 offset-3">
             <h1><strong>Estado del Viaje "{{travel.name}}" .</strong></h1>
-            <h2><strong>Creado por el usuario {{creator.username}} .</strong></h2>
-            <h2><strong>Hacia el país {{to_country.name}} .</strong></h2>
+            <h2><strong>Creado por el usuario {{travel.user.username}} .</strong></h2>
+            <h2><strong>Hacia el país {{travel.country.name}} .</strong></h2>
             <h2><strong>Se requiere autorizar los siguientes tipos documentos:</strong></h2>
             <ul>
-                {% for req in requirements %}
+                {% for req in travel.workflow_state.requirements %}
                 <li><h3>{{ req.name }}</h3></li>
                 {% endfor %}
             </ul>
@@ -24,7 +24,7 @@
                     checked
                     {% endif %}
                     >
-                    <label for="accept_travel">Autorización por {{ role.name }}</label>
+                    <label for="accept_travel">Autorización por {{ travel.workflow_state.role.name }}</label>
                 </div>
                 {% for document in documents %}
                     <div class="form-group">
