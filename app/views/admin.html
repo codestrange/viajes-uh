@@ -1,0 +1,17 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-10">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <div class="h2 mt-0">Panel de Administración de <strong>Viajes UH</strong></div>
+                </div>
+                <div class="panel-body">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-default btn-block">Ir a la página de Inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

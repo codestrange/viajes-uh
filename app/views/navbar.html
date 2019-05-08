@@ -53,9 +53,14 @@
                             Subir Documento
                         </a>
                         {% if current_user.is_administrator %}
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url_for('workflow.create_workflow') }}">
                             <i class="fas fa-plus-circle mr-2"></i>
                             Crear Nodo
+                        </a>
+                        <a class="dropdown-item" href="{{ url_for('admin.index') }}">
+                            <i class="fas fa-cog mr-2"></i>
+                            Administración
                         </a>
                         {% endif %}
                         <div class="dropdown-divider"></div>
