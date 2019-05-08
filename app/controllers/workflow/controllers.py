@@ -1,12 +1,12 @@
 from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from . import workflow
+from . import workflow_blueprint
 from .forms import AppendWorkflowStateForm, CreateWorkflowStateForm, EditWorkflowStateForm
 from ...models import db, Role, TypeDocument, WorkflowState
 from ...utils import flash_errors
 
 
-@workflow.route('/view/<int:id>', methods=['GET'])
+@workflow_blueprint.route('/view/<int:id>', methods=['GET'])
 @login_required
 def view(id):
     if not current_user.is_administrator:
@@ -15,7 +15,7 @@ def view(id):
     return render_template('workflow/view.html', workflow=workflow_actual)
 
 
-@workflow.route('/create', methods=['GET', 'POST'])
+@workflow_blueprint.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
     if not current_user.is_administrator:
@@ -45,7 +45,7 @@ def create():
     return render_template('workflow/create.html', form=form)
 
 
-@workflow.route('/append/<int:id>', methods=['GET', 'POST'])
+@workflow_blueprint.route('/append/<int:id>', methods=['GET', 'POST'])
 @login_required
 def append(id=0):
     if not current_user.is_administrator:
@@ -75,7 +75,7 @@ def append(id=0):
     return render_template('workflow/append.html', form=form, prev_workflow=prev_workflow)
 
 
-@workflow.route('/edit/<int:id>', methods=['GET', 'POST'])
+@workflow_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
     if not current_user.is_administrator:
@@ -113,7 +113,7 @@ def edit(id):
     return render_template('workflow/edit.html', form=form)
 
 
-@workflow.route('/', methods=['GET'])
+@workflow_blueprint.route('/', methods=['GET'])
 @login_required
 def get():
     if not current_user.is_administrator:
@@ -122,7 +122,7 @@ def get():
     return render_template('workflow/workflows.html', workflows=workflows)
 
 
-@workflow.route('/<int:id>', methods=['GET'])
+@workflow_blueprint.route('/<int:id>', methods=['GET'])
 @login_required
 def graph(id):
     if not current_user.is_administrator:

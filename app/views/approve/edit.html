@@ -6,7 +6,7 @@
     <div class="col-10 offset-1">
         <div class="card text-light bg-dark mb-2">
             <div class="card-header text-center">
-                <div class="h2 m-0">Estado del viaje: <a class="text-light" href="{{ url_for('main.get_travel', id=travel.id) }}"><u>{{ travel.name }}</u></a></div>
+                <div class="h2 m-0">Estado del viaje: <a class="text-light" href="{{ url_for('travel.get', id=travel.id) }}"><u>{{ travel.name }}</u></a></div>
             </div>
             <div class="card-body">
                 <div><strong>Usuario:</strong> {{ travel.user }}</div>

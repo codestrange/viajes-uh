@@ -1,12 +1,12 @@
-from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user, login_required, current_user
-from . import auth
-from .forms import LoginForm, RegistrationForm, EditProfileForm
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_user, login_required, logout_user
+from . import auth_blueprint
+from .forms import EditProfileForm, LoginForm, RegistrationForm
 from ...models import db, User
 from ...utils import flash_errors
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -20,7 +20,7 @@ def login():
     return render_template('auth/login.html', form=form)
 
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -40,14 +40,14 @@ def register():
     return render_template('auth/register.html', form=form)
 
 
-@auth.route('/logout')
+@auth_blueprint.route('/logout')
 def logout():
     logout_user()
     flash('Usted ha sido desconectado.')
     return redirect(request.args.get('next') or url_for('main.index'))
 
 
-@auth.route('/edit_profile', methods=['GET', 'POST'])
+@auth_blueprint.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     form = EditProfileForm()
@@ -63,7 +63,7 @@ def edit_profile():
     return render_template('auth/edit_profile.html', form=form)
 
 
-@auth.route('/see_profile')
+@auth_blueprint.route('/see_profile')
 @login_required
 def see_profile():
     return render_template('auth/see_profile.html')

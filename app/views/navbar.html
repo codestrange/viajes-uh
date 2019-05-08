@@ -14,7 +14,7 @@
                 </li>
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a href="{{ url_for('main.get_travels') }}" class="nav-link">Mis Viajes</a>
+                    <a href="{{ url_for('travel.travels') }}" class="nav-link">Mis Viajes</a>
                 </li>
                 {% if current_user.is_administrator %}
                 <li class="nav-item">
@@ -44,7 +44,7 @@
                             <i class="fas fa-user-edit mr-1"></i>
                             Editar Perfil
                         </a>
-                        <a class="dropdown-item" href="{{ url_for('main.create_travel') }}">
+                        <a class="dropdown-item" href="{{ url_for('travel.create') }}">
                             <i class="fas fa-route mr-2"></i>
                             Crear Viaje
                         </a>

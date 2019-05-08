@@ -32,19 +32,22 @@ def create_app(config_name):
     admin.add_view(UserModelView(User, db.session, endpoint='userAdmin'))
     admin.add_view(ModelView(WorkflowState, db.session, endpoint='workflowStateAdmin'))
 
-    from .controllers.main import main as main_blueprint
+    from .controllers.main import main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .controllers.approve import approve as approve_blueprint
+    from .controllers.approve import approve_blueprint
     app.register_blueprint(approve_blueprint, url_prefix='/approve')
 
-    from .controllers.auth import auth as auth_blueprint
+    from .controllers.auth import auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-    from .controllers.document import document as document_blueprint
+    from .controllers.document import document_blueprint
     app.register_blueprint(document_blueprint, url_prefix='/document')
 
-    from .controllers.workflow import workflow as workflow_blueprint
+    from .controllers.travel import travel_blueprint
+    app.register_blueprint(travel_blueprint, url_prefix='/travel')
+
+    from .controllers.workflow import workflow_blueprint
     app.register_blueprint(workflow_blueprint, url_prefix='/workflow')
 
     return app

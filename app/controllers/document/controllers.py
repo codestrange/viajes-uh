@@ -1,12 +1,12 @@
 from flask import render_template, redirect, request, url_for
 from flask_login import current_user, login_required
-from . import document
+from . import document_blueprint
 from .forms import UploadDocumentForm
 from ...models import Document, Travel, TypeDocument
 from ...utils import flash_errors, modify_document, save_document
 
 
-@document.route('/upload', methods=['GET', 'POST'])
+@document_blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
     form = UploadDocumentForm()
@@ -27,7 +27,7 @@ def upload():
     return render_template('document/upload.html', form=form)
 
 
-@document.route('/edit/<int:id>', methods=['GET', 'POST'])
+@document_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
     document = Document.query.get_or_404(id)

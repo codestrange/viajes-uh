@@ -1,20 +1,20 @@
-from flask import render_template, redirect, url_for, flash, request, abort
-from flask_login import login_user, current_user, login_required
-from . import approve
-from ...models import db, Travel, User, Country, Document, WorkflowState, Role, TypeDocument
+from flask import abort, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
+from . import approve_blueprint
+from ...models import db, Travel
 from ...utils import check_conditions, user_can_decide
 
 
-@approve.route('/travels')
+@approve_blueprint.route('/travels')
 @login_required
 def approve_travels():
     travels = current_user.decisions()
     if not travels:
         return redirect(url_for('main.index'))
-    return render_template('approve/approve_travels.html', travels=travels)
+    return render_template('approve/list.html', travels=travels)
 
 
-@approve.route('/reject/travel/<int:id>', methods=['GET'])
+@approve_blueprint.route('/reject/travel/<int:id>', methods=['GET'])
 @login_required
 def reject_travel(id):
     if not user_can_decide(current_user, Travel.query.get(id)):
@@ -26,7 +26,7 @@ def reject_travel(id):
     return redirect(url_for('approve.approve_travels'))
 
 
-@approve.route('/travel/<int:id>', methods=['GET', 'POST'])
+@approve_blueprint.route('/travel/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_travel_state(id):
     travel = Travel.query.get_or_404(id)
@@ -48,5 +48,5 @@ def edit_travel_state(id):
         db.session.commit()
         if check_conditions(travel):
             return redirect(url_for('approve.approve_travels'))
-    return render_template('approve/edit_travel.html', travel=travel, documents=documents)
+    return render_template('approve/edit.html', travel=travel, documents=documents)
  
