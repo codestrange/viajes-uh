@@ -8,6 +8,10 @@ def user_can_decide(user, travel):
     return travel.id in (trav.id for trav in user.decisions())
 
 
+def user_can_decide_by_id(user, travel_id):
+    return travel_id in (trav.id for trav in user.decisions())
+
+
 def save_document(name, file_document, travel_id, type_document_id):
     travel = Travel.query.get(travel_id)
     type_document = TypeDocument.query.get(type_document_id)

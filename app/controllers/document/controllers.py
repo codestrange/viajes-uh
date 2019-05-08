@@ -3,17 +3,22 @@ from flask_login import current_user, login_required
 from . import document_blueprint
 from .forms import UploadDocumentForm
 from ...models import Document, Travel, TypeDocument
-from ...utils import flash_errors, modify_document, save_document
+from ...utils import flash_errors, modify_document, save_document, user_can_decide_by_id
 
 
 @document_blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
     form = UploadDocumentForm()
+    ids = [
+        travel.id
+        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
+    ]
+    ids += [ travel.id for travel in current_user.decisions() if not travel.id in ids]
+    travels = [Travel.query.get(_id) for _id in ids]
     form.travel.choices = [
         (str(travel.id), travel.name)
-        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
-        if not travel.accepted and not travel.rejected
+        for travel in travels if not travel.accepted and not travel.rejected
     ]
     form.type_document.choices = [
         (str(type_document.id), type_document.name)
@@ -35,10 +40,15 @@ def edit(id):
     if document.travel.accepted or document.travel.rejected:
         abort(404)
     form = UploadDocumentForm()
+    ids = [
+        travel.id
+        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
+    ]
+    ids += [ travel.id for travel in current_user.decisions() if not travel.id in ids]
+    travels = [Travel.query.get(_id) for _id in ids]
     form.travel.choices = [
         (str(travel.id), travel.name)
-        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
-        if not travel.accepted and not travel.rejected
+        for travel in travels if not travel.accepted and not travel.rejected
     ]
     form.type_document.choices = [
         (str(type_document.id), type_document.name)
