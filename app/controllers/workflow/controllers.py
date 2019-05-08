@@ -8,7 +8,7 @@ from ...models import db, Role, TypeDocument, WorkflowState
 @workflow.route('/view/<int:id>', methods=['GET'])
 @login_required
 def view_workflow(id):
-    if not current_user.is_admin():
+    if not current_user.is_administrator:
         abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
     return render_template('workflow/view.html', workflow=workflow_actual)
@@ -17,7 +17,7 @@ def view_workflow(id):
 @workflow.route('/create', methods=['GET', 'POST'])
 @login_required
 def create_workflow():
-    if not current_user.is_admin():
+    if not current_user.is_administrator:
         abort(403)
     form = CreateWorkflowStateForm()
     requirements = TypeDocument.query.all()
@@ -47,7 +47,7 @@ def create_workflow():
 @workflow.route('/append/<int:id>', methods=['GET', 'POST'])
 @login_required
 def append_workflow(id=0):
-    if not current_user.is_admin():
+    if not current_user.is_administrator:
         abort(403)
     prev_workflow = WorkflowState.query.get_or_404(id)
     form = AppendWorkflowStateForm()
@@ -77,7 +77,7 @@ def append_workflow(id=0):
 @workflow.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_workflow(id):
-    if not current_user.is_admin():
+    if not current_user.is_administrator:
         abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
     form = EditWorkflowStateForm()
@@ -115,7 +115,7 @@ def edit_workflow(id):
 @workflow.route('/', methods=['GET'])
 @login_required
 def get_workflows():
-    if not current_user.is_admin():
+    if not current_user.is_administrator:
         abort(403)
     workflows = WorkflowState.query.all()
     return render_template('workflow/workflows.html', workflows=workflows)
@@ -124,7 +124,7 @@ def get_workflows():
 @workflow.route('/<int:id>', methods=['GET'])
 @login_required
 def graph_workflow(id):
-    if not current_user.is_admin():
+    if not current_user.is_administrator:
         abort(403)
     workflows = [WorkflowState.query.get_or_404(id)]
     for workflow in workflows:
