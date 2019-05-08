@@ -115,7 +115,6 @@ def get_travel(id):
         if not mask:
             requirements.append(requirement)
     form = CommentForm()
-    form.text.data = ''
     if form.validate_on_submit():
         comment = Comment()
         comment.text = form.text.data
@@ -123,6 +122,7 @@ def get_travel(id):
         comment.travel = travel
         db.session.add(comment)
         db.session.commit()
+        form.text.data = ''
     else:
         flash_errors(form)
     return render_template("travel.html", travel=travel, requirements=requirements, form=form)
