@@ -13,6 +13,7 @@ def upload():
     form.travel.choices = [
         (str(travel.id), travel.name)
         for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
+        if not travel.accepted and not travel.rejected
     ]
     form.type_document.choices = [
         (str(type_document.id), type_document.name)
@@ -35,6 +36,7 @@ def edit(id):
     form.travel.choices = [
         (str(travel.id), travel.name)
         for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
+        if not travel.accepted and not travel.rejected
     ]
     form.type_document.choices = [
         (str(type_document.id), type_document.name)
