@@ -110,7 +110,9 @@ class Country(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
     region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
-    workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
+    workflow_state_employee_id = db.Column(db.Integer)
+    workflow_state_student_id = db.Column(db.Integer)
+    workflow_state_teacher_id = db.Column(db.Integer)
     travels = db.relationship('Travel', backref='country', lazy='dynamic')
 
     @staticmethod
@@ -135,6 +137,9 @@ class Country(db.Model):
             for country_name in countries:
                 country = Country(name=country_name)
                 country.region = region
+                country.workflow_state_employee_id = 1
+                country.workflow_state_student_id = 1
+                country.workflow_state_teacher_id = 1
                 db.session.add(country)
             db.session.commit()
 
@@ -295,6 +300,7 @@ class User(UserMixin, db.Model):
     area_id = db.Column(db.Integer, db.ForeignKey('area.id'))
     travels = db.relationship('Travel', backref='user', lazy='dynamic')
     comments = db.relationship('Comment', backref='user', lazy='dynamic')
+    category = db.Column(db.String(64), nullable=False)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -302,7 +308,6 @@ class User(UserMixin, db.Model):
         for role in roles:
             role.users.append(self)
             db.session.add(role)
-        db.session.commit()
 
     @property
     def password(self):
@@ -335,10 +340,10 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def insert():
-        leynier = User(username='l.gutierrez', email='l.gutierrez@estudiantes.matcom.uh.cu', password='1234')
-        carlos = User(username='c.bermudez', email='c.bermudez@estudiantes.matcom.uh.cu', password='1234')
-        martinez = User(username='c.martinez', email='c.martinez@estudiantes.matcom.uh.cu', password='1234')
-        roberto = User(username='r.marti', email='r.marti@estudiantes.matcom.uh.cu', password='1234')
+        leynier = User(username='l.gutierrez', email='l.gutierrez@estudiantes.matcom.uh.cu', password='1234', category='student')
+        carlos = User(username='c.bermudez', email='c.bermudez@estudiantes.matcom.uh.cu', password='1234', category='student')
+        martinez = User(username='c.martinez', email='c.martinez@estudiantes.matcom.uh.cu', password='1234', category='employee')
+        roberto = User(username='r.marti', email='r.marti@estudiantes.matcom.uh.cu', password='1234', category='teacher')
         leynier.confirmed = carlos.confirmed = martinez.confirmed = roberto.confirmed = True
         general = Area.query.get(1)
         matcom = Area.query.get(2)
@@ -376,7 +381,6 @@ class WorkflowState(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     next_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
     travels = db.relationship('Travel', backref='workflow_state', lazy='dynamic')
-    countries = db.relationship('Country', backref='workflow_state', lazy='dynamic')
     requirements = db.relationship('TypeDocument',
                                    secondary=workflow_state_type_document,
                                    backref=db.backref('workflow_states', lazy='dynamic'),
@@ -405,8 +409,6 @@ class WorkflowState(db.Model):
         item1.role = Role.query.filter_by(name='Decano').first()
         item1.requirements.append(TypeDocument.query.get(2))
         item1.next = item0
-        for country in Country.query.all():
-            item1.countries.append(country)
         db.session.add(item1)
         db.session.commit()
 

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1ca0c4e636aa
+Revision ID: f8f11df63813
 Revises: 
-Create Date: 2019-05-08 13:28:03.535628
+Create Date: 2019-05-08 17:34:04.501013
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1ca0c4e636aa'
+revision = 'f8f11df63813'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -52,6 +52,17 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    op.create_table('country',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=64), nullable=False),
+    sa.Column('region_id', sa.Integer(), nullable=True),
+    sa.Column('workflow_state_employee_id', sa.Integer(), nullable=True),
+    sa.Column('workflow_state_student_id', sa.Integer(), nullable=True),
+    sa.Column('workflow_state_teacher_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['region_id'], ['region.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=64), nullable=False),
@@ -62,6 +73,7 @@ def upgrade():
     sa.Column('confirmed', sa.Boolean(), nullable=True),
     sa.Column('activated', sa.Boolean(), nullable=True),
     sa.Column('area_id', sa.Integer(), nullable=True),
+    sa.Column('category', sa.String(length=64), nullable=False),
     sa.ForeignKeyConstraint(['area_id'], ['area.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
@@ -78,30 +90,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
-    )
-    op.create_table('country',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=64), nullable=False),
-    sa.Column('region_id', sa.Integer(), nullable=True),
-    sa.Column('workflow_state_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['region_id'], ['region.id'], ),
-    sa.ForeignKeyConstraint(['workflow_state_id'], ['workflow_state.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
-    )
-    op.create_table('user_role',
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('role_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('user_id', 'role_id')
-    )
-    op.create_table('workflow_state_type_document',
-    sa.Column('workflow_state_id', sa.Integer(), nullable=False),
-    sa.Column('type_document_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['type_document_id'], ['type_document.id'], ),
-    sa.ForeignKeyConstraint(['workflow_state_id'], ['workflow_state.id'], ),
-    sa.PrimaryKeyConstraint('workflow_state_id', 'type_document_id')
     )
     op.create_table('travel',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -125,6 +113,20 @@ def upgrade():
     op.create_index(op.f('ix_travel_accepted'), 'travel', ['accepted'], unique=False)
     op.create_index(op.f('ix_travel_confirmed_in_state'), 'travel', ['confirmed_in_state'], unique=False)
     op.create_index(op.f('ix_travel_rejected'), 'travel', ['rejected'], unique=False)
+    op.create_table('user_role',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('role_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('user_id', 'role_id')
+    )
+    op.create_table('workflow_state_type_document',
+    sa.Column('workflow_state_id', sa.Integer(), nullable=False),
+    sa.Column('type_document_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['type_document_id'], ['type_document.id'], ),
+    sa.ForeignKeyConstraint(['workflow_state_id'], ['workflow_state.id'], ),
+    sa.PrimaryKeyConstraint('workflow_state_id', 'type_document_id')
+    )
     op.create_table('comment',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('text', sa.Text(), nullable=False),
@@ -155,17 +157,17 @@ def downgrade():
     op.drop_index(op.f('ix_document_confirmed'), table_name='document')
     op.drop_table('document')
     op.drop_table('comment')
+    op.drop_table('workflow_state_type_document')
+    op.drop_table('user_role')
     op.drop_index(op.f('ix_travel_rejected'), table_name='travel')
     op.drop_index(op.f('ix_travel_confirmed_in_state'), table_name='travel')
     op.drop_index(op.f('ix_travel_accepted'), table_name='travel')
     op.drop_table('travel')
-    op.drop_table('workflow_state_type_document')
-    op.drop_table('user_role')
-    op.drop_table('country')
     op.drop_table('workflow_state')
     op.drop_index(op.f('ix_user_confirmed'), table_name='user')
     op.drop_index(op.f('ix_user_activated'), table_name='user')
     op.drop_table('user')
+    op.drop_table('country')
     op.drop_table('type_document')
     op.drop_index(op.f('ix_role_default'), table_name='role')
     op.drop_table('role')

@@ -3,7 +3,7 @@ from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from . import travel_blueprint
 from .forms import CreateTravelForm, CommentForm
-from ...models import db, Comment, Concept, Country, Travel
+from ...models import db, Comment, Concept, Country, Travel, WorkflowState
 from ...utils import flash_errors, user_can_decide
 
 
@@ -27,7 +27,14 @@ def create():
         travel.concept = concept
         travel.country = country
         travel.duration = form.duration.data
-        travel.workflow_state = country.workflow_state
+        temp = None
+        if current_user.category == 'student':
+            temp = travel.country.workflow_state_student_id
+        elif current_user.category == 'teacher':
+            temp = travel.country.workflow_state_teacher_id
+        else:
+            temp = travel.country.workflow_state_employee_id
+        travel.workflow_state = WorkflowState.query.get_or_404(temp)
         hour = int(form.departure_date_hour.data)
         minute = int(form.departure_date_minute.data)
         day = int(form.departure_date_day.data)

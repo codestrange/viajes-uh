@@ -23,14 +23,18 @@ def login():
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    form.category.choices = [('0', 'Estudiante'), ('1', 'Profesor'), ('2', 'Trabajador')]
     if form.validate_on_submit():
         user = User()
         user.firstname = form.firstname.data
         user.lastname = form.lastname.data
         user.username = form.username.data
+        print(form.username.data, 'dadsadasd')
         user.email = form.email.data
         user.password = form.password.data
         user.confirmed = True
+        user.category = 'student' if form.category.data == '0' else \
+            'teacher' if form.category.data == '1' else 'employee'
         db.session.add(user)
         db.session.commit()
         flash('Ahora puede iniciar sesión.')
