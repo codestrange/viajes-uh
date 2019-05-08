@@ -44,20 +44,21 @@ def modify_document(document, name, file_document, travel_id, type_document_id):
 
 
 def check_conditions(travel):
-    actual_state = WorkflowState.query.get(travel.workflow_state_id)
-    documents = travel.documents
-    requirements_ids = [ requirement.id for requirement in actual_state.requirements ]
-    to_confirm_documents = [ document for document in documents if document.type_id in requirements_ids ]
+    documents = [
+        document
+        for document in travel.documents
+        if travel.workflow_state.requirements.filter_by(id=document.type_document.id).first()
+    ]
     if travel.confirmed_in_state:
-        for requirement in requirements_ids:
-            for doc in to_confirm_documents:
-                if doc.type_id == requirement and doc.confirmed:
+        for requirement in travel.workflow_state.requirements:
+            for document in documents:
+                if document.type_document.id == requirement.id and document.confirmed:
                     break
             else:
                 return False
         travel.confirmed_in_state = False
-        if actual_state.next_id:
-            travel.workflow_state_id = actual_state.next_id
+        if travel.workflow_state.next:
+            travel.workflow_state = travel.workflow_state.next
         else:
             travel.accepted = True
         db.session.add(travel)
