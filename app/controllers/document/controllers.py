@@ -32,6 +32,8 @@ def upload():
 @login_required
 def edit(id):
     document = Document.query.get_or_404(id)
+    if document.travel.accepted or document.travel.rejected:
+        abort(404)
     form = UploadDocumentForm()
     form.travel.choices = [
         (str(travel.id), travel.name)
