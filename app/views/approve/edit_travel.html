@@ -2,42 +2,53 @@
 {% extends "navbar.html" %}
 {% block subtitle %} - Aprovación{% endblock subtitle %}
 {% block page_content %}
-<div class="page-header">
-    <div class="text-center">
-        <div class="col-6 offset-3">
-            <h1><strong>Estado del Viaje "{{travel.name}}" .</strong></h1>
-            <h2><strong>Creado por el usuario {{travel.user.username}} .</strong></h2>
-            <h2><strong>Hacia el país {{travel.country.name}} .</strong></h2>
-            <h2><strong>Se requiere autorizar los siguientes tipos documentos:</strong></h2>
-            <ul>
-                {% for req in travel.workflow_state.requirements %}
-                <li><h3>{{ req.name }}</h3></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="col-6 offset-3">
-            <form method="POST">
-                <h2><strong>Documentos a confirmar:</strong></h2>
-                <div class="form-group">
-                    <input type="checkbox" name="accept_travel" id="accept_travel"
-                    {% if travel.confirmed_in_state %}
-                    checked
+<div class="row">
+    <div class="col-10 offset-1">
+        <div class="card text-light bg-dark mb-2">
+            <div class="card-header text-center">
+                <div class="h2 m-0">Estado del viaje: <a class="text-light" href="{{ url_for('main.get_travel', id=travel.id) }}"><u>{{ travel.name }}</u></a></div>
+            </div>
+            <div class="card-body">
+                <div><strong>Usuario:</strong> {{ travel.user }}</div>
+                <div><strong>País:</strong> {{ travel.country }}</div>
+                <div>
+                    {% if travel.workflow_state.requirements.first() %}
+                    <strong>Documentos Necesarios:</strong> 
+                    {% for requirement in travel.workflow_state.requirements.all() %}
+                        {{ requirement.name }}{% if loop.index != loop.length %}, {% endif %}
+                    {% endfor %}
                     {% endif %}
-                    >
-                    <label for="accept_travel">Autorización por {{ travel.workflow_state.role.name }}</label>
                 </div>
-                {% for document in documents %}
-                    <div class="form-group">
-                        <input type="checkbox" value="{{ document.id }}" name="confirmed_docs" id="{{ 'cb' + document.id.__str__() }}"
-                        {% if document.confirmed %}
-                        checked
-                        {% endif %}
-                        >
-                        <label for="{{ 'cb' + document.id.__str__() }}">{{ document.name }}</label>
+            </div>
+        </div>
+        <div class="card text-light bg-dark mb-2">
+            <div class="card-header text-center">
+                <div class="h4 m-0">Documentos a Confirmar</div>
+            </div>
+            <form method="POST">
+                <div class="card-body text-center">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" name="accept_travel" id="accept_travel" {% if travel.confirmed_in_state %} checked {% endif %}>
+                        <label class="form-check-label ml-2 h5" for="accept_travel"><strong>Autorización por {{ travel.workflow_state.role.name }}</strong></label>
                     </div>
-                {% endfor %}
-                <button type="submit" class="btn btn-dark ">Aceptar cambios</button>
-                <a href="{{ url_for('approve.reject_travel', id=travel.id) }}" class="btn btn-danger">Rechazar Viaje</a>
+                    {% for document in documents %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ document.id }}" name="confirmed_docs" id="{{ 'cb' + document.id.__str__() }}" {% if document.confirmed %} checked {% endif %} >
+                        <label class="form-check-label ml-2" for="{{ 'cb' + document.id.__str__() }}">{{ document.name }} <span class="badge badge-pill badge-light">{{ document.type_document.name }}</span></label>
+                        <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Ver Documento</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-outline-success btn-block">Aceptar cambios</button>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ url_for('approve.reject_travel', id=travel.id) }}" class="btn btn-outline-danger btn-block">Rechazar Viaje</a>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
