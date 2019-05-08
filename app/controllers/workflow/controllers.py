@@ -9,7 +9,7 @@ from ...utils import flash_errors
 @workflow_blueprint.route('/view/<int:id>', methods=['GET'])
 @login_required
 def view(id):
-    if not current_user.is_administrator:
+    if not current_user.is_specialist:
         abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
     return render_template('workflow/view.html', workflow=workflow_actual)
@@ -18,7 +18,7 @@ def view(id):
 @workflow_blueprint.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
-    if not current_user.is_administrator:
+    if not current_user.is_specialist:
         abort(403)
     form = CreateWorkflowStateForm()
     requirements = TypeDocument.query.all()
@@ -48,7 +48,7 @@ def create():
 @workflow_blueprint.route('/append/<int:id>', methods=['GET', 'POST'])
 @login_required
 def append(id=0):
-    if not current_user.is_administrator:
+    if not current_user.is_specialist:
         abort(403)
     prev_workflow = WorkflowState.query.get_or_404(id)
     form = AppendWorkflowStateForm()
@@ -78,7 +78,7 @@ def append(id=0):
 @workflow_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
-    if not current_user.is_administrator:
+    if not current_user.is_specialist:
         abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
     form = EditWorkflowStateForm()
@@ -116,7 +116,7 @@ def edit(id):
 @workflow_blueprint.route('/', methods=['GET'])
 @login_required
 def get():
-    if not current_user.is_administrator:
+    if not current_user.is_specialist:
         abort(403)
     workflows = WorkflowState.query.all()
     return render_template('workflow/workflows.html', workflows=workflows)
@@ -125,7 +125,7 @@ def get():
 @workflow_blueprint.route('/<int:id>', methods=['GET'])
 @login_required
 def graph(id):
-    if not current_user.is_administrator:
+    if not current_user.is_specialist:
         abort(403)
     workflows = [WorkflowState.query.get_or_404(id)]
     for workflow in workflows:

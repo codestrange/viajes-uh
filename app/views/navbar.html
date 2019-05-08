@@ -16,7 +16,7 @@
                 <li class="nav-item">
                     <a href="{{ url_for('travel.travels') }}" class="nav-link">Mis Viajes</a>
                 </li>
-                {% if current_user.is_administrator %}
+                {% if current_user.is_specialist %}
                 <li class="nav-item">
                     <a href="{{ url_for('workflow.get') }}" class="nav-link">Workflows</a>
                 </li>
@@ -52,12 +52,15 @@
                             <i class="fas fa-upload mr-2"></i>
                             Subir Documento
                         </a>
-                        {% if current_user.is_administrator %}
+                        {% if current_user.is_specialist %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url_for('workflow.create') }}">
                             <i class="fas fa-plus-circle mr-2"></i>
                             Crear Nodo
                         </a>
+                        {% endif %}
+                        {% if current_user.is_administrator %}
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url_for('admin.index') }}">
                             <i class="fas fa-cog mr-2"></i>
                             Administración

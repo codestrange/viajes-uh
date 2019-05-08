@@ -197,17 +197,20 @@ class Role(db.Model):
         profesor = Role(name='Profesor')
         decano = Role(name='Decano')
         especialista = Role(name='Especialista')
+        administrador = Role(name='Administrador')
         db.session.add(viajero)
         db.session.add(estudiante)
         db.session.add(profesor)
         db.session.add(decano)
         db.session.add(especialista)
+        db.session.add(administrador)
         db.session.commit()
         leynier = User.query.get(1)
         carlos = User.query.get(2)
         martinez = User.query.get(3)
         roberto = User.query.get(4)
         leynier.roles.append(estudiante)
+        leynier.roles.append(administrador)
         carlos.roles.append(profesor)
         martinez.roles.append(especialista)
         roberto.roles.append(decano)
@@ -323,8 +326,12 @@ class User(UserMixin, db.Model):
         return self.username
 
     @property
-    def is_administrator(self):
+    def is_specialist(self):
         return Role.query.filter_by(name='Especialista').first().id in (role.id for role in self.roles)
+
+    @property
+    def is_administrator(self):
+        return Role.query.filter_by(name='Administrador').first().id in (role.id for role in self.roles)
 
     @staticmethod
     def insert():
