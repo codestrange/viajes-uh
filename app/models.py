@@ -405,8 +405,8 @@ class WorkflowState(db.Model):
         item1.role = Role.query.filter_by(name='Decano').first()
         item1.requirements.append(TypeDocument.query.get(2))
         item1.next = item0
-        item1.countries.append(Country.query.get(41))
-        item1.countries.append(Country.query.get(25))
+        for country in Country.query.all():
+            item1.countries.append(country)
         db.session.add(item1)
         db.session.commit()
 
