@@ -1,7 +1,6 @@
 from flask import flash
 from os import remove
 from os.path import abspath, exists, join
-from os.path import exists, join
 from .models import db, Document, Travel, TypeDocument, WorkflowState
 
 

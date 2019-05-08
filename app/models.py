@@ -81,6 +81,13 @@ class Area(db.Model):
         return f'{self.name}'
 
 
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
 class Concept(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
@@ -97,13 +104,6 @@ class Concept(db.Model):
 
     def __repr__(self):
         return f'{self.name}'
-
-
-class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.Text, nullable=False)
-    travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 class Country(db.Model):

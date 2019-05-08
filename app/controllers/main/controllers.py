@@ -1,10 +1,10 @@
 from datetime import datetime
-from flask import render_template, redirect, request, url_for, flash, abort
-from flask_login import login_required, current_user
+from flask import abort, flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from . import main
-from .forms import CreateTravelForm, UploadDocumentForm, CommentForm
-from ...models import db, Concept, Country, Comment, Document, Travel, TypeDocument
-from ...utils import flash_errors, modify_document, save_document
+from .forms import CreateTravelForm, CommentForm
+from ...models import db, Comment, Concept, Country, Document, Travel, TypeDocument
+from ...utils import flash_errors
 
 
 @main.route('/')
@@ -17,8 +17,14 @@ def index():
 @login_required
 def create_travel():
     form = CreateTravelForm()
-    form.concept.choices = [(str(concept.id), concept.name) for concept in Concept.query.order_by(Concept.name).all()]
-    form.country.choices = [(str(country.id), country.name) for country in Country.query.order_by(Country.name).all()]
+    form.concept.choices = [
+        (str(concept.id), concept.name)
+        for concept in Concept.query.order_by(Concept.name).all()
+    ]
+    form.country.choices = [
+        (str(country.id), country.name)
+        for country in Country.query.order_by(Country.name).all()
+    ]
     if form.validate_on_submit():
         travel = Travel(name=form.name.data)
         travel.user = current_user
@@ -45,52 +51,6 @@ def create_travel():
     else:
         flash_errors(form)
     return render_template('create_travel.html', form=form)
-
-
-@main.route('/upload_document', methods=['GET', 'POST'])
-@login_required
-def upload_document():
-    form = UploadDocumentForm()
-    form.travel.choices = [
-        (str(travel.id), travel.name)
-        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
-    ]
-    form.type_document.choices = [
-        (str(type_document.id), type_document.name)
-        for type_document in TypeDocument.query.all()
-    ]
-    if form.validate_on_submit():
-        save_document(form.name.data, form.file_document.data, form.travel.data,
-                      form.type_document.data)
-        return redirect(request.args.get('next') or url_for('main.index'))
-    else:
-        flash_errors(form)
-    return render_template('upload_document.html', form=form)
-
-
-@main.route('/edit_document/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_document(id):
-    document = Document.query.get_or_404(id)
-    form = UploadDocumentForm()
-    form.travel.choices = [
-        (str(travel.id), travel.name)
-        for travel in Travel.query.filter(Travel.user_id == current_user.id).all()
-    ]
-    form.type_document.choices = [
-        (str(type_document.id), type_document.name)
-        for type_document in TypeDocument.query.all()
-    ]
-    form.name.data = document.name
-    form.travel.data = str(document.travel.id)
-    form.type_document.data = str(document.type_document.id)
-    if form.validate_on_submit():
-        modify_document(document, form.name.data, form.file_document.data, form.travel.data,
-                      form.type_document.data)
-        return redirect(request.args.get('next') or url_for('main.index'))
-    else:
-        flash_errors(form)
-    return render_template('edit_document.html', form=form)
 
 
 @main.route('/travels')
