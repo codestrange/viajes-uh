@@ -5,7 +5,7 @@
     <div class="card mb-5 text-white bg-dark">
         <div class="card-header text-center">
             <h2 class="m-0">Crear Nodo del Workflow</h2>
-            <h6 class="m-0">a continuación del nodo <a href="{{ url_for('workflow.view_workflow', id=prev_workflow.id) }}" class="text-light"><u>{{ prev_workflow.name }}</u></a></h6>
+            <h6 class="m-0">a continuación del nodo <a href="{{ url_for('workflow.view', id=prev_workflow.id) }}" class="text-light"><u>{{ prev_workflow.name }}</u></a></h6>
         </div>
         <div class="card-body">
             <form method="POST">

@@ -18,7 +18,7 @@
                 </li>
                 {% if current_user.is_administrator %}
                 <li class="nav-item">
-                    <a href="{{ url_for('workflow.get_workflows') }}" class="nav-link">Workflows</a>
+                    <a href="{{ url_for('workflow.get') }}" class="nav-link">Workflows</a>
                 </li>
                 {% endif %}
                 {% if current_user.have_decisions() %}
@@ -54,7 +54,7 @@
                         </a>
                         {% if current_user.is_administrator %}
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ url_for('workflow.create_workflow') }}">
+                        <a class="dropdown-item" href="{{ url_for('workflow.create') }}">
                             <i class="fas fa-plus-circle mr-2"></i>
                             Crear Nodo
                         </a>

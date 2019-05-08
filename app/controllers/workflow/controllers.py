@@ -1,13 +1,14 @@
-from flask import redirect, render_template, request, url_for, abort
+from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from . import workflow
 from .forms import AppendWorkflowStateForm, CreateWorkflowStateForm, EditWorkflowStateForm
 from ...models import db, Role, TypeDocument, WorkflowState
+from ...utils import flash_errors
 
 
 @workflow.route('/view/<int:id>', methods=['GET'])
 @login_required
-def view_workflow(id):
+def view(id):
     if not current_user.is_administrator:
         abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
@@ -16,7 +17,7 @@ def view_workflow(id):
 
 @workflow.route('/create', methods=['GET', 'POST'])
 @login_required
-def create_workflow():
+def create():
     if not current_user.is_administrator:
         abort(403)
     form = CreateWorkflowStateForm()
@@ -46,7 +47,7 @@ def create_workflow():
 
 @workflow.route('/append/<int:id>', methods=['GET', 'POST'])
 @login_required
-def append_workflow(id=0):
+def append(id=0):
     if not current_user.is_administrator:
         abort(403)
     prev_workflow = WorkflowState.query.get_or_404(id)
@@ -76,7 +77,7 @@ def append_workflow(id=0):
 
 @workflow.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit_workflow(id):
+def edit(id):
     if not current_user.is_administrator:
         abort(403)
     workflow_actual = WorkflowState.query.get_or_404(id)
@@ -114,7 +115,7 @@ def edit_workflow(id):
 
 @workflow.route('/', methods=['GET'])
 @login_required
-def get_workflows():
+def get():
     if not current_user.is_administrator:
         abort(403)
     workflows = WorkflowState.query.all()
@@ -123,7 +124,7 @@ def get_workflows():
 
 @workflow.route('/<int:id>', methods=['GET'])
 @login_required
-def graph_workflow(id):
+def graph(id):
     if not current_user.is_administrator:
         abort(403)
     workflows = [WorkflowState.query.get_or_404(id)]
