@@ -314,7 +314,13 @@ class User(UserMixin, db.Model):
 
     @property
     def fullname(self):
-        return f'{self.firstname} {self.lastname}'
+        if self.firstname and self.lastname:
+            return f'{self.firstname} {self.lastname}'
+        elif self.firstname:
+            return self.firstname
+        elif self.lastname:
+            return self.lastname
+        return self.username
 
     @property
     def is_administrator(self):
@@ -354,7 +360,7 @@ class User(UserMixin, db.Model):
         return len(self.decisions()) > 0
 
     def __repr__(self):
-        return f'{self.username}'
+        return self.fullname
 
 
 class WorkflowState(db.Model):
