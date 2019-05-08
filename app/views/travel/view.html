@@ -3,7 +3,10 @@
 {% block page_content %}
 <div class="row">
     <div class="col-8">
-        <span class="mb-0 h1">{{ travel.name }}</span>
+        <div class="mb-0 h1">{{ travel.name }}</div>
+        {% if current_user.id != travel.user.id %}
+        <div class="mb-0 ml-4"><strong>Usuario:</strong> <span class="badge badge-pill badge-dark">{{ travel.user }}</span></div>
+        {% endif %}
     </div>
     <div class="col-4">
         <div class="row">

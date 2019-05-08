@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from . import travel_blueprint
 from .forms import CreateTravelForm, CommentForm
 from ...models import db, Comment, Concept, Country, Travel
-from ...utils import flash_errors
+from ...utils import flash_errors, user_can_decide
 
 
 @travel_blueprint.route('/create', methods=['GET', 'POST'])
@@ -56,9 +56,10 @@ def travels():
 @travel_blueprint.route('/<int:id>', methods=['GET', 'POST'])
 @login_required
 def get(id):
-    if id not in (travel.id for travel in current_user.travels):
-        abort(403)
     travel = Travel.query.get(id)
+    if id not in (_travel.id for _travel in current_user.travels) and \
+        not user_can_decide(current_user, travel):
+        abort(403)
     requirements = []
     for requirement in travel.workflow_state.requirements.all():
         mask = False
