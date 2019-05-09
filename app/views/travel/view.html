@@ -15,6 +15,8 @@
                     <span class="badge badge-pill badge-success w-100 mr-2"><strong>Estado:</strong> Aceptado</span>
                 {% elif travel.rejected %}
                     <span class="badge badge-pill badge-danger w-100 mr-2"><strong>Estado:</strong> Rechazado</span>
+                {% elif travel.canceled %}
+                    <span class="badge badge-pill badge-danger w-100 mr-2"><strong>Estado:</strong> Cancelado</span>
                 {% else %}
                 <span class="badge badge-pill badge-info w-100 mr-2"><strong>Estado:</strong> En Proceso</span>
                 {% endif %}
@@ -60,13 +62,25 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+                {% if not travel.documents.first() %}
+                <div class="h4 m-0 text-center">El viaje no contiene documentos</div>
+                {% endif %}
             </div>
         </div>
-        {% if requirements %}
+        {% if need_checkeds %}
         <div class="card mb-2">
-            <div class="card-header"><strong>Requisitos que necesita el viaje:</strong> 
-                {% for requirement in requirements %}
-                {{ requirement.name }}{% if loop.index != loop.length %}, {% endif %}
+            <div class="card-header"><strong>Documentos que se tienen que chequear en el estado actual:</strong> 
+                {% for need_checked in need_checkeds %}
+                {{ need_checked.name }}{% if loop.index != loop.length %}, {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% if need_uploadeds %}
+        <div class="card mb-2">
+            <div class="card-header"><strong>Documentos que se tienen que subir en el estado actual:</strong> 
+                {% for need_uploaded in need_uploadeds %}
+                {{ need_uploaded.name }}{% if loop.index != loop.length %}, {% endif %}
                 {% endfor %}
             </div>
         </div>

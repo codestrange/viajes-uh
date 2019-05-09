@@ -17,6 +17,7 @@ class CreateTravelForm(FlaskForm):
                             validators=[DataRequired(message='La duración debe ser mayor que 0.'),
                                         NumberRange(min=0,
                                                     message='La duración debe ser mayor que 0.')])
+    justification = TextAreaField('Justificación')
     submit = SubmitField('Crear')
 
 

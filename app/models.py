@@ -49,7 +49,6 @@ class Area(db.Model):
     name = db.Column(db.String(64), unique=True, nullable=False)
     users = db.relationship('User', backref='area', lazy='dynamic')
     ancestor_id = db.Column(db.Integer, db.ForeignKey('area.id'))
-    # descendants = db.relationship('Area', backref='ancestor', lazy='dynamic')
 
     def __init__(self, name=None, ancestor=None):
         self.name = name
@@ -298,13 +297,11 @@ class User(UserMixin, db.Model):
 
     @property
     def is_specialist(self):
-        # return Role.query.filter_by(name='Especialista').first().id in (role.id for role in self.roles)
-        pass
+        return Role.query.filter_by(name='Especialista').first().id in (role.id for role in self.roles)
 
     @property
     def is_administrator(self):
-        # return Role.query.filter_by(name='Administrador').first().id in (role.id for role in self.roles)
-        pass
+        return Role.query.filter_by(name='Administrador').first().id in (role.id for role in self.roles)
 
     @staticmethod
     def insert():

@@ -21,6 +21,9 @@
         </div>
     </div>
     {% endfor %}
+    {% if not travels.first() %}
+    <div class="h3 mt-4 text-center">No tiene viajes pendientes</div>
+    {% endif %}
     <div class="mb-3">&nbsp;</div>
 </div>
 {% endblock page_content %}

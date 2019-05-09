@@ -8,5 +8,5 @@ class UploadDocumentForm(FlaskForm):
         debe tener un máximo de 64 letras.')])
     file_document = FileField('Archivo', validators=[DataRequired()])
     travel = SelectField('Viaje')
-    type_document = SelectField('Tipo de Documento')
+    document_type = SelectField('Tipo de Documento')
     submit = SubmitField('Subir')

@@ -69,6 +69,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    {{ form.justification.label }}:
+                    {{ form.justification(class="form-control", placeholder="Introduzca la justificación") }}
+                </div>
                 {{ form.submit(class="btn btn-outline-light btn-block") }}
             </form>
         </div>

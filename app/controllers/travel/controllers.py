@@ -3,7 +3,7 @@ from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from . import travel_blueprint
 from .forms import CreateTravelForm, CommentForm
-from ...models import db, Comment, Concept, Country, Travel, WorkflowState
+from ...models import db, Comment, Concept, Country, Travel, State
 from ...utils import flash_errors, user_can_decide
 
 
@@ -27,14 +27,13 @@ def create():
         travel.concept = concept
         travel.country = country
         travel.duration = form.duration.data
-        temp = None
-        if current_user.category == 'student':
-            temp = travel.country.workflow_state_student_id
-        elif current_user.category == 'teacher':
-            temp = travel.country.workflow_state_teacher_id
+        travel.justification = form.justification.data
+        if current_user.category == 'employee':
+            travel.state = travel.country.region.workflow_employee.states.first()
+        elif current_user.category == 'student':
+            travel.state = travel.country.region.workflow_student.states.first()
         else:
-            temp = travel.country.workflow_state_employee_id
-        travel.workflow_state = WorkflowState.query.get_or_404(temp)
+            travel.state = travel.country.region.workflow_teacher.states.first()
         hour = int(form.departure_date_hour.data)
         minute = int(form.departure_date_minute.data)
         day = int(form.departure_date_day.data)
@@ -67,15 +66,24 @@ def get(id):
     if id not in (_travel.id for _travel in current_user.travels) and \
         not user_can_decide(current_user, travel):
         abort(403)
-    requirements = []
-    for requirement in travel.workflow_state.requirements.all():
+    need_checkeds = []
+    for need_checked in travel.state.need_checked.all():
         mask = False
         for document in travel.documents.all():
-            if document.type_document.id == document.id:
+            if document.document_type.id == document.id and not document.upload_by_node:
                 mark = True
                 break
         if not mask:
-            requirements.append(requirement)
+            need_checkeds.append(need_checked)
+    need_uploadeds = []
+    for need_uploaded in travel.state.need_uploaded.all():
+        mask = False
+        for document in travel.documents.all():
+            if document.document_type.id == document.id and document.upload_by_node:
+                mark = True
+                break
+        if not mask:
+            need_uploadeds.append(need_uploaded)
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment()
@@ -87,4 +95,5 @@ def get(id):
         form.text.data = ''
     else:
         flash_errors(form)
-    return render_template('travel/view.html', travel=travel, requirements=requirements, form=form)
+    return render_template('travel/view.html', travel=travel, need_checkeds=need_checkeds,
+                           need_uploadeds=need_uploadeds, form=form)

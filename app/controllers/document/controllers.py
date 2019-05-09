@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for
 from flask_login import current_user, login_required
 from . import document_blueprint
 from .forms import UploadDocumentForm
-from ...models import Document, Travel, TypeDocument
+from ...models import Document, DocumentType, Travel
 from ...utils import flash_errors, modify_document, save_document, user_can_decide_by_id
 
 
@@ -20,13 +20,13 @@ def upload():
         (str(travel.id), travel.name)
         for travel in travels if not travel.accepted and not travel.rejected
     ]
-    form.type_document.choices = [
-        (str(type_document.id), type_document.name)
-        for type_document in TypeDocument.query.all()
+    form.document_type.choices = [
+        (str(document_type.id), document_type.name)
+        for document_type in DocumentType.query.all()
     ]
     if form.validate_on_submit():
         save_document(form.name.data, form.file_document.data, form.travel.data,
-                      form.type_document.data)
+                      form.document_type.data)
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
@@ -50,16 +50,16 @@ def edit(id):
         (str(travel.id), travel.name)
         for travel in travels if not travel.accepted and not travel.rejected
     ]
-    form.type_document.choices = [
-        (str(type_document.id), type_document.name)
-        for type_document in TypeDocument.query.all()
+    form.document_type.choices = [
+        (str(document_type.id), document_type.name)
+        for document_type in DocumentType.query.all()
     ]
     form.name.data = document.name
     form.travel.data = str(document.travel.id)
-    form.type_document.data = str(document.type_document.id)
+    form.document_type.data = str(document.document_type.id)
     if form.validate_on_submit():
         modify_document(document, form.name.data, form.file_document.data, form.travel.data,
-                      form.type_document.data)
+                      form.document_type.data)
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)

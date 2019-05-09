@@ -35,7 +35,7 @@ def edit_travel_state(id):
     documents = [
         document
         for document in travel.documents
-        if travel.workflow_state.requirements.filter_by(id=document.type_document.id).first()
+        if travel.state.need_checked.filter_by(id=document.document_type.id).first()
     ]
     if request.method == 'POST':
         confirmed = {int(id) for id in request.form.getlist('confirmed_docs')}
