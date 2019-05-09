@@ -100,3 +100,10 @@ def edit_auth(id):
     else:
         flash_errors(form)
     return render_template('document/edit_to_travel.html', form=form)
+
+
+@document_blueprint.route('/rejecteds')
+@login_required
+def see_rejecteds():
+    documents = current_user.rejected_documents()
+    return render_template('document/rejecteds.html', documents=documents)

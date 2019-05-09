@@ -15,16 +15,16 @@
                     <h4 class="m-0">{{ document.name }}</h4>
                 </div>
                 <div class="col-12">
-                    <a class="btn btn-block btn-outline-light">Ver Documento</a>
+                    <a href="{{ url_for('static', filename=document.path) }}"class="btn btn-block btn-outline-light">Ver Documento</a>
                 </div>
                 <div class="col-12">
-                    <a class="btn btn-block btn-outline-light">Editar Documento</a>
+                    <a href="{{ url_for('document.edit', id=document.id) }}" class="btn btn-block btn-outline-light">Editar Documento</a>
                 </div>
             </div>
         </div>
     </div>
     {% endfor %}
-    {% if not documents.first() %}
+    {% if not documents %}
     <div class="h3 mt-4 text-center">No tiene Documentos</div>
     {% endif %}
     <div class="mb-3">&nbsp;</div>
