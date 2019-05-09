@@ -19,15 +19,29 @@ user_role = db.Table('user_role',
                      db.Column('role_id',
                                db.Integer, db.ForeignKey('role.id'), primary_key=True))
 
-workflow_state_type_document = db.Table('workflow_state_type_document',
-                                       db.Column('workflow_state_id',
-                                                 db.Integer,
-                                                 db.ForeignKey('workflow_state.id'),
-                                                 primary_key=True),
-                                       db.Column('type_document_id',
-                                                 db.Integer,
-                                                 db.ForeignKey('type_document.id'),
-                                                 primary_key=True))
+state_document_type_uploaded = db.Table('state_document_type_uploaded',
+                                       db.Column('state_id', db.Integer,
+                                                 db.ForeignKey('state.id'), primary_key=True),
+                                       db.Column('document_type_id', db.Integer,
+                                                 db.ForeignKey('document_type.id'), primary_key=True))
+
+state_document_type_checked = db.Table('state_document_type_checked',
+                                       db.Column('state_id', db.Integer,
+                                                 db.ForeignKey('state.id'), primary_key=True),
+                                       db.Column('document_type_id', db.Integer,
+                                                 db.ForeignKey('document_type.id'), primary_key=True))
+
+state_role = db.Table('state_role',
+                      db.Column('state_id', db.Integer,
+                                db.ForeignKey('state.id'), primary_key=True),
+                      db.Column('role_id', db.Integer,
+                                db.ForeignKey('role.id'), primary_key=True))
+
+state_workflow = db.Table('state_workflow',
+                          db.Column('state_id', db.Integer,
+                                    db.ForeignKey('state.id'), primary_key=True),
+                          db.Column('workflow_id', db.Integer,
+                                    db.ForeignKey('workflow.id'), primary_key=True))
 
 
 class Area(db.Model):
@@ -35,8 +49,9 @@ class Area(db.Model):
     name = db.Column(db.String(64), unique=True, nullable=False)
     users = db.relationship('User', backref='area', lazy='dynamic')
     ancestor_id = db.Column(db.Integer, db.ForeignKey('area.id'))
+    # descendants = db.relationship('Area', backref='ancestor', lazy='dynamic')
 
-    def __init__(self, name, ancestor=None):
+    def __init__(self, name=None, ancestor=None):
         self.name = name
         self.ancestor = ancestor
 
@@ -54,19 +69,7 @@ class Area(db.Model):
     
     @staticmethod
     def insert():
-        areas = []
-        areas.append(Area(name='General'))
-        db.session.add(areas[-1])
-        db.session.commit()
-        areas.append(Area(name='MatCom', ancestor=areas[-1]))
-        db.session.add(areas[-1])
-        db.session.commit()
-        areas.append(Area(name='Cibernetica', ancestor=areas[-1]))
-        db.session.add(areas[-1])
-        db.session.commit()
-        areas.append(Area(name='Matematica', ancestor=areas[-2]))
-        db.session.add(areas[-1])
-        db.session.commit()
+        pass
 
     def contains(self, area):
         if self.id == area.id:
@@ -86,6 +89,9 @@ class Comment(db.Model):
     text = db.Column(db.Text, nullable=False)
     travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'{self.user}: {self.text}'
 
 
 class Concept(db.Model):
@@ -110,9 +116,6 @@ class Country(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
     region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
-    workflow_state_employee_id = db.Column(db.Integer)
-    workflow_state_student_id = db.Column(db.Integer)
-    workflow_state_teacher_id = db.Column(db.Integer)
     travels = db.relationship('Travel', backref='country', lazy='dynamic')
 
     @staticmethod
@@ -137,9 +140,6 @@ class Country(db.Model):
             for country_name in countries:
                 country = Country(name=country_name)
                 country.region = region
-                country.workflow_state_employee_id = 1
-                country.workflow_state_student_id = 1
-                country.workflow_state_teacher_id = 1
                 db.session.add(country)
             db.session.commit()
 
@@ -152,26 +152,27 @@ class Document(db.Model):
     name = db.Column(db.String(64), nullable=False)
     path = db.Column(db.String(256), unique=True, nullable=True)
     confirmed = db.Column(db.Boolean, default=False, index=True)
-    type_id = db.Column(db.Integer, db.ForeignKey('type_document.id'))
+    upload_by_node = db.Column(db.Boolean, default=False, index=True)
+    document_type_id = db.Column(db.Integer, db.ForeignKey('document_type.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
 
     @staticmethod
     def insert():
-        type1 = TypeDocument.query.get(1)
-        type2 = TypeDocument.query.get(2)
-        document1 = Document(name='Documento 1', type_document=type1, travel=Travel.query.get(1))
-        document2 = Document(name='Documento 2', type_document=type2, travel=Travel.query.get(1))
-        document3 = Document(name='Documento 3', type_document=type1, travel=Travel.query.get(2))
-        document4 = Document(name='Documento 4', type_document=type2, travel=Travel.query.get(2))
-        document1.path = 'empty1'
-        document2.path = 'empty2'
-        document3.path = 'empty3'
-        document4.path = 'empty4'
-        db.session.add(document1)
-        db.session.add(document2)
-        db.session.add(document3)
-        db.session.add(document4)
-        db.session.commit()
+        pass
+
+    def __repr__(self):
+        return f'{self.name}'
+
+
+class DocumentType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    documents = db.relationship('Document', backref='document_type', lazy='dynamic')
+
+    @staticmethod
+    def insert():
+        pass
 
     def __repr__(self):
         return f'{self.name}'
@@ -180,6 +181,9 @@ class Document(db.Model):
 class Region(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
+    workflow_employee_id = db.Column(db.Integer, db.ForeignKey('workflow.id'))
+    workflow_student_id = db.Column(db.Integer, db.ForeignKey('workflow.id'))
+    workflow_teacher_id = db.Column(db.Integer, db.ForeignKey('workflow.id'))
     countries = db.relationship('Country', backref='region', lazy='dynamic')
 
     def __repr__(self):
@@ -192,38 +196,33 @@ class Role(db.Model):
     default = db.Column(db.Boolean, default=False, index=True)
     users = db.relationship('User', secondary=user_role, 
                             backref=db.backref('roles', lazy='dynamic'), lazy='dynamic')
-    workflow_states = db.relationship('WorkflowState', backref='role')
+    states = db.relationship('State', secondary=state_role, 
+                             backref=db.backref('roles', lazy='dynamic'), lazy='dynamic')
 
     @staticmethod
     def insert():
-        roles = []
-        viajero = Role(name='Viajero', default=True)
-        estudiante = Role(name='Estudiante')
-        profesor = Role(name='Profesor')
-        decano = Role(name='Decano')
-        especialista = Role(name='Especialista')
-        administrador = Role(name='Administrador')
-        db.session.add(viajero)
-        db.session.add(estudiante)
-        db.session.add(profesor)
-        db.session.add(decano)
-        db.session.add(especialista)
-        db.session.add(administrador)
-        db.session.commit()
-        leynier = User.query.get(1)
-        carlos = User.query.get(2)
-        martinez = User.query.get(3)
-        roberto = User.query.get(4)
-        leynier.roles.append(estudiante)
-        leynier.roles.append(administrador)
-        carlos.roles.append(profesor)
-        martinez.roles.append(especialista)
-        roberto.roles.append(decano)
-        db.session.add(leynier)
-        db.session.add(carlos)
-        db.session.add(martinez)
-        db.session.add(roberto)
-        db.session.commit()
+        pass
+
+    def __repr__(self):
+        return f'{self.name}'
+
+
+class State(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    travels = db.relationship('Travel', backref='state', lazy='dynamic')
+    need_uploaded = db.relationship('DocumentType',
+                                   secondary=state_document_type_uploaded,
+                                   backref=db.backref('states_uploaded', lazy='dynamic'),
+                                   lazy='dynamic')
+    need_checked = db.relationship('DocumentType',
+                                   secondary=state_document_type_checked,
+                                   backref=db.backref('states_checked', lazy='dynamic'),
+                                   lazy='dynamic')
+
+    @staticmethod
+    def insert():
+        pass
 
     def __repr__(self):
         return f'{self.name}'
@@ -231,58 +230,24 @@ class Role(db.Model):
 
 class Travel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
+    name = db.Column(db.String(64), nullable=False)
     departure_date = db.Column(db.Date, nullable=False)
     duration = db.Column(db.Integer, nullable=False)
+    justification = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     concept_id = db.Column(db.Integer, db.ForeignKey('concept.id'))
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
-    workflow_state_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
+    state_id = db.Column(db.Integer, db.ForeignKey('state.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
     comments = db.relationship('Comment', backref='travel', lazy='dynamic')
     accepted = db.Column(db.Boolean, default=False, index=True)
     rejected = db.Column(db.Boolean, default=False, index=True)
+    cancelled = db.Column(db.Boolean, default=False, index=True)
     confirmed_in_state = db.Column(db.Boolean, default=False, index=True)
 
     @staticmethod
     def insert():
-        travel1 = Travel(name='Viaje uno')
-        travel1.user = User.query.get(1)
-        travel1.country = Country.query.get(41)
-        travel1.workflow_state = WorkflowState.query.get(2)
-        travel1.concept = Concept.query.get(3)
-        travel1.departure_date = datetime.now()
-        travel1.duration = 3
-        travel2 = Travel(name='Viaje dos')
-        travel2.user = User.query.get(2)
-        travel2.country = Country.query.get(25)
-        travel2.workflow_state = WorkflowState.query.get(2)
-        travel2.concept = Concept.query.get(5)
-        travel2.departure_date = datetime.now()
-        travel2.duration = 6
-        db.session.add(travel1)
-        db.session.add(travel2)
-        db.session.commit()
-
-    def __repr__(self):
-        return f'{self.name}'
-
-
-class TypeDocument(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    documents = db.relationship('Document', backref='type_document', lazy='dynamic')
-
-    @staticmethod
-    def insert():
-        types = []
-        types.append(TypeDocument(name='Visa'))
-        types.append(TypeDocument(name='Pasaporte'))
-        types.append(TypeDocument(name='Carta de Invitación'))
-        types.append(TypeDocument(name='Otros'))
-        for item in types:
-            db.session.add(item)
-        db.session.commit()
+        pass
 
     def __repr__(self):
         return f'{self.name}'
@@ -295,12 +260,13 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     firstname = db.Column(db.String(64))
     lastname = db.Column(db.String(64))
+    category = db.Column(db.String(64), nullable=False)
     confirmed = db.Column(db.Boolean, default=False, index=True)
     activated = db.Column(db.Boolean, default=True, index=True)
     area_id = db.Column(db.Integer, db.ForeignKey('area.id'))
     travels = db.relationship('Travel', backref='user', lazy='dynamic')
     comments = db.relationship('Comment', backref='user', lazy='dynamic')
-    category = db.Column(db.String(64), nullable=False)
+    documents = db.relationship('Document', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -332,88 +298,52 @@ class User(UserMixin, db.Model):
 
     @property
     def is_specialist(self):
-        return Role.query.filter_by(name='Especialista').first().id in (role.id for role in self.roles)
+        # return Role.query.filter_by(name='Especialista').first().id in (role.id for role in self.roles)
+        pass
 
     @property
     def is_administrator(self):
-        return Role.query.filter_by(name='Administrador').first().id in (role.id for role in self.roles)
+        # return Role.query.filter_by(name='Administrador').first().id in (role.id for role in self.roles)
+        pass
 
     @staticmethod
     def insert():
-        leynier = User(username='l.gutierrez', email='l.gutierrez@estudiantes.matcom.uh.cu', password='1234', category='student')
-        carlos = User(username='c.bermudez', email='c.bermudez@estudiantes.matcom.uh.cu', password='1234', category='student')
-        martinez = User(username='c.martinez', email='c.martinez@estudiantes.matcom.uh.cu', password='1234', category='employee')
-        roberto = User(username='r.marti', email='r.marti@estudiantes.matcom.uh.cu', password='1234', category='teacher')
-        leynier.confirmed = carlos.confirmed = martinez.confirmed = roberto.confirmed = True
-        general = Area.query.get(1)
-        matcom = Area.query.get(2)
-        computacion = Area.query.get(3)
-        matematica = Area.query.get(4)
-        leynier.area = computacion
-        carlos.area = matematica
-        martinez.area = general
-        roberto.area = matcom
-        db.session.add(leynier)
-        db.session.add(carlos)
-        db.session.add(martinez)
-        db.session.add(roberto)
-        db.session.commit()
+        pass
 
     def decisions(self):
-        travels_to_decide = []
-        for role in self.roles:
-            for ws in WorkflowState.query.filter_by(role_id=role.id).all():
-                for travel in Travel.query.filter_by(workflow_state_id=ws.id).all():
-                    if self.area.contains(travel.user.area) and not travel.accepted and not travel.rejected:
-                        travels_to_decide.append(travel)
-        return travels_to_decide
+        # travels_to_decide = []
+        # for role in self.roles:
+        #     for ws in WorkflowState.query.filter_by(role_id=role.id).all():
+        #         for travel in Travel.query.filter_by(workflow_state_id=ws.id).all():
+        #             if self.area.contains(travel.user.area) and not travel.accepted \
+        #                 and not travel.rejected:
+        #                 travels_to_decide.append(travel)
+        # return travels_to_decide
+        pass
 
     def have_decisions(self):
-        return len(self.decisions()) > 0
+        # return len(self.decisions()) > 0
+        pass
 
     def __repr__(self):
         return self.fullname
 
 
-class WorkflowState(db.Model):
+class Workflow(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-    next_id = db.Column(db.Integer, db.ForeignKey('workflow_state.id'))
-    travels = db.relationship('Travel', backref='workflow_state', lazy='dynamic')
-    requirements = db.relationship('TypeDocument',
-                                   secondary=workflow_state_type_document,
-                                   backref=db.backref('workflow_states', lazy='dynamic'),
-                                   lazy='dynamic')
+    name = db.Column(db.String(64), nullable=False)
+    employee_regions = db.relationship('Region', backref='workflow_employee', lazy='dynamic', \
+                                       primaryjoin=id == Region.workflow_employee_id)
+    student_regions = db.relationship('Region', backref='workflow_student', lazy='dynamic', \
+                                      primaryjoin=id == Region.workflow_student_id)
+    teacher_regions = db.relationship('Region', backref='workflow_teacher', lazy='dynamic', \
+                                      primaryjoin=id == Region.workflow_teacher_id)
+    states = db.relationship('State', secondary=state_workflow, 
+                             backref=db.backref('workflows', lazy='dynamic'), lazy='dynamic')
 
-    @property
-    def next(self):
-        return WorkflowState.query.get(self.next_id) if self.next_id else None
-
-    @next.setter
-    def next(self, next):
-        self.next_id = next.id
-
-    @property
-    def previous(self):
-        return WorkflowState.query.filter(WorkflowState.next_id == self.id).all()
-
-    @staticmethod
-    def insert():
-        item0 = WorkflowState(name='Paso Dos')
-        item0.role = Role.query.filter_by(name='Especialista').first()
-        item0.requirements.append(TypeDocument.query.get(1))
-        db.session.add(item0)
-        db.session.commit()
-        item1 = WorkflowState(name='Paso Uno')
-        item1.role = Role.query.filter_by(name='Decano').first()
-        item1.requirements.append(TypeDocument.query.get(2))
-        item1.next = item0
-        db.session.add(item1)
-        db.session.commit()
 
     def __repr__(self):
-        return f'{self.name}'
+        return self.name
 
 
 class AnonymousUserModel(AnonymousUserMixin):

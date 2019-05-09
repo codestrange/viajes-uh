@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f8f11df63813
+Revision ID: c78dbd41ed04
 Revises: 
-Create Date: 2019-05-08 17:34:04.501013
+Create Date: 2019-05-09 14:26:06.578724
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f8f11df63813'
+revision = 'c78dbd41ed04'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,7 +32,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
-    op.create_table('region',
+    op.create_table('document_type',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('id'),
@@ -46,22 +46,56 @@ def upgrade():
     sa.UniqueConstraint('name')
     )
     op.create_index(op.f('ix_role_default'), 'role', ['default'], unique=False)
-    op.create_table('type_document',
+    op.create_table('state',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
-    op.create_table('country',
+    op.create_table('workflow',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=False),
-    sa.Column('region_id', sa.Integer(), nullable=True),
-    sa.Column('workflow_state_employee_id', sa.Integer(), nullable=True),
-    sa.Column('workflow_state_student_id', sa.Integer(), nullable=True),
-    sa.Column('workflow_state_teacher_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['region_id'], ['region.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('region',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=64), nullable=False),
+    sa.Column('workflow_employee_id', sa.Integer(), nullable=True),
+    sa.Column('workflow_student_id', sa.Integer(), nullable=True),
+    sa.Column('workflow_teacher_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['workflow_employee_id'], ['workflow.id'], ),
+    sa.ForeignKeyConstraint(['workflow_student_id'], ['workflow.id'], ),
+    sa.ForeignKeyConstraint(['workflow_teacher_id'], ['workflow.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
+    )
+    op.create_table('state_document_type_checked',
+    sa.Column('state_id', sa.Integer(), nullable=False),
+    sa.Column('document_type_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['document_type_id'], ['document_type.id'], ),
+    sa.ForeignKeyConstraint(['state_id'], ['state.id'], ),
+    sa.PrimaryKeyConstraint('state_id', 'document_type_id')
+    )
+    op.create_table('state_document_type_uploaded',
+    sa.Column('state_id', sa.Integer(), nullable=False),
+    sa.Column('document_type_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['document_type_id'], ['document_type.id'], ),
+    sa.ForeignKeyConstraint(['state_id'], ['state.id'], ),
+    sa.PrimaryKeyConstraint('state_id', 'document_type_id')
+    )
+    op.create_table('state_role',
+    sa.Column('state_id', sa.Integer(), nullable=False),
+    sa.Column('role_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
+    sa.ForeignKeyConstraint(['state_id'], ['state.id'], ),
+    sa.PrimaryKeyConstraint('state_id', 'role_id')
+    )
+    op.create_table('state_workflow',
+    sa.Column('state_id', sa.Integer(), nullable=False),
+    sa.Column('workflow_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['state_id'], ['state.id'], ),
+    sa.ForeignKeyConstraint(['workflow_id'], ['workflow.id'], ),
+    sa.PrimaryKeyConstraint('state_id', 'workflow_id')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -70,10 +104,10 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=128), nullable=False),
     sa.Column('firstname', sa.String(length=64), nullable=True),
     sa.Column('lastname', sa.String(length=64), nullable=True),
+    sa.Column('category', sa.String(length=64), nullable=False),
     sa.Column('confirmed', sa.Boolean(), nullable=True),
     sa.Column('activated', sa.Boolean(), nullable=True),
     sa.Column('area_id', sa.Integer(), nullable=True),
-    sa.Column('category', sa.String(length=64), nullable=False),
     sa.ForeignKeyConstraint(['area_id'], ['area.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
@@ -81,38 +115,14 @@ def upgrade():
     )
     op.create_index(op.f('ix_user_activated'), 'user', ['activated'], unique=False)
     op.create_index(op.f('ix_user_confirmed'), 'user', ['confirmed'], unique=False)
-    op.create_table('workflow_state',
+    op.create_table('country',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=False),
-    sa.Column('role_id', sa.Integer(), nullable=True),
-    sa.Column('next_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['next_id'], ['workflow_state.id'], ),
-    sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
+    sa.Column('region_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['region_id'], ['region.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
-    op.create_table('travel',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=64), nullable=False),
-    sa.Column('departure_date', sa.Date(), nullable=False),
-    sa.Column('duration', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('concept_id', sa.Integer(), nullable=True),
-    sa.Column('country_id', sa.Integer(), nullable=True),
-    sa.Column('workflow_state_id', sa.Integer(), nullable=True),
-    sa.Column('accepted', sa.Boolean(), nullable=True),
-    sa.Column('rejected', sa.Boolean(), nullable=True),
-    sa.Column('confirmed_in_state', sa.Boolean(), nullable=True),
-    sa.ForeignKeyConstraint(['concept_id'], ['concept.id'], ),
-    sa.ForeignKeyConstraint(['country_id'], ['country.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.ForeignKeyConstraint(['workflow_state_id'], ['workflow_state.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
-    )
-    op.create_index(op.f('ix_travel_accepted'), 'travel', ['accepted'], unique=False)
-    op.create_index(op.f('ix_travel_confirmed_in_state'), 'travel', ['confirmed_in_state'], unique=False)
-    op.create_index(op.f('ix_travel_rejected'), 'travel', ['rejected'], unique=False)
     op.create_table('user_role',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('role_id', sa.Integer(), nullable=False),
@@ -120,13 +130,30 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('user_id', 'role_id')
     )
-    op.create_table('workflow_state_type_document',
-    sa.Column('workflow_state_id', sa.Integer(), nullable=False),
-    sa.Column('type_document_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['type_document_id'], ['type_document.id'], ),
-    sa.ForeignKeyConstraint(['workflow_state_id'], ['workflow_state.id'], ),
-    sa.PrimaryKeyConstraint('workflow_state_id', 'type_document_id')
+    op.create_table('travel',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=64), nullable=False),
+    sa.Column('departure_date', sa.Date(), nullable=False),
+    sa.Column('duration', sa.Integer(), nullable=False),
+    sa.Column('justification', sa.Text(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('concept_id', sa.Integer(), nullable=True),
+    sa.Column('country_id', sa.Integer(), nullable=True),
+    sa.Column('state_id', sa.Integer(), nullable=True),
+    sa.Column('accepted', sa.Boolean(), nullable=True),
+    sa.Column('rejected', sa.Boolean(), nullable=True),
+    sa.Column('cancelled', sa.Boolean(), nullable=True),
+    sa.Column('confirmed_in_state', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['concept_id'], ['concept.id'], ),
+    sa.ForeignKeyConstraint(['country_id'], ['country.id'], ),
+    sa.ForeignKeyConstraint(['state_id'], ['state.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
+    op.create_index(op.f('ix_travel_accepted'), 'travel', ['accepted'], unique=False)
+    op.create_index(op.f('ix_travel_cancelled'), 'travel', ['cancelled'], unique=False)
+    op.create_index(op.f('ix_travel_confirmed_in_state'), 'travel', ['confirmed_in_state'], unique=False)
+    op.create_index(op.f('ix_travel_rejected'), 'travel', ['rejected'], unique=False)
     op.create_table('comment',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('text', sa.Text(), nullable=False),
@@ -141,37 +168,47 @@ def upgrade():
     sa.Column('name', sa.String(length=64), nullable=False),
     sa.Column('path', sa.String(length=256), nullable=True),
     sa.Column('confirmed', sa.Boolean(), nullable=True),
-    sa.Column('type_id', sa.Integer(), nullable=True),
+    sa.Column('upload_by_node', sa.Boolean(), nullable=True),
+    sa.Column('document_type_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('travel_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['document_type_id'], ['document_type.id'], ),
     sa.ForeignKeyConstraint(['travel_id'], ['travel.id'], ),
-    sa.ForeignKeyConstraint(['type_id'], ['type_document.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('path')
     )
     op.create_index(op.f('ix_document_confirmed'), 'document', ['confirmed'], unique=False)
+    op.create_index(op.f('ix_document_upload_by_node'), 'document', ['upload_by_node'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_document_upload_by_node'), table_name='document')
     op.drop_index(op.f('ix_document_confirmed'), table_name='document')
     op.drop_table('document')
     op.drop_table('comment')
-    op.drop_table('workflow_state_type_document')
-    op.drop_table('user_role')
     op.drop_index(op.f('ix_travel_rejected'), table_name='travel')
     op.drop_index(op.f('ix_travel_confirmed_in_state'), table_name='travel')
+    op.drop_index(op.f('ix_travel_cancelled'), table_name='travel')
     op.drop_index(op.f('ix_travel_accepted'), table_name='travel')
     op.drop_table('travel')
-    op.drop_table('workflow_state')
+    op.drop_table('user_role')
+    op.drop_table('country')
     op.drop_index(op.f('ix_user_confirmed'), table_name='user')
     op.drop_index(op.f('ix_user_activated'), table_name='user')
     op.drop_table('user')
-    op.drop_table('country')
-    op.drop_table('type_document')
+    op.drop_table('state_workflow')
+    op.drop_table('state_role')
+    op.drop_table('state_document_type_uploaded')
+    op.drop_table('state_document_type_checked')
+    op.drop_table('region')
+    op.drop_table('workflow')
+    op.drop_table('state')
     op.drop_index(op.f('ix_role_default'), table_name='role')
     op.drop_table('role')
-    op.drop_table('region')
+    op.drop_table('document_type')
     op.drop_table('concept')
     op.drop_table('area')
     # ### end Alembic commands ###
