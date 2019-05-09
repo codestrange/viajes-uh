@@ -16,6 +16,7 @@ def save_document(name, file_document, travel_id, document_type_id):
     travel = Travel.query.get(travel_id)
     document_type = DocumentType.query.get(document_type_id)
     document = Document(name=name, travel=travel, document_type=document_type)
+    document.confirmed = True
     db.session.add(document)
     db.session.commit()
     file_name = str(document.id)
@@ -27,12 +28,14 @@ def save_document(name, file_document, travel_id, document_type_id):
     if exists(path):
         remove(path)
     file_document.save(path)
+    return document
 
 
 def modify_document(document, name, file_document, travel_id, document_type_id):
     travel = Travel.query.get(travel_id)
     document_type = DocumentType.query.get(document_type_id)
     document.name = name
+    document.confirmed = True
     document.travel = travel
     document.document_type = document_type
     file_name = str(document.id)
@@ -44,6 +47,7 @@ def modify_document(document, name, file_document, travel_id, document_type_id):
     if exists(path):
         remove(path)
     file_document.save(path)
+    return document
 
 
 def flash_errors(form):

@@ -27,8 +27,11 @@ def upload():
         for document_type in DocumentType.query.all()
     ]
     if form.validate_on_submit():
-        save_document(form.name.data, form.file_document.data, form.travel.data,
-                      form.document_type.data)
+        document = save_document(form.name.data, form.file_document.data, form.travel.data,
+                                 form.document_type.data)
+        document.user = current_user
+        db.session.add(document)
+        db.session.commit()
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
@@ -48,8 +51,12 @@ def upload_to_travel(id):
         if document_type.id in (dt.id for dt in travel.state.need_uploaded.all())
     ]
     if form.validate_on_submit():
-        save_document(form.name.data, form.file_document.data, form.travel.data,
-                      form.document_type.data)
+        document = save_document(form.name.data, form.file_document.data, travel.id,
+                                 form.document_type.data)
+        document.user = current_user
+        document.upload_by_node = True
+        db.session.add(document)
+        db.session.commit()
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
@@ -60,15 +67,18 @@ def upload_to_travel(id):
 @login_required
 def edit(id):
     document = Document.query.get_or_404(id)
-    if not document.user.id != current_user.id:
+    if document.user.id != current_user.id:
         abort(403)
     if document.travel.accepted or document.travel.rejected or document.travel.cancelled:
         abort(404)
     form = EditDocumentForm()
     form.name.data = document.name
     if form.validate_on_submit():
-        modify_document(document, form.name.data, form.file_document.data, document.travel.id,
-                        document.document_type.id)
+        document = modify_document(document, form.name.data, form.file_document.data, document.travel.id,
+                                   document.document_type.id)
+        document.confirmed = True
+        db.session.add(document)
+        db.session.commit()
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
@@ -94,8 +104,11 @@ def edit_auth(id):
     form.name.data = document.name
     form.document_type.data = document.document_type.id
     if form.validate_on_submit():
-        modify_document(document, form.name.data, form.file_document.data, document.travel.id,
-                        document.document_type.id)
+        document = modify_document(document, form.name.data, form.file_document.data, document.travel.id,
+                                   document.document_type.id)
+        document.confirmed = True
+        db.session.add(document)
+        db.session.commit()
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)

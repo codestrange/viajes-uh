@@ -52,11 +52,11 @@ def edit_travel_state(id):
             travel.log('Aprobó el viaje para pasar al siguiente paso.', current_user)
             db.session.add(travel)
         for document in to_check_documents:
-            travel.log(f'{'Aprobó' if document.id in confirmed_check else 'Rechazó'} el documento {document.name}.', current_user)
+            travel.log(f'{"Aprobó" if document.id in confirmed_check else "Rechazó"} el documento {document.name}.', current_user)
             document.confirmed = document.id in confirmed_check
             db.session.add(document)
         for document in to_upload_documents:
-            travel.log(f'{'Aprobó' if document.id in confirmed_upload else 'Rechazó'} el documento {document.name}.', current_user)
+            travel.log(f'{"Aprobó" if document.id in confirmed_upload else "Rechazó"} el documento {document.name}.', current_user)
             document.confirmed = document.id in confirmed_upload
             db.session.add(document)
         db.session.commit()

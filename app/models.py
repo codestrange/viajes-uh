@@ -274,8 +274,8 @@ class Travel(db.Model):
 
     def can_move(self):
         if not self.confirmed_in_state: return False
-        reqs_upload = State.query.filter_by(id=self.state_id).need_uploaded
-        reqs_checked = State.query.filter_by(id=self.state_id).need_checked
+        reqs_upload = State.query.filter_by(id=self.state_id).first().need_uploaded.all()
+        reqs_checked = State.query.filter_by(id=self.state_id).first().need_checked.all()
         for req in reqs_upload:
             for doc in self.documents:
                 if doc.document_type_id == req.id and doc.upload_by_node:
@@ -362,7 +362,7 @@ class User(UserMixin, db.Model):
         travels_to_decide = []
         for role in self.roles:
             for state in State.query.all():
-                if role.id in [r.id for r in state.roles.all()]:
+                if not role.id in [r.id for r in state.roles.all()]:
                     continue
                 for travel in Travel.query.filter_by(state_id=state.id).all():
                     if self.area.contains(travel.user.area) and not travel.accepted \
