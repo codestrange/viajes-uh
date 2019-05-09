@@ -263,7 +263,14 @@ class Travel(db.Model):
 
     def __repr__(self):
         return f'{self.name}'
-    
+
+    def log(self, text, user):
+        comment = Comment()
+        comment.text = text
+        comment.user = user
+        comment.travel = self
+        db.session.add(comment)
+        db.session.commit()
 
     def can_move(self):
         if not self.confirmed_in_state: return False
@@ -404,19 +411,19 @@ class Workflow(db.Model):
         states = workflow.states.all()
         if travel.state is None:
             travel.state = states[0]
-            for document in travel.document:
+            for document in travel.documents:
                 document.upload_by_node = False
             travel.confirmed_in_state = False
             db.session.add(travel)
             return True
         else:
             for i in range(len(states)):
-                if states[i].id == travel.state.id:
+                if states[i].id == travel.state.id: 
                     if i + 1 == len(states):
                         travel.accepted = True
                     else:
                         travel.state = states[i + 1]
-                    for document in travel.document:
+                    for document in travel.documents:
                         document.upload_by_node = False
                     travel.confirmed_in_state = False
                     db.session.add(travel)
