@@ -251,6 +251,25 @@ class Travel(db.Model):
 
     def __repr__(self):
         return f'{self.name}'
+    
+
+    def can_move(self):
+        if not self.confirmed_in_state: return False
+        reqs_upload = State.query.filter_by(id=self.state_id).need_uploaded
+        reqs_checked = State.query.filter_by(id=self.state_id).need_checked
+        for req in reqs_upload:
+            for doc in self.documents:
+                if doc.document_type_id == req.id and doc.upload_by_node:
+                    break
+            else:
+                return False
+        for req in reqs_checked:
+            for doc in self.documents:
+                if doc.document_type_id == req.id and not doc.upload_by_node:
+                    break
+            else:
+                return False
+        return True
 
 
 class User(UserMixin, db.Model):

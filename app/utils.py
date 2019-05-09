@@ -46,30 +46,6 @@ def modify_document(document, name, file_document, travel_id, document_type_id):
     file_document.save(path)
 
 
-def check_conditions(travel):
-    documents = [
-        document
-        for document in travel.documents
-        if travel.workflow_state.requirements.filter_by(id=document.document_type.id).first()
-    ]
-    if travel.confirmed_in_state:
-        for requirement in travel.workflow_state.requirements:
-            for document in documents:
-                if document.document_type.id == requirement.id and document.confirmed:
-                    break
-            else:
-                return False
-        travel.confirmed_in_state = False
-        if travel.workflow_state.next:
-            travel.workflow_state = travel.workflow_state.next
-        else:
-            travel.accepted = True
-        db.session.add(travel)
-        db.session.commit()
-        return True
-    return False
-
-
 def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
