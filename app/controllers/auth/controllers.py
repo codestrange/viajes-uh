@@ -64,6 +64,8 @@ def edit_profile():
         return redirect(request.args.get('next') or url_for('auth.see_profile'))
     else:
         flash_errors(form)
+    form.firstname.data = current_user.firstname
+    form.lastname.data = current_user.lastname
     return render_template('auth/edit_profile.html', form=form)
 
 
