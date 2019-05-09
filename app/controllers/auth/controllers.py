@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, login_required, logout_user
 from . import auth_blueprint
 from .forms import EditProfileForm, LoginForm, RegistrationForm
-from ...models import db, User
+from ...models import db, User, Area
 from ...utils import flash_errors
 
 
@@ -24,6 +24,10 @@ def login():
 def register():
     form = RegistrationForm()
     form.category.choices = [('0', 'Estudiante'), ('1', 'Profesor'), ('2', 'Trabajador')]
+    form.area.choices= [
+        (str(area.id), area.name)
+        for area in Area.query.order_by(Area.name).all()
+    ]
     if form.validate_on_submit():
         user = User()
         user.firstname = form.firstname.data
@@ -35,6 +39,8 @@ def register():
         user.confirmed = True
         user.category = 'student' if form.category.data == '0' else \
             'teacher' if form.category.data == '1' else 'employee'
+        area = Area.query.get_or_404(int(form.area.data))
+        user.area = area
         db.session.add(user)
         db.session.commit()
         flash('Ahora puede iniciar sesión.')

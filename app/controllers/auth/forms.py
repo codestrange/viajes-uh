@@ -28,6 +28,7 @@ class RegistrationForm(FlaskForm):
                                          EqualTo('password2', message='Las contraseñas deben coincidir.')])
     password2 = PasswordField('Confirmar Contraseña', validators=[DataRequired()])
     category = SelectField('Categoría')
+    area = SelectField('Área')
     submit = SubmitField('Registrar')
 
     def validate_email(self, field):
