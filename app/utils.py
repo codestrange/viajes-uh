@@ -1,7 +1,7 @@
 from flask import flash
 from os import remove
 from os.path import abspath, exists, join
-from .models import db, Document, Travel, TypeDocument, WorkflowState
+from .models import db, Document, Travel, DocumentType
 
 
 def user_can_decide(user, travel):
@@ -12,10 +12,10 @@ def user_can_decide_by_id(user, travel_id):
     return travel_id in (trav.id for trav in user.decisions())
 
 
-def save_document(name, file_document, travel_id, type_document_id):
+def save_document(name, file_document, travel_id, document_type_id):
     travel = Travel.query.get(travel_id)
-    type_document = TypeDocument.query.get(type_document_id)
-    document = Document(name=name, travel=travel, type_document=type_document)
+    document_type = DocumentType.query.get(document_type_id)
+    document = Document(name=name, travel=travel, document_type=document_type)
     db.session.add(document)
     db.session.commit()
     file_name = str(document.id)
@@ -29,12 +29,12 @@ def save_document(name, file_document, travel_id, type_document_id):
     file_document.save(path)
 
 
-def modify_document(document, name, file_document, travel_id, type_document_id):
+def modify_document(document, name, file_document, travel_id, document_type_id):
     travel = Travel.query.get(travel_id)
-    type_document = TypeDocument.query.get(type_document_id)
+    document_type = TypeDocument.query.get(document_type_id)
     document.name = name
     document.travel = travel
-    document.type_document = type_document
+    document.document_type = document_type
     file_name = str(document.id)
     file_name += f'.{file_document.filename.split(".")[-1]}' if file_document.filename.split(".") else ''
     path = join(f'{abspath("")}/app/static/uploads', file_name)
@@ -50,12 +50,12 @@ def check_conditions(travel):
     documents = [
         document
         for document in travel.documents
-        if travel.workflow_state.requirements.filter_by(id=document.type_document.id).first()
+        if travel.workflow_state.requirements.filter_by(id=document.document_type.id).first()
     ]
     if travel.confirmed_in_state:
         for requirement in travel.workflow_state.requirements:
             for document in documents:
-                if document.type_document.id == requirement.id and document.confirmed:
+                if document.document_type.id == requirement.id and document.confirmed:
                     break
             else:
                 return False
