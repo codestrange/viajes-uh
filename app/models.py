@@ -237,6 +237,7 @@ class Travel(db.Model):
     concept_id = db.Column(db.Integer, db.ForeignKey('concept.id'))
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
     state_id = db.Column(db.Integer, db.ForeignKey('state.id'))
+    workflow_id = db.Column(db.Integer, db.ForeignKey('workflow.id'))
     documents = db.relationship('Document', backref='travel', lazy='dynamic')
     comments = db.relationship('Comment', backref='travel', lazy='dynamic')
     accepted = db.Column(db.Boolean, default=False, index=True)
@@ -337,7 +338,26 @@ class Workflow(db.Model):
                                       primaryjoin=id == Region.workflow_teacher_id)
     states = db.relationship('State', secondary=state_workflow, 
                              backref=db.backref('workflows', lazy='dynamic'), lazy='dynamic')
+    travels = db.relationship('Travel', backref='workflow', lazy='dynamic')
 
+    @staticmethod
+    def move(travel):
+        workflow = travel.workflow
+        states = workflow.states.all()
+        travel.confirmed_in_state = False
+        if travel.state is None:
+            travel.state = states[0]
+            return True
+        else:
+            for i in range(len(states)):
+                if states[i].id == travel.state.id:
+                    if i + 1 == len(states):
+                        travel.accepted = True
+                    else:
+                        travel.state = states[i + 1]
+                    db.session.add(travel)
+                    return True
+        return False
 
     def __repr__(self):
         return self.name

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 84b66f709d6f
+Revision ID: b822f31b8668
 Revises: 
-Create Date: 2019-05-09 15:03:30.516184
+Create Date: 2019-05-09 16:16:48.398500
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '84b66f709d6f'
+revision = 'b822f31b8668'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -140,6 +140,7 @@ def upgrade():
     sa.Column('concept_id', sa.Integer(), nullable=True),
     sa.Column('country_id', sa.Integer(), nullable=True),
     sa.Column('state_id', sa.Integer(), nullable=True),
+    sa.Column('workflow_id', sa.Integer(), nullable=True),
     sa.Column('accepted', sa.Boolean(), nullable=True),
     sa.Column('rejected', sa.Boolean(), nullable=True),
     sa.Column('cancelled', sa.Boolean(), nullable=True),
@@ -148,6 +149,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['country_id'], ['country.id'], ),
     sa.ForeignKeyConstraint(['state_id'], ['state.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['workflow_id'], ['workflow.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_travel_accepted'), 'travel', ['accepted'], unique=False)
