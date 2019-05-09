@@ -31,7 +31,7 @@ def save_document(name, file_document, travel_id, document_type_id):
 
 def modify_document(document, name, file_document, travel_id, document_type_id):
     travel = Travel.query.get(travel_id)
-    document_type = TypeDocument.query.get(document_type_id)
+    document_type = DocumentType.query.get(document_type_id)
     document.name = name
     document.travel = travel
     document.document_type = document_type

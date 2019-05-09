@@ -308,19 +308,19 @@ class User(UserMixin, db.Model):
         pass
 
     def decisions(self):
-        # travels_to_decide = []
-        # for role in self.roles:
-        #     for ws in WorkflowState.query.filter_by(role_id=role.id).all():
-        #         for travel in Travel.query.filter_by(workflow_state_id=ws.id).all():
-        #             if self.area.contains(travel.user.area) and not travel.accepted \
-        #                 and not travel.rejected:
-        #                 travels_to_decide.append(travel)
-        # return travels_to_decide
-        pass
+        travels_to_decide = []
+        for role in self.roles:
+            for state in State.query.all():
+                if role.id in [r.id for r in state.roles.all()]:
+                    continue
+                for travel in Travel.query.filter_by(state_id=state.id).all():
+                    if self.area.contains(travel.user.area) and not travel.accepted \
+                        and not travel.rejected and not travel.cancelled:
+                        travels_to_decide.append(travel)
+        return travels_to_decide
 
     def have_decisions(self):
-        # return len(self.decisions()) > 0
-        pass
+        return len(self.decisions()) > 0
 
     def __repr__(self):
         return self.fullname

@@ -47,10 +47,12 @@
                         <div class="col-{% if travel.accepted or travel.rejected %}12{% else %}10{% endif %}">
                             {% if document.confirmed %}
                             <a href="{{ url_for('static', filename=document.path) }}" class="btn btn-block btn-outline-success">{{ document.name }}
+                                <span class="badge badge-pill badge-success">{{ document.document_type }}</span>
                                 <span class="badge badge-pill badge-success">Confirmado</span>
                             </a>
                             {% else %}
                             <a href="{{ url_for('static', filename=document.path) }}" class="btn btn-block btn-outline-danger">{{ document.name }}
+                                <span class="badge badge-pill badge-danger">{{ document.document_type }}</span>
                                 <span class="badge badge-pill badge-danger">No Confirmado</span>
                             </a>
                             {% endif %}
