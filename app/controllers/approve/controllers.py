@@ -20,6 +20,7 @@ def reject_travel(id):
     if not user_can_decide(current_user, Travel.query.get(id)):
         return abort(403)
     travel = Travel.query.get(id)
+    travel.log(f'Rechazó el viaje.', current_user)
     travel.rejected = True
     db.session.add(travel)
     db.session.commit()
@@ -48,16 +49,20 @@ def edit_travel_state(id):
         confirmed_upload = {int(id) for id in request.form.getlist('confirmed_upload_docs')}
         if request.form.get('accept_travel'):
             travel.confirmed_in_state = True
+            travel.log('Aprobó el viaje para pasar al siguiente paso.', current_user)
             db.session.add(travel)
         for document in to_check_documents:
+            travel.log(f'{'Aprobó' if document.id in confirmed_check else 'Rechazó'} el documento {document.name}.', current_user)
             document.confirmed = document.id in confirmed_check
             db.session.add(document)
         for document in to_upload_documents:
+            travel.log(f'{'Aprobó' if document.id in confirmed_upload else 'Rechazó'} el documento {document.name}.', current_user)
             document.confirmed = document.id in confirmed_upload
             db.session.add(document)
         db.session.commit()
         if travel.can_move():
             Workflow.move(travel)
+            travel.log('Pasó el viaje al siguiente paso.', current_user)
             return redirect(url_for('approve.approve_travels'))
     return render_template('approve/edit.html', travel=travel, to_check_documents=to_check_documents, to_upload_documents=to_upload_documents)
  
