@@ -48,11 +48,4 @@ def create_app(config_name):
     from .controllers.travel import travel_blueprint
     app.register_blueprint(travel_blueprint, url_prefix='/travel')
 
-    from .controllers.workflow import workflow_blueprint
-    app.register_blueprint(workflow_blueprint, url_prefix='/workflow')
-
-    @app.context_processor
-    def utility_processor():
-        return dict(len=len)
-
     return app
