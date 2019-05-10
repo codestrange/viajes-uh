@@ -370,9 +370,24 @@ class User(UserMixin, db.Model):
                         travels_to_decide.append(travel)
         return travels_to_decide
 
+
+    def rejected_documents(self):
+        messages = [
+            doc
+            for doc in self.documents
+            if not doc.confirmed and not doc.upload_by_node
+        ]
+        return messages
+    
+
+    def have_rejected(self):
+        return any(self.rejected_documents())
+
+
     def have_decisions(self):
         return len(self.decisions()) > 0
 
+    
     def __repr__(self):
         return self.fullname
 

@@ -21,6 +21,11 @@
                     <a href="{{ url_for('approve.approve_travels') }}" class="nav-link">Administrar Viajes</a>
                 </li>
                 {% endif %}
+                {% if current_user.have_rejected() %}
+                <li class="nav-item">
+                    <a href="{{ url_for('document.see_rejecteds') }}" class="nav-link">Documentos Pendientes</a>
+                </li>
+                {% endif %}
                 {% endif %}
             </ul>
             <ul class="navbar-nav align-content-end">
