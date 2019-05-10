@@ -68,7 +68,13 @@ class Area(db.Model):
     
     @staticmethod
     def insert():
-        pass
+        for area in Area.query.all():
+            db.session.delete(area)
+        db.session.commit()
+        area = Area()
+        area.name = 'General'
+        db.session.add(area)
+        db.session.commit()
 
     def contains(self, area):
         if self.id == area.id:
