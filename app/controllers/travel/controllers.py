@@ -11,10 +11,6 @@ from ...utils import flash_errors, user_can_decide
 @login_required
 def create():
     form = CreateTravelForm()
-    form.area.choices= [
-        (str(area.id), area.name)
-        for area in Area.query.order_by(Area.name).all()
-    ]
     form.concept.choices = [
         (str(concept.id), concept.name)
         for concept in Concept.query.order_by(Concept.name).all()

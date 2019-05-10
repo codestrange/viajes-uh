@@ -12,10 +12,18 @@
                 <div><strong>Usuario:</strong> {{ travel.user }}</div>
                 <div><strong>País:</strong> {{ travel.country }}</div>
                 <div>
-                    {% if travel.workflow_state.requirements.first() %}
-                    <strong>Documentos Necesarios:</strong> 
-                    {% for requirement in travel.workflow_state.requirements.all() %}
-                        {{ requirement.name }}{% if loop.index != loop.length %}, {% endif %}
+                    {% if travel.state.need_checked.first() %}
+                    <strong>Documentos a Revizar:</strong> 
+                    {% for document_type in travel.state.need_checked.all() %}
+                        {{ document_type.name }}{% if loop.index != loop.length %}, {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div>
+                    {% if travel.state.need_uploaded.first() %}
+                    <strong>Documentos a Subir:</strong> 
+                    {% for document_type in travel.state.need_uploaded.all() %}
+                        {{ document_type.name }}{% if loop.index != loop.length %}, {% endif %}
                     {% endfor %}
                     {% endif %}
                 </div>
@@ -23,13 +31,13 @@
         </div>
         <div class="card text-light bg-dark mb-2">
             <div class="card-header text-center">
-                <div class="h4 m-0">Documentos a Confirmar</div>
+                <div class="h4 m-0">Documentos</div>
             </div>
             <form method="POST">
                 <div class="card-body text-center">
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" name="accept_travel" id="accept_travel" {% if travel.confirmed_in_state %} checked {% endif %}>
-                        <label class="form-check-label ml-2 h5" for="accept_travel"><strong>Autorización por {{ travel.workflow_state.role.name }}</strong></label>
+                        <label class="form-check-label ml-2 h5" for="accept_travel"><strong>Autorización</strong></label>
                     </div>
                     <h3>Documentos a Revizar</h3>
                     {% for document in to_check_documents %}
@@ -45,7 +53,7 @@
                         <input class="form-check-input" type="checkbox" value="{{ document.id }}" name="confirmed_upload_docs" id="{{ 'cb' + document.id.__str__() }}" {% if document.confirmed %} checked {% endif %} >
                         <label class="form-check-label ml-2" for="{{ 'cb' + document.id.__str__() }}">{{ document.name }} <span class="badge badge-pill badge-light">{{ document.type_document.name }}</span></label>
                         <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Ver Documento</a>
-                        <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Editar</a>
+                        <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('document.edit_auth', id=document.id) }}">Editar</a>
                     </div>
                     {% endfor %}
                 </div>
