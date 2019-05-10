@@ -31,11 +31,21 @@
                         <input class="form-check-input" type="checkbox" name="accept_travel" id="accept_travel" {% if travel.confirmed_in_state %} checked {% endif %}>
                         <label class="form-check-label ml-2 h5" for="accept_travel"><strong>Autorización por {{ travel.workflow_state.role.name }}</strong></label>
                     </div>
-                    {% for document in documents %}
+                    <h3>Documentos a Revizar</h3>
+                    {% for document in to_check_documents %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{ document.id }}" name="confirmed_docs" id="{{ 'cb' + document.id.__str__() }}" {% if document.confirmed %} checked {% endif %} >
+                        <input class="form-check-input" type="checkbox" value="{{ document.id }}" name="confirmed_check_docs" id="{{ 'cb' + document.id.__str__() }}" {% if document.confirmed %} checked {% endif %} >
                         <label class="form-check-label ml-2" for="{{ 'cb' + document.id.__str__() }}">{{ document.name }} <span class="badge badge-pill badge-light">{{ document.type_document.name }}</span></label>
                         <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Ver Documento</a>
+                    </div>
+                    {% endfor %}
+                    <h3>Documentos Añadidos</h3>
+                    {% for document in to_upload_documents %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{ document.id }}" name="confirmed_upload_docs" id="{{ 'cb' + document.id.__str__() }}" {% if document.confirmed %} checked {% endif %} >
+                        <label class="form-check-label ml-2" for="{{ 'cb' + document.id.__str__() }}">{{ document.name }} <span class="badge badge-pill badge-light">{{ document.type_document.name }}</span></label>
+                        <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Ver Documento</a>
+                        <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Editar</a>
                     </div>
                     {% endfor %}
                 </div>

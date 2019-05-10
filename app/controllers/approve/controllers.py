@@ -1,7 +1,7 @@
 from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from . import approve_blueprint
-from ...models import db, Travel
+from ...models import db, Travel, Workflow
 from ...utils import check_conditions, user_can_decide
 
 
@@ -32,21 +32,32 @@ def edit_travel_state(id):
     travel = Travel.query.get_or_404(id)
     if not user_can_decide(current_user, travel):
         return abort(403)
-    documents = [
+    
+    to_check_documents = [
         document
         for document in travel.documents
-        if travel.state.need_checked.filter_by(id=document.document_type.id).first()
+        if travel.state.need_checked.filter_by(id=document.document_type.id).first() and not document.upload_by_node
+    ]
+    to_upload_documents = [
+        document
+        for document in travel.documents
+        if travel.state.need_uploaded.filter_by(id=document.document_type.id).first() and document.upload_by_node
     ]
     if request.method == 'POST':
-        confirmed = {int(id) for id in request.form.getlist('confirmed_docs')}
+        confirmed_check = {int(id) for id in request.form.getlist('confirmed_check_docs')}
+        confirmed_upload = {int(id) for id in request.form.getlist('confirmed_upload_docs')}
         if request.form.get('accept_travel'):
             travel.confirmed_in_state = True
             db.session.add(travel)
-        for document in documents:
-            document.confirmed = document.id in confirmed
+        for document in to_check_documents:
+            document.confirmed = document.id in confirmed_check
+            db.session.add(document)
+        for document in to_upload_documents:
+            document.confirmed = document.id in confirmed_upload
             db.session.add(document)
         db.session.commit()
-        if check_conditions(travel):
+        if travel.can_move():
+            Workflow.move(travel)
             return redirect(url_for('approve.approve_travels'))
-    return render_template('approve/edit.html', travel=travel, documents=documents)
+    return render_template('approve/edit.html', travel=travel, to_check_documents=to_check_documents, to_upload_documents=to_upload_documents)
  
