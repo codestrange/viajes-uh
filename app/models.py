@@ -200,7 +200,13 @@ class Role(db.Model):
 
     @staticmethod
     def insert():
-        pass
+        for rol in Role.query.all():
+            db.session.delete(rol)
+        db.session.commit()
+        rol = Role()
+        rol.name = 'Administrador'
+        db.session.add(rol)
+        db.session.commit()
 
     def __repr__(self):
         return f'{self.name}'
@@ -325,7 +331,19 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def insert():
-        pass
+        for user in User.query.all():
+            db.session.delete(user)
+        db.session.commit()
+        user = User()
+        user.username = 'admin'
+        user.email = 'admin@gmail.com'
+        user.password = '1234'
+        user.category = 'student'
+        user.confirmed = True
+        role = Role.query.filter_by(name='Administrador').first()
+        user.roles.append(role)
+        db.session.add(user)
+        db.session.commit()
 
     def decisions(self):
         travels_to_decide = []
