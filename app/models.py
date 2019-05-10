@@ -263,7 +263,14 @@ class Travel(db.Model):
 
     def __repr__(self):
         return f'{self.name}'
-    
+
+    def log(self, text, user):
+        comment = Comment()
+        comment.text = text
+        comment.user = user
+        comment.travel = self
+        db.session.add(comment)
+        db.session.commit()
 
     def can_move(self):
         if not self.confirmed_in_state: return False
