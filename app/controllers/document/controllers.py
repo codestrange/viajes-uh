@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from flask import abort
 from . import document_blueprint
 from .forms import UploadDocumentForm, UploadToTravelDocumentForm, EditDocumentForm
-from ...models import Document, DocumentType, Travel
+from ...models import db, Document, DocumentType, Travel
 from ...utils import flash_errors, modify_document, save_document, user_can_decide_by_id
 
 
