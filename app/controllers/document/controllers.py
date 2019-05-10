@@ -32,6 +32,7 @@ def upload():
         document.user = current_user
         db.session.add(document)
         db.session.commit()
+        document.travel.log(f'Subio el documento {document} de tipo {document.document_type}.', current_user)
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
@@ -57,6 +58,7 @@ def upload_to_travel(id):
         document.upload_by_node = True
         db.session.add(document)
         db.session.commit()
+        document.travel.log(f'Subio el documento {document} de tipo {document.document_type}.', current_user)
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
@@ -79,6 +81,7 @@ def edit(id):
         document.confirmed = True
         db.session.add(document)
         db.session.commit()
+        document.travel.log(f'Resubio el documento {document} de tipo {document.document_type}.', current_user)
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
@@ -107,6 +110,7 @@ def edit_auth(id):
         document.confirmed = True
         db.session.add(document)
         db.session.commit()
+        document.travel.log(f'Resubio el documento {document} de tipo {document.document_type}.', current_user)
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
