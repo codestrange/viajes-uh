@@ -361,7 +361,9 @@ class User(UserMixin, db.Model):
         user.category = 'student'
         user.confirmed = True
         role = Role.query.filter_by(name='Administrador').first()
+        area = Area.query.filter_by(name='General').first()
         user.roles.append(role)
+        user.area = area
         db.session.add(user)
         db.session.commit()
 
