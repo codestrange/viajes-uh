@@ -344,9 +344,12 @@ class Workflow(db.Model):
     def move(travel):
         workflow = travel.workflow
         states = workflow.states.all()
-        travel.confirmed_in_state = False
         if travel.state is None:
             travel.state = states[0]
+            for document in travel.document:
+                document.upload_by_node = False
+            travel.confirmed_in_state = False
+            db.session.add(travel)
             return True
         else:
             for i in range(len(states)):
@@ -355,6 +358,9 @@ class Workflow(db.Model):
                         travel.accepted = True
                     else:
                         travel.state = states[i + 1]
+                    for document in travel.document:
+                        document.upload_by_node = False
+                    travel.confirmed_in_state = False
                     db.session.add(travel)
                     return True
         return False
