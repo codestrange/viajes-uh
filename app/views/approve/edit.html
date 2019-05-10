@@ -47,6 +47,9 @@
                         <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Ver Documento</a>
                     </div>
                     {% endfor %}
+                    {% if not to_check_documents %}
+                        <span class="badge badge-pill badge-light mb-2">No existen documentos a revizar</span>
+                    {% endif %}
                     <h3>Documentos Añadidos</h3>
                     {% for document in to_upload_documents %}
                     <div class="form-check">
@@ -56,6 +59,9 @@
                         <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('document.edit_auth', id=document.id) }}">Editar</a>
                     </div>
                     {% endfor %}
+                    {% if not to_upload_documents %}
+                        <span class="badge badge-pill badge-light mb-2">No existen documentos a revizar por subir</span>
+                    {% endif %}
                 </div>
                 <div class="card-footer">
                     {% if travel.state.need_uploaded.first() %}

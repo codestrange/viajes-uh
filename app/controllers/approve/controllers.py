@@ -32,8 +32,7 @@ def reject_travel(id):
 def edit_travel_state(id):
     travel = Travel.query.get_or_404(id)
     if not user_can_decide(current_user, travel):
-        return abort(403)
-    
+        abort(403)
     to_check_documents = [
         document
         for document in travel.documents
@@ -48,8 +47,14 @@ def edit_travel_state(id):
         confirmed_check = {int(id) for id in request.form.getlist('confirmed_check_docs')}
         confirmed_upload = {int(id) for id in request.form.getlist('confirmed_upload_docs')}
         if request.form.get('accept_travel'):
+            if not travel.confirmed_in_state:
+                travel.log('Aprobó el viaje para pasar al siguiente paso.', current_user)
             travel.confirmed_in_state = True
-            travel.log('Aprobó el viaje para pasar al siguiente paso.', current_user)
+            db.session.add(travel)
+        else:
+            if travel.confirmed_in_state:
+                travel.log('No autorizó el viaje para pasar al siguiente paso.', current_user)
+            travel.confirmed_in_state = False
             db.session.add(travel)
         for document in to_check_documents:
             travel.log(f'{"Aprobó" if document.id in confirmed_check else "Rechazó"} el documento {document.name}.', current_user)

@@ -101,8 +101,6 @@ def edit_auth(id):
         for document_type in DocumentType.query.all()
         if document_type.id in (dt.id for dt in document.travel.state.need_uploaded.all())
     ]
-    form.name.data = document.name
-    form.document_type.data = document.document_type.id
     if form.validate_on_submit():
         document = modify_document(document, form.name.data, form.file_document.data, document.travel.id,
                                    document.document_type.id)
@@ -112,6 +110,8 @@ def edit_auth(id):
         return redirect(request.args.get('next') or url_for('main.index'))
     else:
         flash_errors(form)
+    form.name.data = document.name
+    form.document_type.data = document.document_type.id
     return render_template('document/edit_to_travel.html', form=form)
 
 

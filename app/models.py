@@ -289,18 +289,19 @@ class Travel(db.Model):
         db.session.commit()
 
     def can_move(self):
-        if not self.confirmed_in_state: return False
-        reqs_upload = State.query.filter_by(id=self.state_id).first().need_uploaded.all()
-        reqs_checked = State.query.filter_by(id=self.state_id).first().need_checked.all()
-        for req in reqs_upload:
-            for doc in self.documents:
-                if doc.document_type_id == req.id and doc.upload_by_node:
+        if not self.confirmed_in_state:
+            return False
+        reqs_uploaded = self.state.need_uploaded.all()
+        reqs_checked = self.state.need_checked.all()
+        for req in reqs_uploaded:
+            for doc in self.documents.all():
+                if doc.document_type_id == req.id and doc.confirmed and doc.upload_by_node:
                     break
             else:
                 return False
         for req in reqs_checked:
-            for doc in self.documents:
-                if doc.document_type_id == req.id and not doc.upload_by_node:
+            for doc in self.documents.all():
+                if doc.document_type_id == req.id and doc.confirmed and not doc.upload_by_node:
                     break
             else:
                 return False
