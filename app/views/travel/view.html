@@ -69,6 +69,7 @@
                 {% endif %}
             </div>
         </div>
+        {% if not travel.accepted and not travel.rejected and not travel.cancelled %}
         {% if need_checkeds %}
         <div class="card mb-2">
             <div class="card-header"><strong>Documentos que se tienen que chequear en el estado actual:</strong> 
@@ -86,6 +87,7 @@
                 {% endfor %}
             </div>
         </div>
+        {% endif %}
         {% endif %}
         <div class="card mb-2">
             <div class="card-header h4"><strong>Escribir comentario</strong></div>

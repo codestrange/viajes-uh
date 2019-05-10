@@ -41,7 +41,7 @@
                     </div>
                     <h3>Documentos a Revizar</h3>
                     {% for document in to_check_documents %}
-                    <div class="form-check">
+                    <div class="form-check mb-1">
                         <input class="form-check-input" type="checkbox" value="{{ document.id }}" name="confirmed_check_docs" id="{{ 'cb' + document.id.__str__() }}" {% if document.confirmed %} checked {% endif %} >
                         <label class="form-check-label ml-2" for="{{ 'cb' + document.id.__str__() }}">{{ document.name }} <span class="badge badge-pill badge-light">{{ document.document_type.name }}</span></label>
                         <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Ver Documento</a>
@@ -52,7 +52,7 @@
                     {% endif %}
                     <h3>Documentos Añadidos</h3>
                     {% for document in to_upload_documents %}
-                    <div class="form-check">
+                    <div class="form-check mb-1">
                         <input class="form-check-input" type="checkbox" value="{{ document.id }}" name="confirmed_upload_docs" id="{{ 'cb' + document.id.__str__() }}" {% if document.confirmed %} checked {% endif %} >
                         <label class="form-check-label ml-2" for="{{ 'cb' + document.id.__str__() }}">{{ document.name }} <span class="badge badge-pill badge-light">{{ document.document_type.name }}</span></label>
                         <a class="btn btn-sm btn-outline-light ml-2" href="{{ url_for('static', filename=document.path) }}">Ver Documento</a>
