@@ -2,7 +2,7 @@ from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from . import approve_blueprint
 from ...models import db, Travel, Workflow
-from ...utils import check_conditions, user_can_decide
+from ...utils import user_can_decide
 
 
 @approve_blueprint.route('/travels')
