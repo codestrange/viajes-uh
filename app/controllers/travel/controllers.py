@@ -96,5 +96,7 @@ def get(id):
         form.text.data = ''
     else:
         flash_errors(form)
+    comments = travel.comments.all()
+    comments.reverse()
     return render_template('travel/view.html', travel=travel, need_checkeds=need_checkeds,
-                           need_uploadeds=need_uploadeds, form=form)
+                           need_uploadeds=need_uploadeds, comments=comments, form=form)
