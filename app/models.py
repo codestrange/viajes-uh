@@ -219,6 +219,15 @@ class Role(db.Model):
         role.name = 'Administrador'
         db.session.add(role)
         db.session.commit()
+        role = Role()
+        role.name = 'Especialista'
+        db.session.add(role)
+        db.session.commit()
+        role = Role()
+        role.name = 'Usuario'
+        role.default = True
+        db.session.add(role)
+        db.session.commit()
 
     def __repr__(self):
         return f'{self.name}'

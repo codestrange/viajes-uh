@@ -15,9 +15,11 @@ class AdminIndexView(DefaultAdminIndexView):
     def index(self):
         if not current_user.is_authenticated:
             return redirect(url_for('auth.login'))
-        if not current_user.is_administrator:
+        if not current_user.is_administrator and not current_user.is_specialist:
             abort(403)
-        return self.render('admin.html')
+        if current_user.is_administrator:
+            return self.render('admin.html')
+        return self.render('admin_specialist.html')
 
 
 class ModelView(_ModelView):
@@ -50,7 +52,15 @@ class AreaModelView(ModelView):
             model.ancestor_id = 1
 
 
-class IndexModelView(ModelView):
+
+class SpecialistModelView(ModelView):
+
+    def is_accessible(self):
+        return current_user.is_authenticated and (current_user.is_administrator or \
+            current_user.is_specialist)
+
+
+class IndexModelView(SpecialistModelView):
     form_columns = ('workflow', 'state', 'index')
 
 
