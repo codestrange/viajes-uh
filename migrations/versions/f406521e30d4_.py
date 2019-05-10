@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 14e164a341a2
+Revision ID: f406521e30d4
 Revises: 
-Create Date: 2019-05-09 21:03:20.209506
+Create Date: 2019-05-10 13:09:45.858206
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '14e164a341a2'
+revision = 'f406521e30d4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -56,6 +56,14 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('index',
+    sa.Column('workflow_id', sa.Integer(), nullable=False),
+    sa.Column('state_id', sa.Integer(), nullable=True),
+    sa.Column('index', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['state_id'], ['state.id'], ),
+    sa.ForeignKeyConstraint(['workflow_id'], ['workflow.id'], ),
+    sa.PrimaryKeyConstraint('workflow_id', 'index')
     )
     op.create_table('region',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -206,6 +214,7 @@ def downgrade():
     op.drop_table('state_document_type_uploaded')
     op.drop_table('state_document_type_checked')
     op.drop_table('region')
+    op.drop_table('index')
     op.drop_table('workflow')
     op.drop_table('state')
     op.drop_index(op.f('ix_role_default'), table_name='role')

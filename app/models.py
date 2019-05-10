@@ -183,6 +183,12 @@ class DocumentType(db.Model):
         return f'{self.name}'
 
 
+class Index(db.Model):
+    workflow_id = db.Column(db.Integer, db.ForeignKey('workflow.id'), primary_key=True)
+    state_id = db.Column(db.Integer, db.ForeignKey('state.id'))
+    index = db.Column(db.Integer, primary_key=True)
+
+
 class Region(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
@@ -206,12 +212,12 @@ class Role(db.Model):
 
     @staticmethod
     def insert():
-        for rol in Role.query.all():
-            db.session.delete(rol)
+        for role in Role.query.all():
+            db.session.delete(role)
         db.session.commit()
-        rol = Role()
-        rol.name = 'Administrador'
-        db.session.add(rol)
+        role = Role()
+        role.name = 'Administrador'
+        db.session.add(role)
         db.session.commit()
 
     def __repr__(self):
@@ -230,6 +236,7 @@ class State(db.Model):
                                    secondary=state_document_type_checked,
                                    backref=db.backref('states_checked', lazy='dynamic'),
                                    lazy='dynamic')
+    workflows = db.relationship('Index', foreign_keys=[Index.state_id], backref=db.backref('state', lazy='joined'), lazy='dynamic', cascade='all, delete-orphan')
 
     @staticmethod
     def insert():
@@ -401,14 +408,13 @@ class Workflow(db.Model):
                                       primaryjoin=id == Region.workflow_student_id)
     teacher_regions = db.relationship('Region', backref='workflow_teacher', lazy='dynamic', \
                                       primaryjoin=id == Region.workflow_teacher_id)
-    states = db.relationship('State', secondary=state_workflow, 
-                             backref=db.backref('workflows', lazy='dynamic'), lazy='dynamic')
+    states = db.relationship('Index', foreign_keys=[Index.workflow_id], backref=db.backref('workflow', lazy='joined'), lazy='dynamic', cascade='all, delete-orphan')
     travels = db.relationship('Travel', backref='workflow', lazy='dynamic')
 
     @staticmethod
     def move(travel):
         workflow = travel.workflow
-        states = workflow.states.all()
+        states = [index.state for index in workflow.states.order_by(Index.index).all()]
         if travel.state is None:
             travel.state = states[0]
             for document in travel.documents:

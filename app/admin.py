@@ -50,6 +50,10 @@ class AreaModelView(ModelView):
             model.ancestor_id = 1
 
 
+class IndexModelView(ModelView):
+    form_columns = ('workflow', 'state', 'index')
+
+
 class UserModelView(ModelView):
     column_exclude_list = form_excluded_columns = column_details_exclude_list = ['password_hash']
     form_extra_fields = {

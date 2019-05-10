@@ -1,7 +1,7 @@
 from os import getenv
 from app import create_app
-from app.models import Area, Comment, Concept, Country, Document, DocumentType, Region, Role, State, \
-    Travel, User, Workflow, db
+from app.models import Area, Comment, Concept, Country, Document, DocumentType, Index, Region, \
+    Role, State, Travel, User, Workflow, db
 
 app = create_app(getenv('FLASK_CONFIG') or 'default')
 
@@ -9,8 +9,8 @@ app = create_app(getenv('FLASK_CONFIG') or 'default')
 @app.shell_context_processor
 def make_shell_context():
     return dict(app=app, Area=Area, Comment=Comment, Concept=Concept, Country=Country, \
-                Document=Document, DocumentType=DocumentType, Region=Region, Role=Role, \
-                State=State, Travel=Travel, User=User, Workflow=Workflow, db=db)
+                Document=Document, DocumentType=DocumentType, Index=Index, Region=Region, \
+                Role=Role, State=State, Travel=Travel, User=User, Workflow=Workflow, db=db)
 
 
 @app.cli.command()
