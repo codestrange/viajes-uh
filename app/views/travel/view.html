@@ -44,7 +44,7 @@
             <div class="card-body">
                 {% for document in travel.documents %}
                     <div class="row mb-1">
-                        <div class="col-{% if travel.accepted or travel.rejected or current_user.id != document.user.id %}12{% else %}10{% endif %}">
+                        <div class="col-{% if travel.accepted or travel.rejected or current_user.id != document.user.id or document.confirmed %}12{% else %}10{% endif %}">
                             {% if document.confirmed %}
                             <a href="{{ url_for('static', filename=document.path) }}" class="btn btn-block btn-outline-success">{{ document.name }}
                                 <span class="badge badge-pill badge-success">{{ document.document_type }}</span>
@@ -57,7 +57,7 @@
                             </a>
                             {% endif %}
                         </div>
-                        {% if not travel.accepted and not travel.rejected and current_user.id == document.user.id %}
+                        {% if not travel.accepted and not travel.rejected and current_user.id == document.user.id and not document.confirmed %}
                         <div class="col-2">
                             <a href="{{ url_for('document.edit', id=document.id) }}" class="btn btn-block btn-outline-dark">Editar</a>
                         </div>

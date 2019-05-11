@@ -67,7 +67,7 @@
                     {% if travel.state.need_uploaded.first() %}
                     <div class="row mb-3 mt-1">
                         <div class="col-12">
-                            <a href="{{ url_for('document.upload_to_travel', id=travel.id) }}" class="btn btn-outline-light btn-block">Subir Documento</a>
+                            <a href="{{ url_for('document.upload', id=travel.id) }}" class="btn btn-outline-light btn-block">Subir Documento</a>
                         </div>
                     </div>
                     {% endif %}

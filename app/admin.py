@@ -19,7 +19,7 @@ class AdminIndexView(DefaultAdminIndexView):
             abort(403)
         if current_user.is_administrator:
             return self.render('admin.html')
-        return self.render('admin_specialist.html')
+        return self.render('specialist.html')
 
 
 class ModelView(_ModelView):
