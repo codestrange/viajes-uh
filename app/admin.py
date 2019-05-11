@@ -75,3 +75,39 @@ class UserModelView(ModelView):
 
 
 admin = Admin(name='Viajes UH', template_mode='bootstrap3', index_view=AdminIndexView())
+
+class UserProdModelView(UserModelView):
+    form_excluded_columns = ['password_hash', 'travel', 'documents', 'area']
+
+class IndexProdModelView(IndexModelView):
+    form_excluded_columns = ['state']
+
+class ConceptProdModelView(SpecialistModelView):
+    form_excluded_columns = ['travels']
+
+class AreaProdModelView(AreaModelView):
+    form_excluded_columns = ['users']
+
+class CountryProModelView(ModelView):
+    form_excluded_columns = ['travels']
+
+class DocumentProdModelView(ModelView):
+    form_excluded_columns = ['travel','view']
+
+class DocumentTypeProdModelView(ModelView):
+    form_excluded_columns = ['states uploaded', 'states checked', 'documents']
+
+class RoleProdModelType(ModelView):
+    form_excluded_columns = ['users','states']
+
+class StateProdModelView(SpecialistModelView):
+    form_excluded_columns = ['travels','workflows']
+
+class TravelProdModelView(ModelView):
+    form_excluded_columns = ['documents','comments','state','workflow','user']
+
+class WorkflowProdModelView(SpecialistModelView):
+    form_excluded_columns = ['states','travels']
+
+class ComentProdModelView(ModelView):
+    form_excluded_columns = ['travel','user']
