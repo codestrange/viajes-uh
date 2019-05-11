@@ -384,8 +384,9 @@ class User(UserMixin, db.Model):
                 if not role.id in [r.id for r in state.roles.all()]:
                     continue
                 for travel in Travel.query.filter_by(state_id=state.id).all():
-                    if self.area.contains(travel.user.area) and not travel.accepted \
-                        and not travel.rejected and not travel.cancelled:
+                    if (self.area.contains(travel.user.area) and role.name != 'Usuario' \
+                        or current_user.id == travel.user.id and role.name == 'Usuario') \
+                        and not travel.accepted and not travel.rejected and not travel.cancelled:
                         travels_to_decide.append(travel)
         return travels_to_decide
 
