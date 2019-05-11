@@ -52,7 +52,6 @@ class AreaModelView(ModelView):
             model.ancestor_id = 1
 
 
-
 class SpecialistModelView(ModelView):
 
     def is_accessible(self):
@@ -74,40 +73,56 @@ class UserModelView(ModelView):
         model.password = form.password.data
 
 
-admin = Admin(name='Viajes UH', template_mode='bootstrap3', index_view=AdminIndexView())
+class AreaProdModelView(AreaModelView):
+    form_excluded_columns = ['users']
 
-class UserProdModelView(UserModelView):
-    form_excluded_columns = ['password_hash', 'travel', 'documents', 'area']
 
-class IndexProdModelView(IndexModelView):
-    form_excluded_columns = ['state']
+class ComentProdModelView(ModelView):
+    form_excluded_columns = []
+
 
 class ConceptProdModelView(SpecialistModelView):
     form_excluded_columns = ['travels']
 
-class AreaProdModelView(AreaModelView):
-    form_excluded_columns = ['users']
 
 class CountryProModelView(ModelView):
     form_excluded_columns = ['travels']
 
+
 class DocumentProdModelView(ModelView):
     form_excluded_columns = ['travel','view']
 
+
 class DocumentTypeProdModelView(ModelView):
-    form_excluded_columns = ['states uploaded', 'states checked', 'documents']
+    form_excluded_columns = ['states_uploaded', 'states_checked', 'documents']
+
+
+class IndexProdModelView(IndexModelView):
+    form_excluded_columns = ['state']
+
+
+class RegionProdModelType(ModelView):
+    form_excluded_columns = ['countries']
+
 
 class RoleProdModelType(ModelView):
     form_excluded_columns = ['users','states']
 
+
 class StateProdModelView(SpecialistModelView):
     form_excluded_columns = ['travels','workflows']
+
 
 class TravelProdModelView(ModelView):
     form_excluded_columns = ['documents','comments','state','workflow','user']
 
+
+class UserProdModelView(UserModelView):
+    form_excluded_columns = ['password_hash', 'travel', 'documents', 'area']
+
+
 class WorkflowProdModelView(SpecialistModelView):
     form_excluded_columns = ['states','travels']
 
-class ComentProdModelView(ModelView):
-    form_excluded_columns = ['travel','user']
+
+admin = Admin(name='Viajes UH', template_mode='bootstrap3', index_view=AdminIndexView())
