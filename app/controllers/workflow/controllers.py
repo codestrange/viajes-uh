@@ -42,6 +42,46 @@ def create():
         flash_errors(form)
     return render_template('workflow/state.html', form=form)
 
+@state_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    form = CreateStateForm()
+    current = State.query.get_or_404(id)
+    form.upload.choices = [
+        (str(document_type.id), document_type.name)
+        for document_type in DocumentType.query.order_by(DocumentType.name).all()
+    ]
+    form.review.choices = [
+        (str(document_type.id), document_type.name)
+        for document_type in DocumentType.query.order_by(DocumentType.name).all()
+    ]
+    form.role.choices = [
+        (str(role.id), role.name)
+        for role in Role.query.order_by(Role.name).all()
+    ]
+    if form.validate_on_submit():
+        state = State(name=form.name.data)
+        upload = [ DocumentType.query.get_or_404(int(doc)) for doc in form.upload.data ]
+        review = [ DocumentType.query.get_or_404(int(doc)) for doc in form.review.data ]
+        role = [ Role.query.get_or_404(int(doc)) for doc in form.role.data ]
+        current.need_uploaded = upload
+        current.need_checked = review
+        current.roles = role
+        try:
+            db.session.add(current)
+            db.session.commit()
+            flash('El estado ha sido creado correctamente.')
+            return redirect(url_for('main.index'))
+        except Exception as e:
+            flash(f'Fecha invalida. {e}')
+    else:
+        flash_errors(form)
+    form.name.data = current.name
+    form.upload.data = current.need_uploaded
+    form.review.data = current.need_checked
+    form.role.data = current.roles
+    return render_template('workflow/edit_state.html', form=form)
+
 
 # @travel_blueprint.route('/', methods=['GET'])
 # @login_required

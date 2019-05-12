@@ -1,0 +1,45 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Editar Estado{% endblock subtitle %}
+{% block page_content %}
+<div class="col-8 offset-2">
+    <div class="card mb-5 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Editar Estado</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            {{ form.name.label }}:
+                            {{ form.name(class="form-control", placeholder="Introduzca el nombre del estado") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            {{ form.upload.label }}:
+                            {{ form.upload(class="form-control", placeholder="Seleccione los documentos a subir por quien maneja este estado") }}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            {{ form.review.label }}:
+                            {{ form.review(class="form-control", placeholder="Seleccione los documentos a revisar por quien maneja este estado") }}
+                        </div>
+                    </div>
+                    <div class="col">
+                            <div class="form-group">
+                                {{ form.role.label }}:
+                                {{ form.role(class="form-control", placeholder="Seleccione los roles que interactúan sobre este nodo") }}
+                            </div>
+                        </div>
+                </div>
+                {{ form.submit(class="btn btn-outline-light btn-block") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
