@@ -83,10 +83,11 @@ def edit(id):
     return render_template('workflow/edit_state.html', form=form)
 
 
-# @travel_blueprint.route('/', methods=['GET'])
-# @login_required
-# def travels():
-#     return render_template('travel/list.html', travels=current_user.travels)
+@state_blueprint.route('/', methods=['GET'])
+@login_required
+def travels():
+    states = State.query.all()
+    return render_template('workflow/list_state.html', states=states)
 
 
 # @travel_blueprint.route('/<int:id>', methods=['GET', 'POST'])
