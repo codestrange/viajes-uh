@@ -28,6 +28,11 @@
                     <a href="{{ url_for('document.see_rejecteds') }}" class="nav-link">Documentos Pendientes</a>
                 </li>
                 {% endif %}
+                {% if current_user.is_administrator or current_user.is_specialist %}
+                <li class="nav-item">
+                        <a href="{{ url_for('state._list') }}" class="nav-link">Estados</a>
+                </li>
+                {% endif %}
                 {% endif %}
             </ul>
             <ul class="navbar-nav align-content-end">

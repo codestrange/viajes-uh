@@ -35,7 +35,7 @@ def create():
             db.session.add(state)
             db.session.commit()
             flash('El estado ha sido creado correctamente.')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('state._list'))
         except Exception as e:
             flash(f'Fecha invalida. {e}')
     else:
@@ -70,8 +70,8 @@ def edit(id):
         try:
             db.session.add(current)
             db.session.commit()
-            flash('El estado ha sido creado correctamente.')
-            return redirect(url_for('main.index'))
+            flash('El estado ha sido editado correctamente.')
+            return redirect(url_for('state._list'))
         except Exception as e:
             flash(f'Fecha invalida. {e}')
     else:
@@ -85,48 +85,6 @@ def edit(id):
 
 @state_blueprint.route('/', methods=['GET'])
 @login_required
-def travels():
+def _list():
     states = State.query.all()
     return render_template('workflow/list_state.html', states=states)
-
-
-# @travel_blueprint.route('/<int:id>', methods=['GET', 'POST'])
-# @login_required
-# def get(id):
-#     travel = Travel.query.get(id)
-#     if id not in (_travel.id for _travel in current_user.travels) and \
-#         not user_can_decide(current_user, travel):
-#         abort(403)
-#     need_checkeds = []
-#     for need_checked in travel.state.need_checked.all():
-#         mask = False
-#         for document in travel.documents.all():
-#             if document.document_type.id == document.id and not document.upload_by_node:
-#                 mark = True
-#                 break
-#         if not mask:
-#             need_checkeds.append(need_checked)
-#     need_uploadeds = []
-#     for need_uploaded in travel.state.need_uploaded.all():
-#         mask = False
-#         for document in travel.documents.all():
-#             if document.document_type.id == document.id and document.upload_by_node:
-#                 mark = True
-#                 break
-#         if not mask:
-#             need_uploadeds.append(need_uploaded)
-#     form = CommentForm()
-#     if form.validate_on_submit():
-#         comment = Comment()
-#         comment.text = form.text.data
-#         comment.user = current_user
-#         comment.travel = travel
-#         db.session.add(comment)
-#         db.session.commit()
-#         form.text.data = ''
-#     else:
-#         flash_errors(form)
-#     comments = travel.comments.all()
-#     comments.reverse()
-#     return render_template('travel/view.html', travel=travel, need_checkeds=need_checkeds,
-#                            need_uploadeds=need_uploadeds, comments=comments, form=form)
