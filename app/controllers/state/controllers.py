@@ -1,15 +1,16 @@
-from datetime import datetime
 from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from . import state_blueprint
-from .forms import CreateStateForm
-from ...models import db, Comment, Concept, Country, Travel, State, Workflow, DocumentType, Role
-from ...utils import flash_errors, user_can_decide
+from .forms import CreateStateForm, EditStateForm
+from ...models import db, State, DocumentType, Role
+from ...utils import flash_errors
 
 
-@state_blueprint.route('/new', methods=['GET', 'POST'])
+@state_blueprint.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
+    if not current_user.is_administrator and current_user.is_specialist:
+        abort(403)
     form = CreateStateForm()
     form.upload.choices = [
         (str(document_type.id), document_type.name)
@@ -25,27 +26,27 @@ def create():
     ]
     if form.validate_on_submit():
         state = State(name=form.name.data)
-        upload = [ DocumentType.query.get_or_404(int(doc)) for doc in form.upload.data ]
-        review = [ DocumentType.query.get_or_404(int(doc)) for doc in form.review.data ]
-        role = [ Role.query.get_or_404(int(doc)) for doc in form.role.data ]
+        upload = [DocumentType.query.get_or_404(int(doc)) for doc in form.upload.data]
+        review = [DocumentType.query.get_or_404(int(doc)) for doc in form.review.data]
+        role = [Role.query.get_or_404(int(doc)) for doc in form.role.data]
         state.need_uploaded = upload
         state.need_checked = review
         state.roles = role
-        try:
-            db.session.add(state)
-            db.session.commit()
-            flash('El estado ha sido creado correctamente.')
-            return redirect(url_for('state._list'))
-        except Exception as e:
-            flash(f'Fecha invalida. {e}')
+        db.session.add(state)
+        db.session.commit()
+        flash('El estado ha sido creado correctamente.')
+        return redirect(url_for('state.get_list'))
     else:
         flash_errors(form)
-    return render_template('workflow/state.html', form=form)
+    return render_template('state/create.html', form=form)
+
 
 @state_blueprint.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
-    form = CreateStateForm()
+    if not current_user.is_administrator and current_user.is_specialist:
+        abort(403)
+    form = EditStateForm()
     current = State.query.get_or_404(id)
     form.upload.choices = [
         (str(document_type.id), document_type.name)
@@ -61,30 +62,27 @@ def edit(id):
     ]
     if form.validate_on_submit():
         state = State(name=form.name.data)
-        upload = [ DocumentType.query.get_or_404(int(doc)) for doc in form.upload.data ]
-        review = [ DocumentType.query.get_or_404(int(doc)) for doc in form.review.data ]
-        role = [ Role.query.get_or_404(int(doc)) for doc in form.role.data ]
+        upload = [DocumentType.query.get_or_404(int(doc)) for doc in form.upload.data]
+        review = [DocumentType.query.get_or_404(int(doc)) for doc in form.review.data]
+        role = [Role.query.get_or_404(int(doc)) for doc in form.role.data]
         current.need_uploaded = upload
         current.need_checked = review
         current.roles = role
-        try:
-            db.session.add(current)
-            db.session.commit()
-            flash('El estado ha sido editado correctamente.')
-            return redirect(url_for('state._list'))
-        except Exception as e:
-            flash(f'Fecha invalida. {e}')
+        db.session.add(current)
+        db.session.commit()
+        flash('El estado ha sido editado correctamente.')
+        return redirect(url_for('state.get_list'))
     else:
         flash_errors(form)
     form.name.data = current.name
-    form.upload.data = current.need_uploaded
-    form.review.data = current.need_checked
+    form.upload.data = [str(doc.id) for doc in current.need_uploaded]
+    form.review.data = [str(doc.id) for doc in current.need_checked]
     form.role.data = current.roles
-    return render_template('workflow/edit_state.html', form=form)
+    return render_template('state/edit.html', form=form)
 
 
 @state_blueprint.route('/', methods=['GET'])
 @login_required
-def _list():
+def get_list():
     states = State.query.all()
-    return render_template('workflow/list_state.html', states=states)
+    return render_template('state/list.html', states=states)

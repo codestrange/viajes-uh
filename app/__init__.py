@@ -52,7 +52,7 @@ def create_app(config_name):
     from .controllers.travel import travel_blueprint
     app.register_blueprint(travel_blueprint, url_prefix='/travel')
 
-    from .controllers.workflow import state_blueprint
+    from .controllers.state import state_blueprint
     app.register_blueprint(state_blueprint, url_prefix='/state')
 
     return app

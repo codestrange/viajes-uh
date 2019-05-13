@@ -30,7 +30,7 @@
                 {% endif %}
                 {% if current_user.is_administrator or current_user.is_specialist %}
                 <li class="nav-item">
-                        <a href="{{ url_for('state._list') }}" class="nav-link">Estados</a>
+                        <a href="{{ url_for('state.get_list') }}" class="nav-link">Estados</a>
                 </li>
                 {% endif %}
                 {% endif %}
@@ -56,6 +56,11 @@
                             Crear Viaje
                         </a>
                         {% if current_user.is_administrator or current_user.is_specialist %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('state.create') }}">
+                            <i class="fas fa-check-square mr-2"></i>
+                            Crear Estado
+                        </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url_for('admin.index') }}">
                             <i class="fas fa-cog mr-2"></i>
