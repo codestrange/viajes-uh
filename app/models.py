@@ -3,6 +3,7 @@ from json import load
 from os.path import abspath, dirname, join
 from flask_login import LoginManager, AnonymousUserMixin, UserMixin, current_user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -448,6 +449,29 @@ class Workflow(db.Model):
                     db.session.add(travel)
                     return True
         return False
+
+    def insert_state(workflow, state, position):
+        position = min(position if position > -1 else 0, len(workflow.states.all()))
+        for index in workflow.states.filter(Index.index >= position).order_by(Index.index.desc()):
+            index.index += 1
+            db.session.add(index)
+            db.session.commit()
+        index = Index()
+        index.workflow = workflow
+        index.state = state
+        index.index = position
+        db.session.add(index)
+        db.session.commit()
+    
+    def remove_state(workflow, position):
+        position = min(position if position > -1 else 0, len(workflow.states.all()) - 1)
+        index = workflow.states.filter(Index.index == position).first()
+        db.session.delete(index)
+        db.session.commit()
+        for index in workflow.states.filter(Index.index >= position).order_by(Index.index).all():
+            index.index -= 1
+            db.session.add(index)
+            db.session.commit()
 
     def __repr__(self):
         return self.name
