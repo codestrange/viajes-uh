@@ -122,7 +122,8 @@ class UserProdModelView(UserModelView):
 
 
 class WorkflowProdModelView(SpecialistModelView):
-    form_excluded_columns = ['states','travels']
+    form_excluded_columns = ['states','travels', 'employee_regions',
+        'student_regions', 'teacher_regions']
 
 
 admin = Admin(name='Viajes UH', template_mode='bootstrap3', index_view=AdminIndexView())
