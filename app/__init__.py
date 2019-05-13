@@ -55,4 +55,7 @@ def create_app(config_name):
     from .controllers.state import state_blueprint
     app.register_blueprint(state_blueprint, url_prefix='/state')
 
+    from .controllers.workflow import workflow_blueprint
+    app.register_blueprint(workflow_blueprint, url_prefix='/workflow')
+
     return app

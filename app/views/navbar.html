@@ -30,7 +30,10 @@
                 {% endif %}
                 {% if current_user.is_administrator or current_user.is_specialist %}
                 <li class="nav-item">
-                        <a href="{{ url_for('state.get_list') }}" class="nav-link">Estados</a>
+                    <a href="{{ url_for('state.get_list') }}" class="nav-link">Estados</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('workflow.get_list') }}" class="nav-link">Workflows</a>
                 </li>
                 {% endif %}
                 {% endif %}
@@ -60,6 +63,10 @@
                         <a class="dropdown-item" href="{{ url_for('state.create') }}">
                             <i class="fas fa-check-square mr-2"></i>
                             Crear Estado
+                        </a>
+                        <a class="dropdown-item" href="{{ url_for('workflow.create') }}">
+                            <i class="fas fa-check-square mr-2"></i>
+                            Crear Workflow
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url_for('admin.index') }}">

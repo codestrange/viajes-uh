@@ -1,0 +1,55 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Workflow: {{ workflow.name }}{% endblock subtitle %}
+{% block page_content %}
+<div class="col-8 offset-2">
+    <div class="card mb-2 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Workflow: {{ workflow.name }}</h2>
+        </div>
+    </div>
+    <a href="{{ url_for('workflow.insert', id=workflow.id, index=0) }}" class="btn btn-block btn-dark mb-2">Insertar Estado Aquí</a>
+    {% for state in states %}
+    <div class="card mb-2 text-white bg-dark">
+        <div class="card-header text-center">
+            <h4 class="m-0">{{ state.name }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        <strong>Rol:</strong>
+                        {% for req in state.roles %}
+                        {{ req.name }}
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <strong>Documentos a Subir:</strong>
+                        {% for doc in state.need_uploaded %}
+                        {{ doc.name }}
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <strong>Documentos a revisar:</strong>
+                        {% for doc in state.need_checked %}
+                        {{ doc.name }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-6">
+                    <a href="{{ url_for('state.edit', id=state.id) }}" class="btn btn-block btn-outline-light">Editar Estado</a>
+                </div>
+                <div class="col-6">
+                    <a href="{{ url_for('workflow.remove', id=workflow.id, index=loop.index - 1) }}" class="btn btn-block btn-outline-danger">Eliminar Estado</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('workflow.insert', id=workflow.id, index=loop.index) }}" class="btn btn-block btn-dark mb-2">Insertar Estado Aquí</a>
+    {% endfor %}
+    <div class="mb-3">&nbsp;</div>
+</div>
+{% endblock page_content %}

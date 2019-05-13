@@ -1,0 +1,29 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Workflows{% endblock subtitle %}
+{% block page_content %}
+<div class="col-8 offset-2">
+    <div class="card mb-2 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Lista de Workflows</h2>
+        </div>
+    </div>
+    {% for workflow in workflows %}
+    <div class="card mb-2 text-white bg-dark">
+        <div class="card-header text-center">
+            <h5 class="m-0">{{ workflow.name }}</h5>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-6">
+                    <a href="{{ url_for('workflow.edit_info', id=workflow.id) }}" class="btn btn-block btn-outline-light">Editar Información</a>
+                </div>
+                <div class="col-6">
+                    <a href="{{ url_for('workflow.edit', id=workflow.id) }}" class="btn btn-block btn-outline-light">Editar Estados</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="mb-3">&nbsp;</div>
+</div>
+{% endblock page_content %}

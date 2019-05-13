@@ -1,0 +1,23 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Insertar Estado{% endblock subtitle %}
+{% block page_content %}
+<div class="col-8 offset-2">
+    <div class="card mb-5 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Insertar Estado</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="col">
+                    <div class="form-group">
+                        {{ form.state.label }}:
+                        {{ form.state(class="form-control") }}
+                    </div>
+                </div>
+                {{ form.submit(class="btn btn-outline-light btn-block") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
