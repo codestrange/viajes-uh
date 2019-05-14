@@ -61,10 +61,10 @@ def edit(id):
         for role in Role.query.order_by(Role.name).all()
     ]
     if form.validate_on_submit():
-        state = State(name=form.name.data)
         upload = [DocumentType.query.get_or_404(int(doc)) for doc in form.upload.data]
         review = [DocumentType.query.get_or_404(int(doc)) for doc in form.review.data]
-        role = [Role.query.get_or_404(int(doc)) for doc in form.role.data]
+        role = [Role.query.get_or_404(int(item)) for item in form.role.data]
+        current.name = form.name.data
         current.need_uploaded = upload
         current.need_checked = review
         current.roles = role
@@ -77,7 +77,7 @@ def edit(id):
     form.name.data = current.name
     form.upload.data = [str(doc.id) for doc in current.need_uploaded]
     form.review.data = [str(doc.id) for doc in current.need_checked]
-    form.role.data = current.roles
+    form.role.data = [str(item.id) for item in current.roles]
     return render_template('state/edit.html', form=form)
 
 
