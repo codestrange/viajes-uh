@@ -28,10 +28,65 @@ class UploadTextDocumentForm(UploadDocumentForm):
 
 
 class EditDocumentForm(FlaskForm):
-    name = StringField('Nombre', validators=[DataRequired(), Length(1, 64, message='El nombre \
-        debe tener un máximo de 64 letras.')])
-    file_document = FileField('Archivo', validators=[FileRequired()])
-    submit = SubmitField('Subir')
+    submit = SubmitField('Editar')
+
+
+class EditImageDocumentForm(EditDocumentForm):
+    file = FileField('Imagen', validators=[FileRequired(), FileAllowed(['jpg', 'png'], \
+        'Solo imágenes ".jpg" o ".png"')])
+
+
+class EditOtherDocumentForm(EditDocumentForm):
+    file = FileField('Archivo', validators=[FileRequired()])
+
+
+class EditPDFDocumentForm(EditDocumentForm):
+    file = FileField('Documento PDF', validators=[FileRequired(), FileAllowed(['pdf'], \
+        'Solo documentos ".pdf".')])
+
+
+class EditTextDocumentForm(EditDocumentForm):
+    text = TextAreaField('Texto', validators=[DataRequired()])
+
+
+class EditAuthDocumentFrom(FlaskForm):
+    document_type = SelectField('Tipo')
+
+
+class EditAuthImageDocumentForm(EditImageDocumentForm, EditAuthDocumentFrom):
+    pass
+
+
+class EditAuthOtherDocumentForm(EditOtherDocumentForm, EditAuthDocumentFrom):
+    pass
+
+
+class EditAuthPDFDocumentForm(EditPDFDocumentForm, EditAuthDocumentFrom):
+    pass
+
+
+class EditAuthTextDocumentForm(EditTextDocumentForm, EditAuthDocumentFrom):
+    pass
+
+
+def get_edit_form(method):
+    if method == 'image':
+        return EditImageDocumentForm()
+    elif method == 'pdf':
+        return EditPDFDocumentForm()
+    elif method == 'text':
+        return EditTextDocumentForm()
+    return EditOtherDocumentForm()
+
+
+def get_edit_auth_form(method):
+    if method == 'image':
+        return EditAuthImageDocumentForm()
+    elif method == 'pdf':
+        return EditAuthPDFDocumentForm()
+    elif method == 'text':
+        return EditAuthTextDocumentForm()
+    return EditAuthOtherDocumentForm()
 
 
 def get_upload_form(method):
