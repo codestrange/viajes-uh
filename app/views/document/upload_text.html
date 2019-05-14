@@ -7,11 +7,11 @@
             <h2 class="m-0">Subir Documento</h2>
         </div>
         <div class="card-body">
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST">
                 {{ form.csrf_token }}
                 <div class="form-group">
-                    {{ form.file.label }}:
-                    {{ form.file(class="form-control-file") }}
+                    {{ form.text.label }}:
+                    {{ form.text(class="form-control", placeholder="Introduzca el contenido del documento") }}
                 </div>
                 <div class="form-group">
                     {{ form.document_type.label }}:

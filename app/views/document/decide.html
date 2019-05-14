@@ -1,0 +1,35 @@
+{% extends "navbar.html" %}
+{% block subtitle %} - Subir Documento{% endblock subtitle %}
+{% block page_content %}
+<div class="col-8 offset-2">
+    <div class="card mb-5 text-white bg-dark">
+        <div class="card-header text-center">
+            <h2 class="m-0">Seleccione el tipo de documento</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3 text-center">
+                    <a href="{{ url_for('document.upload', id=travel.id, method='text') }}" class="btn text-white">
+                        <h3>Texto <i class="fas fa-file-alt mr-2"></i></h3>
+                    </a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="{{ url_for('document.upload', id=travel.id, method='pdf') }}" class="btn text-white">
+                        <h3>PDF <i class="fas fa-file-pdf mr-2"></i></h3>
+                    </a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="{{ url_for('document.upload', id=travel.id, method='image') }}" class="btn text-white">
+                        <h3>Imagen <i class="fas fa-file-image mr-2"></i></h3>
+                    </a>
+                </div>
+                <div class="col-3 text-center">
+                    <a href="{{ url_for('document.upload', id=travel.id, method='other') }}" class="btn text-white">
+                        <h3>Otro <i class="fas fa-file mr-2"></i></h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

@@ -155,20 +155,56 @@ class Country(db.Model):
 
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    path = db.Column(db.String(256), unique=True, nullable=True)
     confirmed = db.Column(db.Boolean, default=False, index=True)
     upload_by_node = db.Column(db.Boolean, default=False, index=True)
     document_type_id = db.Column(db.Integer, db.ForeignKey('document_type.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     travel_id = db.Column(db.Integer, db.ForeignKey('travel.id'))
+    type = db.Column(db.String(64), index=True)
+
+    __mapper_args__ = {
+        'polymorphic_on': type,
+    }
 
     @staticmethod
     def insert():
         pass
 
     def __repr__(self):
-        return f'{self.name}'
+        return f'Documento de tipo "{self.document_type}" del viaje "{self.travel}" \
+            subido por el usuario "{self.user}"'
+
+
+class TextDocument(Document):
+    text = db.Column(db.Text)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'text',
+    }
+
+
+class PDFDocument(Document):
+    pdf_path = db.Column(db.String(256), unique=True, nullable=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'pdf',
+    }
+
+
+class ImageDocument(Document):
+    image_path = db.Column(db.String(256), unique=True, nullable=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'image',
+    }
+
+
+class OtherDocument(Document):
+    path = db.Column(db.String(256), unique=True, nullable=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'other',
+    }
 
 
 class DocumentType(db.Model):

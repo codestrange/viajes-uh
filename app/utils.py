@@ -1,7 +1,8 @@
 from flask import flash
 from os import remove
 from os.path import abspath, exists, join
-from .models import db, Document, Travel, DocumentType
+from .models import db, Document, Travel, DocumentType, ImageDocument, OtherDocument, \
+    PDFDocument, TextDocument
 
 
 def user_can_decide(user, travel):
@@ -12,23 +13,14 @@ def user_can_decide_by_id(user, travel_id):
     return travel_id in (trav.id for trav in user.decisions())
 
 
-def save_document(name, file_document, travel_id, document_type_id):
-    travel = Travel.query.get(travel_id)
-    document_type = DocumentType.query.get(document_type_id)
-    document = Document(name=name, travel=travel, document_type=document_type)
-    document.confirmed = True
-    db.session.add(document)
-    db.session.commit()
-    file_name = str(document.id)
-    file_name += f'.{file_document.filename.split(".")[-1]}' if file_document.filename.split(".") else ''
-    path = join(f'{abspath("")}/app/static/uploads', file_name)
-    document.path = join('uploads', file_name)
-    db.session.add(document)
-    db.session.commit()
-    if exists(path):
-        remove(path)
-    file_document.save(path)
-    return document
+def get_document(method):
+    if method == 'image':
+        return ImageDocument()
+    elif method == 'pdf':
+        return PDFDocument()
+    elif method == 'text':
+        return TextDocument()
+    return OtherDocument()
 
 
 def modify_document(document, name, file_document, travel_id, document_type_id):
