@@ -121,3 +121,17 @@ def edit_auth(id):
 def see_rejecteds():
     documents = current_user.rejected_documents()
     return render_template('document/rejecteds.html', documents=documents)
+
+
+@document_blueprint.route('/show/<int:id>')
+def show(id):
+    document = Document.query.get_or_404(id)
+    if document.type == 'image':
+        template_name = 'show_image'
+    elif document.type == 'pdf':
+        template_name = 'show_pdf'
+    elif document.type == 'text':
+        template_name = 'show_text'
+    else:
+        return redirect(url_for('static', filename=document.path))
+    return render_template(f'document/{template_name}.html', document=document)
