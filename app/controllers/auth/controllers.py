@@ -10,7 +10,9 @@ from ...utils import flash_errors
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user_by_email = User.query.filter_by(email=form.user.data).first()
+        user_by_username = User.query.filter_by(username=form.user.data).first()
+        user = user_by_email if user_by_email else user_by_username
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
