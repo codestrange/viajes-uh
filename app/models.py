@@ -155,6 +155,7 @@ class Country(db.Model):
 
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
     confirmed = db.Column(db.Boolean, default=False, index=True)
     upload_by_node = db.Column(db.Boolean, default=False, index=True)
     document_type_id = db.Column(db.Integer, db.ForeignKey('document_type.id'))

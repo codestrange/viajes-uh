@@ -5,6 +5,8 @@ from wtforms.validators import DataRequired, Length
 
 
 class UploadDocumentForm(FlaskForm):
+    name = StringField('Nombre', validators=[DataRequired(), Length(1, 64, message='El nombre \
+        debe tener un máximo de 64 letras.')])
     document_type = SelectField('Tipo de Documento')
     submit = SubmitField('Subir')
 
@@ -29,6 +31,8 @@ class UploadTextDocumentForm(UploadDocumentForm):
 
 class EditDocumentForm(FlaskForm):
     submit = SubmitField('Editar')
+    name = StringField('Nombre', validators=[DataRequired(), Length(1, 64, message='El nombre \
+        debe tener un máximo de 64 letras.')])
 
 
 class EditImageDocumentForm(EditDocumentForm):
@@ -51,6 +55,8 @@ class EditTextDocumentForm(EditDocumentForm):
 
 class EditAuthDocumentFrom(FlaskForm):
     document_type = SelectField('Tipo')
+    name = StringField('Nombre', validators=[DataRequired(), Length(1, 64, message='El nombre \
+        debe tener un máximo de 64 letras.')])
 
 
 class EditAuthImageDocumentForm(EditImageDocumentForm, EditAuthDocumentFrom):

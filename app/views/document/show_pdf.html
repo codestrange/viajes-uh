@@ -4,7 +4,7 @@
 <div class="col-12">
     <div class="card mb-5 text-white bg-dark">
         <div class="card-header text-center">
-            <h2 class="m-0">Ver Documento</h2>
+            <h2 class="m-0">{{ document.name }}</h2>
         </div>
         <div class="card-body p-1">
             <embed src="{{ url_for('static', filename=document.pdf_path) }}" width="100%" height="420">

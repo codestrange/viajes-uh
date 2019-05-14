@@ -2,12 +2,16 @@
 {% block subtitle %} - Workflow: {{ workflow.name }}{% endblock subtitle %}
 {% block page_content %}
 <div class="col-8 offset-2">
-    <div class="card mb-2 text-white bg-dark">
+    <div class="card card-sm mb-2 text-white bg-dark">
         <div class="card-header text-center">
             <h2 class="m-0">Workflow: {{ workflow.name }}</h2>
         </div>
     </div>
-    <a href="{{ url_for('workflow.insert', id=workflow.id, index=0) }}" class="btn btn-block btn-dark mb-2">Insertar Estado Aquí</a>
+    <div class="row">
+        <div class="col-10 offset-1">
+            <a href="{{ url_for('workflow.insert', id=workflow.id, index=0) }}" class="btn btn-sm btn-block btn-dark mb-2">Insertar Estado Aquí</a>
+        </div>
+    </div>
     {% for state in states %}
     <div class="card mb-2 text-white bg-dark">
         <div class="card-header text-center">
@@ -48,7 +52,11 @@
             </div>
         </div>
     </div>
-    <a href="{{ url_for('workflow.insert', id=workflow.id, index=loop.index) }}" class="btn btn-block btn-dark mb-2">Insertar Estado Aquí</a>
+    <div class="row">
+        <div class="col-10 offset-1">
+                <a href="{{ url_for('workflow.insert', id=workflow.id, index=loop.index) }}" class="btn btn-sm btn-block btn-dark mb-2">Insertar Estado Aquí</a>
+        </div>
+    </div>
     {% endfor %}
     <div class="mb-3">&nbsp;</div>
 </div>

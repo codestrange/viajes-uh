@@ -28,6 +28,7 @@ def upload(id, method):
     ]
     if form.validate_on_submit():
         document = get_document(method)
+        document.name = form.name.data
         document.document_type = DocumentType.query.get_or_404(form.document_type.data)
         document.travel = travel
         document.user = current_user
@@ -73,6 +74,7 @@ def edit(id):
     form = get_edit_form(document.type)
     if form.validate_on_submit():
         document.confirmed = True
+        document.name = form.name.data
         if document.type == 'text':
             document.text = form.text.data
         else:
@@ -97,6 +99,7 @@ def edit(id):
         flash_errors(form)
     if document.type == 'text':
         form.text.data = document.text
+    form.name.data = document.name
     template_name = 'edit_text' if document.type == 'text' else 'edit'
     return render_template(f'document/{template_name}.html', form=form)
 
@@ -120,6 +123,7 @@ def edit_auth(id):
     if form.validate_on_submit():
         document.document_type = DocumentType.query.get_or_404(int(form.document_type.data))
         document.confirmed = True
+        document.name = form.name.data
         if document.type == 'text':
             document.text = form.text.data
         else:
@@ -143,6 +147,7 @@ def edit_auth(id):
     else:
         flash_errors(form)
     form.document_type.data = document.document_type.id
+    form.name.data = document.name
     if document.type == 'text':
         form.text.data = document.text
     template_name = 'edit_auth_text' if document.type == 'text' else 'edit_auth'

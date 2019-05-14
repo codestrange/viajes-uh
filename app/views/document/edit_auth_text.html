@@ -10,6 +10,10 @@
             <form method="POST" enctype="multipart/form-data" >
                 {{ form.csrf_token }}
                 <div class="form-group">
+                    {{ form.name.label }}:
+                    {{ form.name(class="form-control", placeholder="Introduzca el nombre del documento") }}
+                </div>
+                <div class="form-group">
                     {{ form.text.label }}:
                     {{ form.text(class="form-control-file", placeholder="Introduzca el contenido del documento") }}
                 </div>
